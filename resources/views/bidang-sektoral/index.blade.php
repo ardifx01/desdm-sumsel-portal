@@ -16,17 +16,32 @@
         Bidang Teknis, UPTD, dan Cabang Dinas Regional untuk melayani masyarakat secara komprehensif.</p>
 
     <div class="row">
-        @foreach($bidangUnits as $unit)
+        @forelse($bidangs as $bidang) {{-- Menggunakan variabel $bidangs dari controller --}}
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card h-100 shadow-sm border-0">
                 <div class="card-body">
-                    <h5 class="card-title text-primary">{{ $unit['nama'] }}</h5>
-                    <p class="card-text">{{ Str::limit($unit['deskripsi'], 120) }}</p>
-                    <a href="{{ route('bidang-sektoral.show', $unit['slug']) }}" class="btn btn-sm btn-outline-primary mt-2">Lihat Profil</a>
+                    <h5 class="card-title text-primary">{{ $bidang->nama }}</h5>
+                    {{-- Menampilkan tipe bidang --}}
+                    {{-- <p class="card-text text-muted small mb-2">Tipe: {{ Str::title(str_replace('_', ' ', $bidang->tipe)) }}</p>  --}}
+                    
+                    {{-- Menampilkan deskripsi singkat dari tupoksi, jika ada --}}
+                    @if($bidang->tupoksi)
+                        <p class="card-text">{{ Str::limit(strip_tags($bidang->tupoksi), 120) }}</p>
+                    @else
+                        <p class="card-text">Belum ada deskripsi singkat tersedia.</p>
+                    @endif
+                    
+                    <a href="{{ route('bidang-sektoral.show', $bidang->slug) }}" class="btn btn-sm btn-outline-primary mt-2">Lihat Profil</a>
                 </div>
             </div>
         </div>
-        @endforeach
+        @empty
+            <div class="col-12">
+                <div class="alert alert-info text-center" role="alert">
+                    Belum ada Bidang, UPTD, atau Cabang Dinas yang aktif untuk ditampilkan.
+                </div>
+            </div>
+        @endforelse
     </div>
 
     <hr class="my-5">

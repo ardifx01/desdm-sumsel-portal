@@ -95,6 +95,11 @@
                     </x-dropdown>
                 </div>
 
+                {{-- Tambahkan ini untuk menu di desktop --}}
+                <x-nav-link :href="route('admin.bidang.index')" :active="request()->routeIs('admin.bidang.*')">
+                    {{ __('Manajemen Bidang') }}
+                </x-nav-link>
+                
                 {{-- Tautan langsung Manajemen Pejabat Dinas --}}
                 <x-nav-link :href="route('admin.pejabat.index')" :active="request()->routeIs('admin.pejabat.index')">
                     {{ __('Manajemen Pejabat Dinas') }}

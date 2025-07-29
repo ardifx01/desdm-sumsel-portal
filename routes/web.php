@@ -29,6 +29,9 @@ use App\Http\Controllers\Admin\PejabatController;
 use App\Http\Controllers\Admin\PermohonanInformasiController; // <-- TAMBAHKAN BARIS INI
 use App\Http\Controllers\Admin\PengajuanKeberatanController; // <-- TAMBAHKAN BARIS INI
 
+use App\Http\Controllers\Admin\BidangController;
+use App\Http\Controllers\Admin\SeksiController;
+
 // Controllers bawaan Laravel/Breeze
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -57,11 +60,12 @@ Route::prefix('tentang-kami')->name('tentang-kami.')->group(function () {
     Route::get('/profil-pimpinan/{id}', [TentangKamiController::class, 'detailPimpinan'])->name('detail-pimpinan');
 });
 
+
 // Modul Bidang & Data Sektoral
 Route::prefix('bidang-sektoral')->name('bidang-sektoral.')->group(function () {
     Route::get('/', [BidangSektoralController::class, 'index'])->name('index');
     Route::get('/data-statistik', [BidangSektoralController::class, 'showDataStatistik'])->name('data-statistik');
-    Route::get('/{slug}', [BidangSektoralController::class, 'show'])->name('show');
+    Route::get('/{slug}', [BidangSektoralController::class, 'show'])->name('show'); // <--- BARIS INI
 });
 
 // Modul Layanan & Pengaduan
@@ -223,6 +227,38 @@ Route::middleware('auth')->group(function () {
         Route::resource('keberatan', PengajuanKeberatanController::class)->only(['index', 'show', 'update', 'destroy'])->parameters([
             'keberatan' => 'keberatan_item', // Mengubah nama parameter
         ]); // <-- TAMBAHKAN BARIS INI
+
+        // =========================================================================
+            // RUTE BARU: PENGELOLAAN BIDANG (BACKEND ADMIN)
+            // =========================================================================
+            // URL-nya menjadi /admin/bidang karena prefix 'admin' sudah ada di atasnya
+            Route::resource('bidang', BidangController::class)->names([ // <--- CUKUP "bidang"
+                'index' => 'bidang.index', // <--- CUKUP "bidang.index"
+                'create' => 'bidang.create',
+                'store' => 'bidang.store',
+                'edit' => 'bidang.edit',
+                'update' => 'bidang.update',
+                'destroy' => 'bidang.destroy',
+                'show' => 'bidang.show_preview',
+            ]);
+
+            // =========================================================================
+            // RUTE BARU: PENGELOLAAN SEKSI (BACKEND ADMIN)
+            // =========================================================================
+            // URL-nya menjadi /admin/bidang/{bidang}/seksi
+            Route::resource('bidang/{bidang}/seksi', SeksiController::class)->names([ // <--- CUKUP "bidang/{bidang}/seksi"
+                'index' => 'bidang.seksi.index', // <--- CUKUP "bidang.seksi.index"
+                'create' => 'bidang.seksi.create',
+                'store' => 'bidang.seksi.store',
+                'edit' => 'bidang.seksi.edit',
+                'update' => 'bidang.seksi.update',
+                'destroy' => 'bidang.seksi.destroy',
+                'show' => 'bidang.seksi.show_preview',
+            ]);
+
+
+
+
     });
 });
 
