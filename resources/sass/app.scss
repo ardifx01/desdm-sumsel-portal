@@ -1,0 +1,15 @@
+// Import semua fungsi dan variabel Bootstrap
+@import "../../node_modules/bootstrap/scss/functions"; // <-- UBAH PATH INI
+@import "../../node_modules/bootstrap/scss/variables"; // <-- UBAH PATH INI
+@import "../../node_modules/bootstrap/scss/mixins"; // <-- UBAH PATH INI
+
+// Kustomisasi variabel Bootstrap Anda di sini (opsional)
+// $primary: #007bff; // Contoh: ganti warna primary Bootstrap
+
+// Import Bootstrap CSS
+@import "../../node_modules/bootstrap/scss/bootstrap"; // <-- UBAH PATH INI
+
+// Tambahkan CSS kustom Anda di sini
+body {
+    font-family: 'Arial', sans-serif;
+}

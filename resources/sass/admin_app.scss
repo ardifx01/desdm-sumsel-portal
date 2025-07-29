@@ -1,0 +1,24 @@
+// Import base Tailwind CSS styles
+@import 'tailwindcss/base';
+
+// Import Tailwind CSS components (e.g., for buttons, forms)
+@import 'tailwindcss/components';
+
+// Import Tailwind CSS utility classes
+@import 'tailwindcss/utilities';
+
+// Anda bisa menambahkan custom CSS untuk panel admin Anda di sini.
+// Contoh:
+/*
+body {
+    font-family: 'Inter', sans-serif; // Contoh penggunaan font kustom
+}
+
+.admin-panel-card {
+    @apply bg-white shadow-lg rounded-lg p-6; // Contoh custom component dengan Tailwind directives
+}
+
+.admin-button {
+    @apply px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700;
+}
+*/
