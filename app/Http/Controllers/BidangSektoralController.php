@@ -16,7 +16,7 @@ class BidangSektoralController extends Controller
     {
         // Ambil semua bidang yang aktif, diurutkan berdasarkan nama
         $bidangs = Bidang::where('is_active', true)
-                         ->orderBy('nama')
+                         ->orderBy('id')
                          ->get();
         
         // Render view daftar bidang (akan kita modifikasi selanjutnya)

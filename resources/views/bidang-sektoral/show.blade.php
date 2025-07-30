@@ -23,7 +23,7 @@
                     @if($bidang->kepala)
                         <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
                             <div class="card h-100 shadow-sm border-0">
-                                <img src="{{ asset('storage/' . $bidang->kepala->foto) }}" onerror="this.onerror=null;this.src='{{ asset('images/default_avatar.png') }}';" alt="{{ $bidang->kepala->nama }}" class="card-img-top" style="height: auto; object-fit: cover;">
+                                <img src="{{ asset('storage/' . $bidang->kepala->foto) }}" onerror="this.onerror=null;this.src='{{ asset('storage/pejabat/nof.svg') }}';" alt="{{ $bidang->kepala->nama }}" class="card-img-top" style="height: auto; object-fit: cover;">
                                 <div class="card-body text-center">
                                     <h5 class="card-title mb-1">{{ $bidang->kepala->nama }}</h5>
                                     <p class="card-text text-muted small">{{ $bidang->kepala->jabatan }}</p>
@@ -36,7 +36,7 @@
                     @foreach($bidang->seksis->whereNotNull('pejabat_kepala_id')->sortBy('urutan') as $seksi)
                         <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
                             <div class="card h-100 shadow-sm border-0">
-                                <img src="{{ asset('storage/' . $seksi->kepala->foto) }}" onerror="this.onerror=null;this.src='{{ asset('images/default_avatar.png') }}';" alt="{{ $seksi->kepala->nama }}" class="card-img-top" style="height: auto; object-fit: cover;">
+                                <img src="{{ asset('storage/' . $seksi->kepala->foto) }}" onerror="this.onerror=null;this.src='{{ asset('storage/pejabat/nof.svg') }}';" alt="{{ $seksi->kepala->nama }}" class="card-img-top" style="height: auto; object-fit: cover;">
                                 <div class="card-body text-center">
                                     <h5 class="card-title mb-1">{{ $seksi->kepala->nama }}</h5>
                                     <p class="card-text text-muted small">Kepala {{ $seksi->nama_seksi }}</p>
@@ -103,7 +103,7 @@
 
                 @if($bidang->map)
                     <h3>Peta Lokasi</h3>
-                    <div class="embed-responsive embed-responsive-16by9" style="height: 400px; width: 100%;">
+                    <div class="embed-responsive embed-responsive-16by9" style="height: 400px; width: auto;">
                         {!! $bidang->map !!}
                     </div>
                     <hr class="my-4">

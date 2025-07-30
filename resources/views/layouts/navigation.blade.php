@@ -95,15 +95,37 @@
                     </x-dropdown>
                 </div>
 
-                {{-- Tambahkan ini untuk menu di desktop --}}
-                <x-nav-link :href="route('admin.bidang.index')" :active="request()->routeIs('admin.bidang.*')">
-                    {{ __('Manajemen Bidang') }}
-                </x-nav-link>
-                
-                {{-- Tautan langsung Manajemen Pejabat Dinas --}}
-                <x-nav-link :href="route('admin.pejabat.index')" :active="request()->routeIs('admin.pejabat.index')">
-                    {{ __('Manajemen Pejabat Dinas') }}
-                </x-nav-link>
+                {{-- Dropdown Utama: OPD --}}
+                <div class="hidden sm:flex sm:items-center sm:ml-6">
+                    <x-dropdown align="right" width="48">
+                        <x-slot name="trigger">
+                            <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                                <div>{{ __('OPD') }}</div>
+                                <div class="ml-1">
+                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            </button>
+                        </x-slot>
+
+                        <x-slot name="content">
+                            {{-- Submenu: Manajemen Pejabat --}}
+                            <h6 class="dropdown-header px-4 py-2 text-xs text-gray-400">Pejabat/Pimpinan Unit</h6>
+                            <x-dropdown-link :href="route('admin.pejabat.index')">
+                                {{ __('Manajemen Pejabat') }}
+                            </x-dropdown-link>
+                            <div class="border-t border-gray-200"></div>
+
+                            {{-- Submenu: Manajemen Bidang/UPTD/Cabdin --}}
+                            <h6 class="dropdown-header px-4 py-2 text-xs text-gray-400">Bidang/UPTD/Cabdin</h6>
+                            <x-dropdown-link :href="route('admin.bidang.index')">
+                                {{ __('Manajemen Bidang') }}
+                            </x-dropdown-link>
+                        </x-slot>
+                    </x-dropdown>
+                </div>
+
             </div>
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">

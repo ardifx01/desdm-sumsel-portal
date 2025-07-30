@@ -256,9 +256,6 @@ Route::middleware('auth')->group(function () {
                 'show' => 'bidang.seksi.show_preview',
             ]);
 
-
-
-
     });
 });
 
