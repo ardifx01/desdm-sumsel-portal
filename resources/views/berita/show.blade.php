@@ -17,7 +17,11 @@
         <div class="card-body">
             <h2 class="card-title mb-3">{{ $post->title }}</h2>
             <p class="card-text text-muted small">
-                <span class="badge bg-primary me-2">{{ $post->category->name ?? 'Tanpa Kategori' }}</span>
+                {{-- LOKASI UNTUK BADGE KATEGORI --}}
+                <span class="badge {{ 'badge-category-' . Str::slug($post->category->name) }}">
+                    {{ $post->category->name }}
+                </span>
+                <!-- <span class="badge bg-primary me-2">{{ $post->category->name ?? 'Tanpa Kategori' }}</span> -->
                 <i class="bi bi-calendar"></i> Dipublikasi: {{ $post->created_at ? $post->created_at->translatedFormat('d F Y H:i') : '-' }} |
                 <i class="bi bi-person"></i> Oleh: {{ $post->author->name ?? 'Admin' }}
             </p>

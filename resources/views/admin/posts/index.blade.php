@@ -61,8 +61,11 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                         {{ Str::limit($post->title, 50) }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ $post->category->name ?? '-' }}
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                            {{-- LOKASI UNTUK BADGE KATEGORI --}}
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ 'badge-category-' . Str::slug($post->category->name) }}">
+                                                {{ $post->category->name }}
+                                            </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{ $post->author->name ?? 'N/A' }}

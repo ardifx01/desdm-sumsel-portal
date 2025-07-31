@@ -43,7 +43,11 @@
                     <img src="https://placehold.co/400x200?text=No+Image" class="card-img-top" alt="No Image" style="width: 400px; object-fit: contain;">
                 @endif
                 <div class="card-body">
-                    <span class="badge bg-primary mb-2">{{ $post->category->name ?? 'Tanpa Kategori' }}</span>
+                            {{-- LOKASI UNTUK BADGE KATEGORI --}}
+                            <span class="badge {{ 'badge-category-' . Str::slug($post->category->name) }}">
+                                {{ $post->category->name }}
+                            </span>                    
+                    <!-- <span class="badge bg-primary mb-2">{{ $post->category->name ?? 'Tanpa Kategori' }}</span> -->
                     <h5 class="card-title">{{ Str::limit($post->title, 60) }}</h5>
                     <p class="card-text text-muted small">
                         <i class="bi bi-calendar"></i> {{ $post->created_at ? $post->created_at->translatedFormat('d M Y') : '-' }} |

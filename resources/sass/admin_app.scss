@@ -22,3 +22,40 @@ body {
     @apply px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700;
 }
 */
+
+/* --- Warna Khusus untuk Setiap Kategori Berita (Admin Panel) --- */
+
+.badge-category-energi {
+    background-color: #d1fae5; /* Tailwind-like green-100 */
+    color: #065f46; /* Tailwind-like green-800 */
+}
+
+.badge-category-berita {
+    background-color: #fee2e2; /* Tailwind-like red-100 */
+    color: #991b1b; /* Tailwind-like red-800 */
+}
+
+.badge-category-ketenagalistrikan {
+    background-color: #fffbeb; /* Tailwind-like yellow-100 */
+    color: #92400e; /* Tailwind-like yellow-800 */
+}
+
+.badge-category-pengusahaan-minerba {
+    background-color: #e0f2fe; /* Tailwind-like blue-100 */
+    color: #1e40af; /* Tailwind-like blue-800 */
+}
+
+.badge-category-teknik-dan-penerimaan-minerba {
+    background-color: #ede9fe; /* Tailwind-like purple-100 */
+    color: #5b21b6; /* Tailwind-like purple-800 */
+}
+
+.badge-category-geolab {
+    background-color: #ffedd5; /* Tailwind-like orange-100 */
+    color: #9a3412; /* Tailwind-like orange-800 */
+}
+
+.badge-category-edukasi {
+    background-color: #e2e8f0; /* Tailwind-like gray-200 */
+    color: #4a5568; /* Tailwind-like gray-700 */
+}

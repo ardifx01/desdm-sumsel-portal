@@ -35,7 +35,7 @@ class BeritaController extends Controller
             $title = 'Hasil Pencarian: "' . $search . '"';
         }
 
-        $posts = $query->orderBy('created_at', 'desc')->paginate(10);
+        $posts = $query->orderBy('created_at', 'desc')->paginate(9);
 
         return view('berita.index', compact('posts', 'categories', 'title'));
     }
