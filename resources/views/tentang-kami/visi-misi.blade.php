@@ -13,28 +13,65 @@
     </nav>
     <h2 class="mb-4">Visi, Misi & Tujuan Dinas ESDM Provinsi Sumatera Selatan</h2>
 
-    <h3>Visi</h3>
-    <p class="lead">
-        "Terwujudnya Tata Kelola Energi dan Sumber Daya Mineral yang Berkeadilan, Berkelanjutan dan Berdaya Saing."
-        {{-- Ganti dengan visi resmi DESDM Sumsel --}}
+    <div class="card mb-3" style="width: auto;">
+    <div class="row g-0">
+        <div class="col-md-4">
+        <img src="https://lh3.googleusercontent.com/d/1DDh3h1mm0E_Bli1VAM1fBMufnBnzqhly=s1000?authuser=0" class="img-fluid rounded-start" alt="...">
+        </div>
+        <div class="col-md-8">
+        <div class="card-body">
+            <h3 class="card-title">Latar Belakang Visi Pembangunan</h3>
+                <div class="p-2">
+                    <p class="card-text">Dengan mempertimbangkan kemajuan yang telah dicapai dan memperhatikan hasil analisis isu strategis;
+                    mengacu visi dan misi Gubernur dan Wakil Gubernur yang terpilih untuk masa bakti 2025-2030; mengikuti prioritas pembangunan RPJPD Provinsi Sumatera Selatan;
+                    memperhatikan prioritas pembangunan nasional; merujuk pada tujuan nasional yang tercantum dalam Pembukaan Undang-undang Dasar 1945;
+                    serta memperhatikan tujuan pembangunan milenium, maka visi pembangunan Provinsi Sumatera Selatan Tahun 2025-2030 adalah:</p>
+    <p class="h3 fw-bold text-success my-0 text-center">
+    "SUMATERA SELATAN MAJU TERUS UNTUK SEMUA"
     </p>
+                </div>
+        </div>
+        </div>
+    </div>
+    </div>
 
-    <h3>Misi</h3>
-    <ol>
-        <li>Meningkatkan kapasitas pengelolaan dan pemanfaatan energi dan sumber daya mineral secara optimal dan berkelanjutan.</li>
-        <li>Mengembangkan sistem informasi dan data geologi, energi dan sumber daya mineral yang akurat dan mudah diakses.</li>
-        <li>Mendorong investasi di sektor energi dan sumber daya mineral yang ramah lingkungan dan memberikan nilai tambah bagi daerah.</li>
-        <li>Meningkatkan kualitas pelayanan publik di bidang energi dan sumber daya mineral.</li>
-        {{-- Ganti dengan misi resmi DESDM Sumsel --}}
-    </ol>
+    <div class="card-group mb-3">
+    <div class="card">
+        <div class="card-body">
+        <h3 class="card-title">MISI KESATU</h3>
+        <p class="card-text">Membangun Sumsel berbasis ekonomi kerakyatan, didukung sektor pertanian, industri, dan UMKM
+            yang tangguh untuk mengatasi pengangguran dan kemiskinan baik di perkotaan maupun di perdesaan.</p>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+        <h3 class="card-title">TUJUAN</h3>
+        <p class="card-text">meningkatnya peran sektor energi dan sumber daya mineral dengan baik dan berkelanjutan.</p>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+        <h3 class="card-title">SASARAN STRATEGIS</h3>
+        <p class="card-text">meningkatkan akses energi baik di pedesaan maupun perkotaan.</p>
+        </div>
+    </div>
+    </div>
 
-    <h3>Tujuan</h3>
-    <ul>
-        <li>Tercapainya peningkatan pendapatan asli daerah dari sektor energi dan sumber daya mineral.</li>
-        <li>Terwujudnya ketersediaan dan aksesibilitas energi yang merata bagi masyarakat.</li>
-        <li>Terkelolanya sumber daya mineral secara profesional dan berkelanjutan.</li>
-        {{-- Ganti dengan tujuan resmi DESDM Sumsel --}}
-    </ul>
+    <div class="card text-bg-primary mb-3" style="width: auto;">
+    <div class="card-header">STRATEGI</div>
+    <div class="card-body">
+        <p class="card-text">
+        <ul>
+            <li>Menyediakan dukungan penuh dan koordinasi intensif bersama Pertamina, PLN dan KESDM RI dalam rangka pemenuhan kebutuhan energi bahan bakar dan listrik bagi masyarakat di Kabupaten/Kota.</li>
+            <li>Melaksanakan pengkajian, evaluasi dan pengawasan di daerah dalam rangka meningkatnya pengelolaan pertambangan minerba yang baik dan benar (tata ruang, lingkungan dan sosial).</li>
+            <li>Melakukan koordinasi secara komprehensif dan terpadu bersama instansi terkait dalam rangka meningkatnya penerimaan sektor ESDM.</li>
+        </ul>
+            
+            </p>
+    </div>
+    </div>
+
+
 
     <a href="{{ route('tentang-kami.index') }}" class="btn btn-secondary mt-4">Kembali ke Tentang Kami</a>
 </div>
