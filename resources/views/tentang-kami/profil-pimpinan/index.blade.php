@@ -18,11 +18,12 @@
         <div class="col-md-4 mb-4">
             <div class="card h-100 shadow-sm border-0">
                 <div class="card-body text-center">
-                    @if($p->foto)
-                        <img src="{{ asset('storage/' . $p->foto) }}" class="img-fluid rounded-circle mb-3" alt="Foto {{ $p->nama }}" style="width: 150px; height: 150px; object-fit: cover;">
-                    @else
-                        <img src="{{ asset('storage/pejabat/nof.svg') }}" class="img-fluid rounded-circle mb-3" alt="Default Avatar" style="width: 150px; height: 150px; object-fit: cover;">
-                    @endif
+                    <x-placeholder-image
+                        :src="asset('storage/' . $p->foto)"
+                        alt="Foto {{ $p->nama }}"
+                        class="img-fluid rounded-circle mb-3"
+                        style="width: 150px; height: 150px; object-fit: cover;"
+                    />
                     <h5 class="card-title">{{ $p->nama }}</h5>
                     <p class="card-text text-muted mb-2">{{ $p->jabatan }}</p>
                     @if($p->nip)

@@ -17,11 +17,13 @@
             <div class="card shadow-sm border-0">
                 <div class="card-body">
                     <div class="text-center mb-4">
-                        @if($pejabat->foto)
-                            <img src="{{ asset('storage/' . $pejabat->foto) }}" class="img-fluid rounded-circle mb-3" alt="Foto {{ $pejabat->nama }}" style="width: 200px; height: 200px; object-fit: cover;">    
-                        @else
-                            <img src="{{ asset('storage/pejabat/nof.svg') }}" class="img-fluid rounded-circle mb-3" alt="Default Avatar" style="width: 200px; height: 200px; object-fit: cover;">
-                        @endif
+                        <x-placeholder-image
+                            :src="asset('storage/' . $pejabat->foto)"
+
+                            alt="Foto {{ $pejabat->nama }}"
+                            class="card-img-top"
+                            style="width: auto; object-fit: cover;"
+                        />                        
                         <h2 class="card-title mt-3">{{ $pejabat->nama }}</h2>
                         <h5 class="text-muted">{{ $pejabat->jabatan }}</h5>
                         @if($pejabat->nip)

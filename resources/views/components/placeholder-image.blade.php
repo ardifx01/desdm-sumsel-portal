@@ -1,0 +1,1 @@
+<img src="{{ $src }}" onerror="this.onerror=null;this.src='{{ $default }}';" {{ $attributes }}>
