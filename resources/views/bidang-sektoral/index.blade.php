@@ -18,7 +18,7 @@
     <div class="row">
         @forelse($bidangs as $bidang) {{-- Menggunakan variabel $bidangs dari controller --}}
         <div class="col-md-6 col-lg-4 mb-4">
-            <div class="card h-100 shadow-sm border-0">
+            <div class="card h-100 shadow-sm border-0 pejabat-card">
                 <div class="card-body">
                     <h5 class="card-title text-primary">{{ $bidang->nama }}</h5>
                     {{-- Menampilkan tipe bidang --}}

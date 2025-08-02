@@ -39,19 +39,20 @@
 
                         <div class="mb-4">
                             <label for="deskripsi_singkat" class="block text-sm font-medium text-gray-700">Deskripsi Singkat (Opsional)</label>
-                            <textarea name="deskripsi_singkat" id="deskripsi_singkat" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">{{ old('deskripsi_singkat', $pejabat->deskripsi_singkat) }}</textarea>
+                            <textarea name="deskripsi_singkat" id="deskripsi_singkat" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 tinymce-editor">{{ old('deskripsi_singkat', $pejabat->deskripsi_singkat) }}</textarea> {{-- TinyMCE will initialize here --}}
                         </div>
-
                         <div class="mb-4">
                             <label for="foto" class="block text-sm font-medium text-gray-700">Foto Pejabat <small>(Opsional, JPG, PNG, GIF, SVG, Max 2MB, kosongkan jika tidak mengubah)</small></label>
                             <input type="file" name="foto" id="foto" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" accept="image/jpeg,image/png,image/gif,image/svg+xml">
                             @error('foto')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
-                            @if($pejabat->foto)
-                                <p class="text-xs text-gray-500 mt-2">Foto saat ini:</p>
-                                <img src="{{ asset('storage/' . $pejabat->foto) }}" alt="Current Photo" class="w-20 h-20 rounded-full object-cover">
-                            @endif
+
+                            @if($pejabat->hasMedia('foto_pejabat'))
+                                <p class="text-xs text-gray-500 mt-2">
+                                    Foto saat ini: <img src="{{ $pejabat->getFirstMediaUrl('foto_pejabat', 'thumb') }}" alt="{{ $pejabat->nama }}" class="w-32 h-auto rounded-md mt-1">
+                                </p>
+                            @endif                            
                         </div>
 
                         <div class="mb-4">

@@ -15,30 +15,51 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <div class="text-center mb-4">
-                        <x-placeholder-image
-                            :src="asset('storage/' . $pejabat->foto)"
 
-                            alt="Foto {{ $pejabat->nama }}"
-                            class="card-img-top"
-                            style="width: auto; object-fit: cover;"
-                        />                        
-                        <h2 class="card-title mt-3">{{ $pejabat->nama }}</h2>
-                        <h5 class="text-muted">{{ $pejabat->jabatan }}</h5>
-                        @if($pejabat->nip)
-                            <p class="text-secondary">NIP: {{ $pejabat->nip }}</p>
-                        @endif
-                    </div>
-                    <hr>
-                    @if($pejabat->deskripsi_singkat)
-                        <div class="pejabat-deskripsi">
-                            {!! nl2br(e($pejabat->deskripsi_singkat)) !!} {{-- Gunakan nl2br dan e untuk keamanan --}}
+               
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            @if ($pejabat->hasMedia('foto_pejabat'))
+                                <picture>
+                                    <source
+                                        srcset="{{ $pejabat->getFirstMedia('foto_pejabat')->getSrcset('webp-responsive') }}"
+                                        type="image/webp"
+                                    >
+                                    <img
+                                        src="{{ $pejabat->getFirstMediaUrl('foto_pejabat', 'thumb') }}"
+                                        alt="Foto {{ $pejabat->nama }}"
+                                        class="img-fluid rounded-start"
+                                        width=auto
+                                        loading="lazy"
+                                    >
+                                </picture>
+                            @else
+                                <img src="https://placehold.co/400x400/E5E7EB/6B7280?text=No+Photo" 
+                                    alt="No Photo"
+                                    class="img-fluid rounded-start"
+                                    width=auto
+                                    loading="lazy"
+                                >
+                            @endif
                         </div>
-                    @else
-                        <p class="text-muted text-center">Deskripsi singkat belum tersedia untuk pejabat ini.</p>
-                    @endif
-                </div>
+                        <div class="col-md-8">
+                            <div class="card-body h-100 d-flex flex-column justify-content-center">
+                                <h3 class="card-title">{{ $pejabat->nama }}</h3>
+                                <h5 class="text-muted">{{ $pejabat->jabatan }}</h5>
+                                    <div class="p-2">
+                                        @if($pejabat->deskripsi_singkat)
+                                            <div class="pejabat-deskripsi">
+                                                {!! ($pejabat->deskripsi_singkat) !!}
+                                            </div>
+                                        @else
+                                            <p class="text-muted text-center">Deskripsi singkat belum tersedia untuk pejabat ini.</p>
+                                        @endif
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                
+
             </div>
         </div>
     </div>

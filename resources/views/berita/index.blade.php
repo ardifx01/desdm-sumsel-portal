@@ -7,7 +7,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ url('/') }}">Beranda</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Berita & Media</li>
+            <li class="breadcrumb-item active" aria-current="page">Berita</li>
         </ol>
     </nav>
     <h2 class="mb-4 text-center">{{ $title }}</h2>
@@ -35,12 +35,26 @@
     <div class="row">
         @forelse($posts as $post)
         <div class="col-md-6 col-lg-4 mb-4">
-            <div class="card h-100 shadow-sm border-0">
-                @if($post->featured_image_url)
-                    <img src="{{ asset('storage/' . $post->featured_image_url) }}" class="card-img-top" alt="{{ $post->title }}" style="width: 400px; object-fit: contain;">
-                    {{-- <img src="{{ $post->featured_image_url }}" class="card-img-top" alt="{{ $post->title }}" loading="lazy" style="width: 400px; object-fit: contain;"> --}}
+            <div class="card h-100 shadow-sm border-0 pejabat-card">
+                @if ($post->hasMedia('featured_image'))
+                    <img src="{{ $post->getFirstMediaUrl('featured_image', 'thumb') }}" 
+                        class="card-img-top" 
+                        alt="{{ $post->title }}"
+                        loading="lazy"
+                        style="width: 400px; object-fit: contain;">
                 @else
-                    <img src="https://placehold.co/400x200?text=No+Image" class="card-img-top" alt="No Image" style="width: 400px; object-fit: contain;">
+                    @if($post->featured_image_url)
+                        <img src="{{ asset('storage/' . $post->featured_image_url) }}"
+                            class="card-img-top" 
+                            alt="{{ $post->title }}"
+                            loading="lazy" 
+                            style="width: 400px; object-fit: contain;">
+                    @else
+                        <img src="https://placehold.co/400x200?text=No+Image" 
+                            class="card-img-top" 
+                            alt="No Image" 
+                            style="width: 400px; object-fit: contain;">
+                    @endif
                 @endif
                 <div class="card-body">
                             {{-- LOKASI UNTUK BADGE KATEGORI --}}

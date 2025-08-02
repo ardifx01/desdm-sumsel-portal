@@ -4,14 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
-class Post extends Model
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use App\Support\ModulePathGenerator;
+class Post extends Model implements HasMedia
 {
-    use HasFactory;
+    use HasFactory, InteractsWithMedia;
 
-    protected $table = 'posts'; // Menunjuk ke tabel 'posts'
+    protected $table = 'posts';
 
-    // Kolom-kolom yang boleh diisi secara massal
     protected $fillable = [
         'title',
         'meta_title',
@@ -19,33 +21,42 @@ class Post extends Model
         'slug',
         'excerpt',
         'content_html',
-        'featured_image_url',
         'category_id',
         'author_id',
         'status',
     ];
 
-    // Kolom-kolom yang harus di-cast ke tipe data tertentu
-    protected $casts = [
-        // 'created_at' => 'datetime', // Jika di table posts Anda datetime
-        // 'updated_at' => 'datetime', // Jika di table posts Anda datetime
-    ];
-
-    // Definisi relasi: Satu post termasuk dalam satu kategori
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
 
-    // Definisi relasi: Satu post ditulis oleh satu user (author)
     public function author()
     {
         return $this->belongsTo(User::class, 'author_id');
     }
 
-    // Scope untuk hanya mengambil post dengan status 'published'
     public function scopePublished($query)
     {
         return $query->where('status', 'published');
+    }
+
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        $this
+            ->addMediaConversion('thumb')
+            ->width(368)
+            ->height(232)
+            ->sharpen(10);
+
+        $this
+            ->addMediaConversion('webp-responsive')
+            ->format('webp')
+            ->nonQueued()
+            ->withResponsiveImages();
+    }
+    public static function getPathGenerator(): ModulePathGenerator
+    {
+        return new ModulePathGenerator();
     }
 }

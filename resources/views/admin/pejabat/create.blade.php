@@ -37,8 +37,11 @@
                         </div>
 
                         <div class="mb-4">
-                            <label for="deskripsi_singkat" class="block text-sm font-medium text-gray-700">Deskripsi Singkat (Opsional)</label>
-                            <textarea name="deskripsi_singkat" id="deskripsi_singkat" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">{{ old('deskripsi_singkat') }}</textarea>
+                            <x-input-label for="deskripsi_singkat" :value="__('Deskripsi Singkat')" />
+                            <textarea name="deskripsi_singkat" id="deskripsi_singkat" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 tinymce-editor">{{ old('deskripsi_singkat') }}</textarea> {{-- TinyMCE will initialize here --}}
+
+                            <x-input-error :messages="$errors->get('deskripsi_singkat')" class="mt-2" />
+                            <p class="mt-1 text-sm text-gray-500">Isi Deskripsi Singkat/Profil Pejabat.</p>
                         </div>
 
                         <div class="mb-4">

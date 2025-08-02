@@ -44,10 +44,14 @@
                                 @forelse ($pejabat as $item)
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        @if($item->foto)
-                                            <img src="{{ asset('storage/' . $item->foto) }}" alt="{{ $item->nama }}" class="h-10 w-10 rounded-full object-cover">
+                                        @if ($item->hasMedia('foto_pejabat'))
+                                            <img src="{{ $item->getFirstMediaUrl('foto_pejabat', 'thumb') }}" 
+                                                alt="{{ $item->nama }}" 
+                                                class="w-16 h-16 object-cover rounded-full">
                                         @else
-                                            <div class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-400 text-xs">N/A</div>
+                                            <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center">
+                                                <span class="text-gray-500 text-xs">N/A</span>
+                                            </div>
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">

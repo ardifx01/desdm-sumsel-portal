@@ -2,29 +2,49 @@
 
 namespace App\Models;
 
+use App\Support\ModulePathGenerator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Image\Manipulations;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Pejabat extends Model
+class Pejabat extends Model implements HasMedia
 {
-    use HasFactory;
+    use HasFactory, InteractsWithMedia;
 
-    // Nama tabel jika berbeda dari konvensi Laravel (plural dari nama model)
     protected $table = 'pejabat';
 
-    // Kolom-kolom yang boleh diisi secara massal (mass assignable)
     protected $fillable = [
         'nama',
         'jabatan',
         'nip',
         'deskripsi_singkat',
-        'foto',
         'urutan',
         'is_active',
     ];
 
-    // Kolom-kolom yang harus di-cast ke tipe data tertentu
     protected $casts = [
         'is_active' => 'boolean',
     ];
+    
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        $this
+            ->addMediaConversion('thumb')
+            ->width(368)
+            ->height(232)
+            ->sharpen(10);
+
+        $this
+           ->addMediaConversion('webp-responsive')
+           ->format('webp')
+           ->withResponsiveImages();
+    }
+
+    public function getPathGenerator(): ModulePathGenerator
+    {
+        return new ModulePathGenerator();
+    }
 }
