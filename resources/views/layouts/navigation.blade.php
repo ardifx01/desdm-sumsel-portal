@@ -6,7 +6,8 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                        {{-- <x-application-logo class="block h-9 w-auto fill-current text-gray-800" /> --}}
+                        <img src="{{ asset('storage/images/logo-desdm.png') }}" alt="Logo DESDM Sumsel" style="height: 50px; margin-right: 15px;">
                     </a>
                 </div>
 
@@ -27,32 +28,32 @@
 
                         <x-slot name="content">
                             {{-- Submenu: Berita --}}
-                            <h6 class="dropdown-header px-4 py-2 text-xs text-gray-400">Berita</h6>
+                            <h6 class="dropdown-header px-4 py-2 text-xs text-gray-400">Manajemen Berita</h6>
                             <x-dropdown-link :href="route('admin.categories.index')">
-                                {{ __('Manajemen Kategori Berita') }}
+                                {{ __('Kategori Berita') }}
                             </x-dropdown-link>
                             <x-dropdown-link :href="route('admin.posts.index')">
-                                {{ __('Manajemen Berita') }}
+                                {{ __('Berita') }}
                             </x-dropdown-link>
                             <div class="border-t border-gray-200"></div>
 
                             {{-- Submenu: Dokumen --}}
-                            <h6 class="dropdown-header px-4 py-2 text-xs text-gray-400">Dokumen</h6>
+                            <h6 class="dropdown-header px-4 py-2 text-xs text-gray-400">Manajemen Dokumen</h6>
                             <x-dropdown-link :href="route('admin.dokumen-categories.index')">
-                                {{ __('Manajemen Kategori Dokumen') }}
+                                {{ __('Kategori Dokumen') }}
                             </x-dropdown-link>
                             <x-dropdown-link :href="route('admin.dokumen.index')">
-                                {{ __('Manajemen Dokumen') }}
+                                {{ __('Dokumen') }}
                             </x-dropdown-link>
                             <div class="border-t border-gray-200"></div>
 
                             {{-- Submenu: Galeri --}}
-                            <h6 class="dropdown-header px-4 py-2 text-xs text-gray-400">Galeri</h6>
+                            <h6 class="dropdown-header px-4 py-2 text-xs text-gray-400">Manajemen Galeri</h6>
                             <x-dropdown-link :href="route('admin.albums.index')">
-                                {{ __('Manajemen Album Foto') }}
+                                {{ __('Album Foto') }}
                             </x-dropdown-link>
                             <x-dropdown-link :href="route('admin.videos.index')">
-                                {{ __('Manajemen Video') }}
+                                {{ __('Video') }}
                             </x-dropdown-link>
                         </x-slot>
                     </x-dropdown>

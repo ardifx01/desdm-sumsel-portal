@@ -14,6 +14,7 @@ use App\Http\Controllers\LayananPengaduanController;
 use App\Http\Controllers\LayananController;
 use App\Http\Controllers\KontakUmumController;
 use App\Http\Controllers\HalamanStatisController;
+use App\Http\Controllers\SearchController;
 
 // Controllers Admin (untuk backend)
 use App\Http\Controllers\Admin\CategoryController; // CRUD Kategori Berita
@@ -32,6 +33,7 @@ use App\Http\Controllers\Admin\PengajuanKeberatanController; // <-- TAMBAHKAN BA
 use App\Http\Controllers\Admin\BidangController;
 use App\Http\Controllers\Admin\SeksiController;
 
+use App\Http\Controllers\WelcomeController;
 // Controllers bawaan Laravel/Breeze
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -43,10 +45,12 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
+
+
 // Rute Halaman Beranda
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
+// Rute Halaman Beranda
+
 
 // --- Rute MODUL PUBLIK (Pastikan Urutan Ini) ---
 
@@ -161,7 +165,8 @@ Route::prefix('halaman-statis')->name('static-pages.')->group(function () {
     Route::get('/aksesibilitas', [HalamanStatisController::class, 'showAksesibilitas'])->name('aksesibilitas');
 });
 
-
+// Tambahkan di bagian rute publik
+Route::get('/search', [SearchController::class, 'index'])->name('search');
 
 // --- Rute AUTENTIKASI BREEZE (Tetap di bagian paling bawah) ---
 Route::get('/dashboard', function () {

@@ -1,17 +1,25 @@
 // Import semua fungsi dan variabel Bootstrap
-@import "../../node_modules/bootstrap/scss/functions"; // <-- UBAH PATH INI
-@import "../../node_modules/bootstrap/scss/variables"; // <-- UBAH PATH INI
-@import "../../node_modules/bootstrap/scss/mixins"; // <-- UBAH PATH INI
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+@import "node_modules/bootstrap/scss/mixins";
 
 // Kustomisasi variabel Bootstrap Anda di sini (opsional)
 // $primary: #007bff; // Contoh: ganti warna primary Bootstrap
 
 // Import Bootstrap CSS
-@import "../../node_modules/bootstrap/scss/bootstrap"; // <-- UBAH PATH INI
+@import "node_modules/bootstrap/scss/bootstrap";
+
+// Import file header terpisah
+@import 'header';
 
 // Tambahkan CSS kustom Anda di sini
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Titillium Web', sans-serif; // Ubah font family di sini
+}
+
+// Tambahkan kode ini untuk menghilangkan garis bawah pada semua tautan
+a {
+    text-decoration: none;
 }
 
 /* Gaya dasar untuk badge di frontend (pastikan kelas 'badge' Bootstrap sudah berfungsi) */
@@ -82,4 +90,134 @@ body {
         transform: scale(1.05);
         z-index: 10;
     }
+}
+
+#scroll-to-top {
+    display: none; // Sembunyikan tombol secara default
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 99; // Pastikan tombol berada di atas elemen lain
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 15px 20px;
+    font-size: 16px;
+    transition: background-color 0.3s, opacity 0.3s;
+    
+    // Gaya untuk ikon panah
+    .fas {
+        margin-right: 8px;
+    }
+
+    &:hover {
+        background-color: #f0f0f0; // Warna hover
+    }
+}
+
+// --- Gaya untuk Floating Widget (diambil dari Tailwind CSS) ---
+// --- PERBAIKI KODE FLOATING WIDGET DI SINI ---
+.floating-widget {
+    position: fixed;
+    top: 275px;
+    right: 20px;
+    z-index: 99;
+    visibility: hidden;
+    
+    @media (min-width: 1280px) { // xl:visible
+        visibility: visible;
+    }
+}
+
+.floating-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.floating-item {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.floating-button {
+    width: 52px;
+    height: 52px;
+    background-color: #3f413f;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    display: flex;
+    flex-direction: column; // DEFAULT: Tumpuk vertikal
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+    
+    transition: all 200ms ease;
+    
+    &:hover {
+        flex-direction: row; // SAAT HOVER: Ubah menjadi horizontal
+        padding: 0 8px;
+        width: auto;
+        gap: 8px;
+        justify-content: space-around;
+    }
+}
+
+.floating-icon {
+    mask-repeat: no-repeat;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    background-color: white;
+    height: 24px;
+    width: 24px;
+    display: inline-block;
+
+}
+
+.floating-text {
+    margin: 0; // KODE PERBAIKAN: Hapus margin default pada teks
+    font-family: 'Titillium Web', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 18px;
+    color: white;
+    display: none; // Teks sembunyi default
+    
+    .floating-button:hover & {
+        display: block; // Teks tampil saat di-hover
+    }
+}
+
+// --- PERBAIKI KODE ANIMASI DI SINI ---
+@keyframes wiggle {
+    0% {
+        // Mulai dari posisi normal
+        transform: none;
+    }
+    10% {
+        // Naik ke kiri atas dengan sedikit rotasi
+        transform: translate(-7px, -5px) rotate(-5deg);
+    }
+    40% {
+        // Goyang ke kanan
+        transform: translate(-7px, -5px) rotate(5deg);
+    }
+    70% {
+        // Goyang kembali ke kiri
+        transform: translate(-7px, -5px) rotate(-5deg);
+    }
+    100% {
+        // Kembali ke posisi normal
+        transform: none;
+    }
+}
+
+// Hapus 'infinite' agar animasi hanya berjalan sekali
+.animate-wiggle {
+    animation: wiggle 3s cubic-bezier(.4,0,.2,1);
 }

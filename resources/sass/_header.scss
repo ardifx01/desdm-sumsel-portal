@@ -1,0 +1,104 @@
+// Import variabel dan mixin Bootstrap yang diperlukan untuk kustomisasi
+@import "../../node_modules/bootstrap/scss/functions";
+@import "../../node_modules/bootstrap/scss/variables";
+@import "../../node_modules/bootstrap/scss/mixins";
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo-text {
+    font-weight: bold; /* Membuat teks menjadi tebal */
+    color: #1a237e !important; /* Pastikan warna teks tetap biru tua */
+}
+
+.logo-main-title {
+    font-weight: bold; /* Ini yang membuat teks menjadi tebal */
+    font-size: 0.91rem;
+    color: #1a237e !important;
+    padding-bottom: -8px;
+}
+
+.logo-sub-title {
+    
+    font-size: 0.95rem;
+    color: #1a237e !important;
+}
+
+// Kustomisasi Header dengan Efek Transparan dan Blur
+.header-transparent {
+    background-color: rgba(255, 255, 255, 0.5); // Latar belakang putih transparan
+    backdrop-filter: blur(10px); // Efek blur pada konten di belakang header
+    -webkit-backdrop-filter: blur(10px); // Dukungan untuk browser WebKit
+    position: sticky;
+    top: 0;
+    z-index: 1030; // Z-index Bootstrap navbar
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); // Shadow ringan
+}
+
+// Gaya Teks Menu
+.header-menu-link,
+.header-menu-link .h4 {
+    color: #1a237e !important; // Warna teks biru tua
+    transition: all 0.3s ease-in-out;
+    position: relative;
+    padding-bottom: 8px; // Memberi ruang untuk garis bawah
+}
+
+// Efek Garis Bawah Saat Hover
+.header-menu-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    background-color: #1a237e; // Warna garis bawah
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.header-menu-link:hover::after {
+    width: 80%; // Lebar garis saat hover
+}
+
+.logo-link:hover::after {
+    width: 0 !important;
+}
+// Gaya Dropdown Menu
+.dropdown-menu-custom {
+    background-color: rgba(255, 255, 255, 0.9); // Latar belakang dropdown semi-transparan
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.1); // Border yang halus
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); // Shadow yang lebih kuat
+    display: none; // Sembunyikan secara default
+}
+
+// Tampilkan dropdown saat di-hover pada nav-item
+.nav-item.dropdown:hover > .dropdown-menu {
+    display: block;
+}
+
+.dropdown-item-custom {
+    color: #1a237e;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.dropdown-item-custom:hover,
+.dropdown-item-custom:focus {
+    background-color: #e9ecef; // Warna latar belakang hover yang lebih terang
+    color: #1a237e;
+}
+
+// Gaya Dropdown Header
+.dropdown-header-custom {
+    color: #6c757d; // Warna abu-abu untuk header dropdown
+    font-weight: 600;
+}
+
+// Menghilangkan caret
+.nav-link.dropdown-toggle::after {
+    display: none;
+}

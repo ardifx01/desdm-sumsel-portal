@@ -13,27 +13,27 @@
     </nav>
     <h2 class="mb-4">Visi, Misi & Tujuan Dinas ESDM Provinsi Sumatera Selatan</h2>
 
-<div class="card mb-3" style="width: auto;">
-    <div class="row g-0">
-        <div class="col-md-4">
-            <img src="https://lh3.googleusercontent.com/d/1DDh3h1mm0E_Bli1VAM1fBMufnBnzqhly=s1000?authuser=0" class="img-fluid rounded-start" alt="...">
-        </div>
-        <div class="col-md-8">
-            <div class="card-body h-100 d-flex flex-column justify-content-center">
-                <h3 class="card-title text-center">Latar Belakang Visi Pembangunan</h3>
-                <div>
-                    <p class="card-text text-center">Dengan mempertimbangkan kemajuan yang telah dicapai dan memperhatikan hasil analisis isu strategis;
-                        mengacu visi dan misi Gubernur dan Wakil Gubernur yang terpilih untuk masa bakti 2025-2030; mengikuti prioritas pembangunan RPJPD Provinsi Sumatera Selatan;
-                        memperhatikan prioritas pembangunan nasional; merujuk pada tujuan nasional yang tercantum dalam Pembukaan Undang-undang Dasar 1945;
-                        serta memperhatikan tujuan pembangunan milenium, maka visi pembangunan Provinsi Sumatera Selatan Tahun 2025-2030 adalah:</p>
-                    <p class="h3 fw-bold text-success my-0 text-center">
-                        "SUMATERA SELATAN MAJU TERUS UNTUK SEMUA"
-                    </p>
+    <div class="card mb-3" style="width: auto;">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="https://lh3.googleusercontent.com/d/1DDh3h1mm0E_Bli1VAM1fBMufnBnzqhly=s1000?authuser=0" class="img-fluid rounded-start" alt="...">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body h-100 d-flex flex-column justify-content-center">
+                    <h3 class="card-title text-center">Latar Belakang Visi Pembangunan</h3>
+                    <div>
+                        <p class="card-text text-center">Dengan mempertimbangkan kemajuan yang telah dicapai dan memperhatikan hasil analisis isu strategis;
+                            mengacu visi dan misi Gubernur dan Wakil Gubernur yang terpilih untuk masa bakti 2025-2030; mengikuti prioritas pembangunan RPJPD Provinsi Sumatera Selatan;
+                            memperhatikan prioritas pembangunan nasional; merujuk pada tujuan nasional yang tercantum dalam Pembukaan Undang-undang Dasar 1945;
+                            serta memperhatikan tujuan pembangunan milenium, maka visi pembangunan Provinsi Sumatera Selatan Tahun 2025-2030 adalah:</p>
+                        <p class="h3 fw-bold text-success my-0 text-center">
+                            "SUMATERA SELATAN MAJU TERUS UNTUK SEMUA"
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
     <div class="card-group mb-3">
     <div class="card">
