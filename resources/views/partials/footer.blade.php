@@ -99,9 +99,9 @@
                 <h5>Informasi Penting</h5>
                 <ul class="list-unstyled">
                     <li><a href="{{ route('static-pages.peta-situs') }}">Peta Situs</a></li>
-                    <li><a href="{{ route('static-pages.kebijakan-privasi') }}">Kebijakan Privasi</a></li>
-                    <li><a href="{{ route('static-pages.disclaimer') }}">Disclaimer</a></li>
-                    <li><a href="{{ route('static-pages.aksesibilitas') }}">Halaman Aksesibilitas</a></li>
+                    <li><a href="{{ route('static-pages.show', 'kebijakan-privasi') }}">Kebijakan Privasi</a></li>
+                    <li><a href="{{ route('static-pages.show', 'disclaimer') }}">Disclaimer</a></li>
+                    <li><a href="{{ route('static-pages.show', 'aksesibilitas') }}">Halaman Aksesibilitas</a></li>
                 </ul>
                 <h5 class="mt-4">Ikuti Kami</h5>
                 <div class="social-icons">

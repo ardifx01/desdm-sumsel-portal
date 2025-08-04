@@ -55,20 +55,13 @@
                             <ul>
                                 <li><a href="{{ route('bidang-sektoral.index') }}">Daftar Bidang & Unit</a></li>
                                 <li><a href="{{ route('bidang-sektoral.data-statistik') }}">Data & Statistik Sektoral Umum</a></li>
-                                {{-- Tambahkan link ke setiap profil bidang/unit jika ingin --}}
-                                <li><a href="{{ route('bidang-sektoral.show', 'sekretariat') }}">Sekretariat</a></li>
-                                <li><a href="{{ route('bidang-sektoral.show', 'bidang-energi') }}">Bidang Energi</a></li>
-                                {{-- ... dan seterusnya untuk setiap bidang/unit ... --}}
+
                             </ul>
 
-                            <h4><i class="bi bi-file-earmark-ruled-fill me-2 text-primary"></i>Publikasi & Dokumen Resmi</h4>
+                            <h4><i class="bi bi-file-earmark-ruled-fill me-2 text-primary"></i>Media Center</h4>
                             <ul>
                                 <li><a href="{{ route('publikasi.index') }}">Daftar Publikasi & Dokumen</a></li>
-                            </ul>
-
-                            <h4><i class="bi bi-newspaper me-2 text-primary"></i>Berita & Media</h4>
-                            <ul>
-                                <li><a href="{{ route('berita.index') }}">Berita & Pengumuman</a></li>
+                                <li><a href="{{ route('berita.index') }}">Berita</a></li>
                                 <li><a href="{{ route('galeri.index') }}">Galeri Foto & Video</a></li>
                             </ul>
 
@@ -88,9 +81,9 @@
 
                             <h4><i class="bi bi-file-text-fill me-2 text-primary"></i>Lain-Lain (Footer)</h4>
                             <ul>
-                                <li><a href="{{ route('static-pages.kebijakan-privasi') }}">Kebijakan Privasi</a></li>
-                                <li><a href="{{ route('static-pages.disclaimer') }}">Disclaimer</a></li>
-                                <li><a href="{{ route('static-pages.aksesibilitas') }}">Halaman Aksesibilitas</a></li>
+                                <li><a href="{{ route('static-pages.show', 'kebijakan-privasi') }}">Kebijakan Privasi</a></li>
+                                <li><a href="{{ route('static-pages.show', 'disclaimer') }}">Disclaimer</a></li>
+                                <li><a href="{{ route('static-pages.show', 'aksesibilitas') }}">Halaman Aksesibilitas</a></li>
                             </ul>
                         </div>
                     </div>

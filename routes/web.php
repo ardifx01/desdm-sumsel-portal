@@ -29,7 +29,7 @@ use App\Http\Controllers\Admin\VideoController; // CRUD Video
 use App\Http\Controllers\Admin\PejabatController;
 use App\Http\Controllers\Admin\PermohonanInformasiController; // <-- TAMBAHKAN BARIS INI
 use App\Http\Controllers\Admin\PengajuanKeberatanController; // <-- TAMBAHKAN BARIS INI
-
+use App\Http\Controllers\Admin\StaticPageController;
 use App\Http\Controllers\Admin\BidangController;
 use App\Http\Controllers\Admin\SeksiController;
 
@@ -160,9 +160,7 @@ Route::prefix('kontak')->name('kontak.')->group(function () {
 // Modul Halaman Statis Footer (Lain-Lain)
 Route::prefix('halaman-statis')->name('static-pages.')->group(function () {
     Route::get('/peta-situs', [HalamanStatisController::class, 'showPetaSitus'])->name('peta-situs');
-    Route::get('/kebijakan-privasi', [HalamanStatisController::class, 'showKebijakanPrivasi'])->name('kebijakan-privasi');
-    Route::get('/disclaimer', [HalamanStatisController::class, 'showDisclaimer'])->name('disclaimer');
-    Route::get('/aksesibilitas', [HalamanStatisController::class, 'showAksesibilitas'])->name('aksesibilitas');
+    Route::get('/{slug}', [HalamanStatisController::class, 'show'])->name('show');
 });
 
 // Tambahkan di bagian rute publik
@@ -182,6 +180,9 @@ Route::middleware('auth')->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
         // Dashboard Admin Utama
         Route::get('/', function () { return view('admin.dashboard'); })->name('dashboard');
+
+        // CRUD halaman statis
+        Route::resource('static-pages', StaticPageController::class);
 
         // CRUD Kategori Berita
         Route::resource('categories', CategoryController::class);
