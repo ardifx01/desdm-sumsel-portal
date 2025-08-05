@@ -14,7 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"> 
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 <body class="antialiased">
@@ -37,12 +37,12 @@
         {{-- Widget Mengambang (Floating Widget) --}}
     <div class="floating-widget xl:visible">
         <ul class="floating-list">
-<li class="floating-item group">
-    <button title="Beri Penilaian" class="floating-button">
-        <i class="floating-icon" style="mask-image:url(/icons/smile.svg); background-color:white;"></i>
-        <p class="floating-text group-hover:block">Beri Penilaian</p>
-    </button>
-</li>
+            <li class="floating-item group">
+                <button title="Beri Penilaian" class="floating-button">
+                    <i class="floating-icon" style="mask-image:url(/icons/smile.svg); background-color:white;"></i>
+                    <p class="floating-text group-hover:block">Beri Penilaian</p>
+                </button>
+            </li>
             <li class="floating-item group">
                 <button title="Aduan Warga" class="floating-button">
                     <i class="floating-icon" style="mask-image:url(/icons/announcement.svg); background-color:white;"></i>

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pejabat; // Import model Pejabat
+use App\Models\Pejabat;
+use App\Models\Bidang;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class TentangKamiController extends Controller
 {
@@ -19,12 +21,36 @@ class TentangKamiController extends Controller
         return view('tentang-kami.visi-misi');
     }
 
-    public function strukturOrganisasi()
+/*     public function strukturOrganisasi()
     {
         // Halaman Struktur Organisasi
         return view('tentang-kami.struktur-organisasi');
-    }
+    } */
 
+    public function strukturOrganisasi()
+    {
+        $kepalaDinas = Pejabat::where('jabatan', 'Kepala Dinas')->first();
+
+        $allUnits = Bidang::with(['kepala', 'seksis.kepala'])
+                          ->where('is_active', true)
+                          ->orderBy('id')
+                          ->get();
+
+        // Pisahkan menjadi grup berdasarkan tipe, lakukan perbandingan case-insensitive
+        $bidangs = $allUnits->filter(function ($unit) {
+            return Str::lower($unit->tipe) === 'bidang';
+        })->take(5);
+
+        $uptds = $allUnits->filter(function ($unit) {
+            return Str::lower($unit->tipe) === 'uptd';
+        });
+
+        $cabangDinas = $allUnits->filter(function ($unit) {
+            return Str::lower($unit->tipe) === 'cabang_dinas';
+        });
+
+        return view('tentang-kami.struktur-organisasi', compact('kepalaDinas', 'bidangs', 'uptds', 'cabangDinas'));
+    }
     public function tugasFungsi()
     {
         // Halaman Tugas & Fungsi
@@ -48,4 +74,7 @@ class TentangKamiController extends Controller
         $pejabat = Pejabat::where('is_active', true)->findOrFail($id); // Temukan pejabat berdasarkan ID, atau tampilkan 404 jika tidak ditemukan
         return view('tentang-kami.profil-pimpinan.show', compact('pejabat'));
     }
+
+
+
 }
