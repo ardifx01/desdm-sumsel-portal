@@ -4,8 +4,14 @@
         <a href="{{ url('/') }}" class="header-menu-link logo-link text-decoration-none d-flex align-items-center">
             <div class="d-flex align-items-center logo-container">
                 {{-- Logo Dinas --}}
-                <img src="{{ asset('storage/images/logo-desdm.png') }}" alt="Logo DESDM Sumsel" style="height: 50px; margin-right: 15px;">
-                
+
+                <a class="navbar-brand me-3" href="{{ url('/') }}">
+                    @if(isset($settings['app_logo']))
+                        <img src="{{ asset('storage/' . $settings['app_logo']) }}" alt="Logo {{ $settings['app_name'] }}" style="max-height: 50px;">
+                    @else
+                        <img src="{{ asset('images/logo.png') }}" alt="Logo Default" style="max-height: 50px;">
+                    @endif
+                </a>                
                 {{-- Teks Logo untuk Desktop (dua baris) --}}
                 <div class="logo-text-group d-none d-lg-block">
                     <div class="logo-main-title">PEMERINTAH PROVINSI SUMATERA SELATAN</div>

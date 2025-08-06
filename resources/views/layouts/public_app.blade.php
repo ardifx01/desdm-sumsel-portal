@@ -5,7 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'DESDM Sumsel') }} - @yield('title', 'Portal Resmi')</title>
+    <title>{{ $settings['app_name'] ?? 'DESDM SUMSEL' }}</title>
+
+    {{-- Favicon --}}
+    @if(isset($settings['app_favicon']))
+        <link rel="icon" type="image/png" href="{{ asset('storage/' . $settings['app_favicon']) }}">
+    @else
+        <link rel="icon" type="image/png" href="{{ asset('images/favicon.ico') }}"> {{-- Default fallback --}}
+    @endif
+
+
 
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />

@@ -22,17 +22,16 @@
                         <div class="col-md-6 mb-4">
                             <h5><i class="bi bi-geo-alt-fill me-2 text-primary"></i>Alamat Kantor:</h5>
                             <p class="mb-0">Dinas Energi dan Sumber Daya Mineral Provinsi Sumatera Selatan</p>
-                            <p class="mb-0">Jl. Kapten A. Rivai No.19, 26 Ilir, Kec. Ilir Bar. I,</p>
-                            <p class="mb-0">Kota Palembang, Sumatera Selatan 30121</p>
+                            <p class="mb-0">{{ $settings['alamat_kantor'] ?? 'Alamat belum diatur' }}</p>
                             {{-- Ganti dengan alamat resmi Dinas ESDM Sumsel --}}
 
                             <h5 class="mt-4"><i class="bi bi-telephone-fill me-2 text-primary"></i>Telepon & Faksimile:</h5>
-                            <p class="mb-0"><a href="tel:+62711xxxxxx" class="text-decoration-none">+62 711 XXXXXX (Telepon)</a></p>
-                            <p class="mb-0"><a href="fax:+62711xxxxxx" class="text-decoration-none">+62 711 XXXXXX (Faksimile)</a></p>
+                            <p class="mb-0"><a href="tel:+62711379040" class="text-decoration-none">{{ $settings['telp_kontak'] ?? 'Telp belum diatur' }} (Telepon)</a></p>
+                            {{-- <p class="mb-0"><a href="fax:+62711xxxxxx" class="text-decoration-none">+62 711 XXXXXX (Faksimile)</a></p> --}}
                             {{-- Ganti dengan nomor telepon/fax resmi Dinas ESDM Sumsel --}}
 
                             <h5 class="mt-4"><i class="bi bi-envelope-fill me-2 text-primary"></i>Email Resmi:</h5>
-                            <p class="mb-0"><a href="mailto:desdm.sumselprov@gmail.com" class="text-decoration-none">desdm.sumselprov@gmail.com</a></p>
+                            <p class="mb-0"><a href="mailto:desdm.sumselprov@gmail.com" class="text-decoration-none">{{ $settings['email_kontak'] ?? 'Email belum diatur' }}</a></p>
                             {{-- Ganti dengan email resmi Dinas ESDM Sumsel --}}
 
                             <h5 class="mt-4"><i class="bi bi-clock-fill me-2 text-primary"></i>Jam Operasional Kantor:</h5>

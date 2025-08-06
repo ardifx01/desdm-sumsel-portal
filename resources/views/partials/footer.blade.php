@@ -62,28 +62,30 @@
 <footer class="bg-dark text-white py-5 mt-auto">
     <div class="container">
         <div class="row">
-            <div class="col-md-4 mb-4">
-                <h5>DESDM SUMSEL</h5>
-                <p>Dinas Energi dan Sumber Daya Mineral</br>
-                    Provinsi Sumatera Selatan</p>
-                <table class="text-muted">
-                    <tr>
-                        <td>Alamat </td>
-                        <td> : </td>
-                        <td> Jalan Angkatan 45 No. 2440, Palembang</td>
-                    </tr>
-                    <tr>
-                        <td>Telp. </td>
-                        <td> : </td>
-                        <td> 0711-379040</td>
-                    </tr>
-                    <tr>
-                        <td>E-Mail </td>
-                        <td> : </td>
-                        <td> desdm.sumselprov@gmail.com</td>
-                    </tr>
-                </table>
-            </div>
+<div class="col-md-4 mb-4">
+    <h5>DESDM SUMSEL</h5>
+    <p>Dinas Energi dan Sumber Daya Mineral</br>
+        Provinsi Sumatera Selatan</p>
+    <table class="text-muted w-100">
+        <tbody>
+            <tr>
+                <td class="fw-bold w-20 align-top">Alamat</td>
+                <td class="pe-2 align-top"> : </td>
+                <td>{{ $settings['alamat_kantor'] ?? 'Alamat belum diatur' }}</td>
+            </tr>
+            <tr>
+                <td class="fw-bold w-20">Telp.</td>
+                <td class="pe-2"> : </td>
+                <td>{{ $settings['telp_kontak'] ?? 'Telp belum diatur' }}</td>
+            </tr>
+            <tr>
+                <td class="fw-bold w-20">E-Mail</td>
+                <td class="pe-2"> : </td>
+                <td>{{ $settings['email_kontak'] ?? 'Email belum diatur' }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
             <div class="col-md-4 mb-4">
                 <h5>Tautan Cepat</h5>
                 <ul class="list-unstyled">
@@ -105,10 +107,10 @@
                 </ul>
                 <h5 class="mt-4">Ikuti Kami</h5>
                 <div class="social-icons">
-                    <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
-                    <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
-                    <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+                    <a href="{{ $settings['facebook_url'] ?? 'Url Facebook belum diatur' }}" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                    <a href="{{ $settings['twitter_url'] ?? 'Url Twitter belum diatur' }}" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="{{ $settings['instagram_url'] ?? 'Url Instagram belum diatur' }}" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="{{ $settings['youtube_url'] ?? 'Url Youtube belum diatur' }}" target="_blank"><i class="fab fa-youtube"></i></a>
                 </div>
             </div>
         </div>

@@ -23,20 +23,19 @@
                         <li class="list-group-item">
                             <h5><i class="bi bi-geo-alt-fill me-2 text-primary"></i>Alamat Kantor:</h5>
                             <p class="mb-0">Dinas Energi dan Sumber Daya Mineral Provinsi Sumatera Selatan</p>
-                            <p class="mb-0">Jl. Angkatan 45 No.2440, Demang Lebar Daun, Kec. Ilir Barat I,</p>
-                            <p class="mb-0">Kota Palembang, Sumatera Selatan 30137</p>
+                            <p class="mb-0">>{{ $settings['alamat_kantor'] ?? 'Alamat belum diatur' }}</p>
                             {{-- Ganti dengan alamat resmi PPID DESDM Sumsel --}}
                         </li>
                         <li class="list-group-item">
                             <h5><i class="bi bi-telephone-fill me-2 text-primary"></i>Telepon:</h5>
-                            <p class="mb-0"><a href="tel:+62711379040" class="text-decoration-none">+62 711 379040</a></p>
-                            <h5><i class="bi bi-printer-fill me-2 text-primary"></i>Faksimile:</h5>
-                            <p class="mb-0"><a href="fax:+62711xxxxxx" class="text-decoration-none">+62 711 XXXXXX</a></p>
+                            <p class="mb-0"><a href="tel:+62711379040" class="text-decoration-none">{{ $settings['telp_kontak'] ?? 'Telp belum diatur' }}</a></p>
+                            {{-- <h5><i class="bi bi-printer-fill me-2 text-primary"></i>Faksimile:</h5>
+                            <p class="mb-0"><a href="fax:+62711xxxxxx" class="text-decoration-none">+62 711 XXXXXX</a></p> --}}
                             {{-- Ganti dengan nomor telepon/fax resmi PPID DESDM Sumsel --}}
                         </li>
                         <li class="list-group-item">
                             <h5><i class="bi bi-envelope-fill me-2 text-primary"></i>Email:</h5>
-                            <p class="mb-0"><a href="mailto:desdm.sumselprov@gmail.com" class="text-decoration-none">desdm.sumselprov@gmail.com</a></p>
+                            <p class="mb-0"><a href="mailto:desdm.sumselprov@gmail.com" class="text-decoration-none">{{ $settings['email_kontak'] ?? 'Email belum diatur' }}</a></p>
                             {{-- Ganti dengan email resmi PPID DESDM Sumsel --}}
                         </li>
                         <li class="list-group-item">

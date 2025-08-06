@@ -3,6 +3,12 @@
 @section('content')
 <div class="container py-5">
     <div class="text-center mb-5">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url('/') }}">Beranda</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Struktur Organisasi</li>
+            </ol>
+        </nav>
         <h1>Struktur Organisasi</h1>
         <h3>Dinas Energi dan Sumber Daya Mineral Provinsi Sumatera Selatan</h3>
         <h6 class="text-center mb-4"><i>Sesuai Peraturan Gubernur Sumatera Selatan Nomor 79 Tahun 2016 </br>

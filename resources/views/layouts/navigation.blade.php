@@ -11,7 +11,9 @@
                     </a>
                 </div>
 
-
+                            <x-nav-link :href="route('admin.settings.edit')" :active="request()->routeIs('admin.settings.edit')">
+                                {{ __('Pengaturan Umum Web') }}
+                            </x-nav-link>
                 {{-- Dropdown Utama: Media Center --}}
                 <div class="hidden sm:flex sm:items-center sm:ml-6">
                     <x-dropdown align="right" width="48">
@@ -55,6 +57,8 @@
                             <x-dropdown-link :href="route('admin.videos.index')">
                                 {{ __('Video') }}
                             </x-dropdown-link>
+
+
                         </x-slot>
                     </x-dropdown>
                 </div>

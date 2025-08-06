@@ -32,12 +32,12 @@ use App\Http\Controllers\Admin\PengajuanKeberatanController; // <-- TAMBAHKAN BA
 use App\Http\Controllers\Admin\StaticPageController;
 use App\Http\Controllers\Admin\BidangController;
 use App\Http\Controllers\Admin\SeksiController;
+use App\Http\Controllers\Admin\SettingController;
 
 use App\Http\Controllers\WelcomeController;
 // Controllers bawaan Laravel/Breeze
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -261,7 +261,9 @@ Route::middleware('auth')->group(function () {
                 'destroy' => 'bidang.seksi.destroy',
                 'show' => 'bidang.seksi.show_preview',
             ]);
-
+// Rute untuk Pengaturan Umum Web
+        Route::get('settings', [SettingController::class, 'edit'])->name('settings.edit');
+        Route::post('settings', [SettingController::class, 'update'])->name('settings.update');
     });
 });
 

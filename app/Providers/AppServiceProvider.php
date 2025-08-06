@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\Setting;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\URL; // Sudah ada di kode Anda
-use Illuminate\Support\Carbon;      // Sudah ada di kode Anda
-use Illuminate\Support\Facades\Schema; // Pastikan ini juga ada
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -37,6 +39,15 @@ class AppServiceProvider extends ServiceProvider
         date_default_timezone_set('Asia/Jakarta'); // <-- PENTING: Paksa timezone PHP runtime
         // --- Akhir Memaksa Timezone ---
 
-        // Pastikan TIDAK ADA KODE UNTUK SETTING ATAU VIEW::SHARE DI SINI
+        // --- KODE UNTUK MEMBAGI PENGATURAN UMUM WEB ---
+        try {
+            $settings = Setting::pluck('value', 'key');
+            View::share('settings', $settings);
+        } catch (\Exception $e) {
+            // Ini akan mencegah error saat menjalankan migration
+            // karena tabel 'settings' mungkin belum ada
+            View::share('settings', collect());
+        }
+        // --- Akhir Kode Pengaturan ---
     }
 }
