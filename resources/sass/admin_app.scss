@@ -59,3 +59,29 @@ body {
     background-color: #e2e8f0; /* Tailwind-like gray-200 */
     color: #4a5568; /* Tailwind-like gray-700 */
 }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem; // Padding atas/bawah 0.25, kiri/kanan 0.5
+  border-radius: 9999px; // Membuat sudut sangat bulat
+  font-size: 0.75rem; // Ukuran font kecil
+  font-weight: 500; // Ketebalan font medium
+  line-height: 1;
+}
+
+// Warna untuk badge
+.badge-success {
+  background-color: #d1fae5; // green-100
+  color: #065f46; // green-800
+}
+
+.badge-warning {
+  background-color: #fef3c7; // yellow-100
+  color: #78350f; // yellow-800
+}
+
+.badge-danger {
+  background-color: #fee2e2; // red-100
+  color: #991b1b; // red-800
+}

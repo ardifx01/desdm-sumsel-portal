@@ -8,6 +8,7 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use App\Support\ModulePathGenerator;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 class Post extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
@@ -35,7 +36,10 @@ class Post extends Model implements HasMedia
     {
         return $this->belongsTo(User::class, 'author_id');
     }
-
+    public function comments(): HasMany
+        {
+            return $this->hasMany(Comment::class);
+        }
     public function scopePublished($query)
     {
         return $query->where('status', 'published');

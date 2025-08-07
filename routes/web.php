@@ -15,7 +15,7 @@ use App\Http\Controllers\LayananController;
 use App\Http\Controllers\KontakUmumController;
 use App\Http\Controllers\HalamanStatisController;
 use App\Http\Controllers\SearchController;
-
+use App\Http\Controllers\CommentController;
 // Controllers Admin (untuk backend)
 use App\Http\Controllers\Admin\CategoryController; // CRUD Kategori Berita
 use App\Http\Controllers\Admin\PostController; // CRUD Berita
@@ -33,7 +33,7 @@ use App\Http\Controllers\Admin\StaticPageController;
 use App\Http\Controllers\Admin\BidangController;
 use App\Http\Controllers\Admin\SeksiController;
 use App\Http\Controllers\Admin\SettingController;
-
+use App\Http\Controllers\Admin\CommentsController;
 use App\Http\Controllers\WelcomeController;
 // Controllers bawaan Laravel/Breeze
 use App\Http\Controllers\ProfileController;
@@ -98,7 +98,9 @@ Route::prefix('berita')->name('berita.')->group(function () {
     Route::get('/', [BeritaController::class, 'index'])->name('index');
     Route::get('/{slug}', [BeritaController::class, 'show'])->name('show');
 });
-
+// Rute untuk Komentar
+Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+Route::get('/comments/{comment}/verify', [CommentController::class, 'verifyEmail'])->name('comments.verify-email');
 // Modul Galeri (Sisi Publik)
 Route::prefix('galeri')->name('galeri.')->group(function () {
     Route::get('/', [GaleriController::class, 'index'])->name('index');
@@ -261,10 +263,20 @@ Route::middleware('auth')->group(function () {
                 'destroy' => 'bidang.seksi.destroy',
                 'show' => 'bidang.seksi.show_preview',
             ]);
-// Rute untuk Pengaturan Umum Web
+
+        // ... di dalam grup rute admin
+        Route::get('comments', [CommentsController::class, 'index'])->name('comments.index');
+        Route::patch('comments/{comment}/approve', [CommentsController::class, 'approve'])->name('comments.approve');
+        Route::patch('comments/{comment}/reject', [CommentsController::class, 'reject'])->name('comments.reject');
+        Route::delete('comments/{comment}', [CommentsController::class, 'destroy'])->name('comments.destroy');
+        Route::get('comments/{comment}', [CommentsController::class, 'show'])->name('comments.show');
+        Route::post('comments/reply', [CommentsController::class, 'reply'])->name('comments.reply');
+
+        // Rute untuk Pengaturan Umum Web
         Route::get('settings', [SettingController::class, 'edit'])->name('settings.edit');
         Route::post('settings', [SettingController::class, 'update'])->name('settings.update');
     });
 });
+
 
 require __DIR__.'/auth.php'; // Memasukkan rute autentikasi dari auth.php

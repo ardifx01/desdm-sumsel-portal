@@ -41,8 +41,23 @@ class BeritaController extends Controller
     }
 
     public function show($slug)
-    {
-        $post = Post::with(['category', 'author'])->published()->where('slug', $slug)->firstOrFail();
-        return view('berita.show', compact('post'));
-    }
+        {
+            // Ambil post beserta relasi kategori dan author
+            $post = Post::with(['author', 'category'])->where('slug', $slug)->firstOrFail();
+
+            // Ambil HANYA komentar utama yang sudah disetujui
+            // Gunakan with('replies.user') untuk mengambil balasan secara rekursif
+            $approvedComments = $post->comments()
+                ->where('status', 'approved')
+                ->where(function ($query) {
+                    $query->whereNotNull('email_verified_at')
+                        ->orWhereNotNull('user_id');
+                })
+                ->whereNull('parent_id') // Hanya ambil komentar utama
+                ->with('replies.user') // Eager load balasan
+                ->latest()
+                ->get();
+
+            return view('berita.show', compact('post', 'approvedComments'));
+        }
 }

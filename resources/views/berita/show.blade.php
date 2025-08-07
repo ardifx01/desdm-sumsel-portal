@@ -11,61 +11,154 @@
             <li class="breadcrumb-item active" aria-current="page">{{ Str::limit($post->title, 50) }}</li>
         </ol>
     </nav>
-
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body">
             <h2 class="card-title mb-3">{{ $post->title }}</h2>
+            {{-- Tombol Berbagi Media Sosial --}}
+            <div class="d-flex align-items-center mb-4">
+                <span class="me-3 fw-bold">Bagikan:</span>
+                <a href="https://www.facebook.com/sharer/sharer.php?u={{ url()->current() }}"
+                   target="_blank" rel="noopener noreferrer" class="btn btn-primary me-2 rounded-circle" style="width: 40px; height: 40px; line-height: 25px;">
+                    <i class="bi bi-facebook"></i>
+                </a>
+                <a href="https://twitter.com/intent/tweet?text={{ urlencode($post->title) }}&url={{ url()->current() }}"
+                   target="_blank" rel="noopener noreferrer" class="btn btn-info me-2 rounded-circle" style="width: 40px; height: 40px; line-height: 25px;">
+                    <i class="bi bi-twitter"></i>
+                </a>
+                <a href="https://api.whatsapp.com/send?text={{ urlencode($post->title) }} - {{ url()->current() }}"
+                   target="_blank" rel="noopener noreferrer" class="btn btn-success me-2 rounded-circle" style="width: 40px; height: 40px; line-height: 25px;">
+                    <i class="bi bi-whatsapp"></i>
+                </a>
+            </div>
             <p class="card-text text-muted small">
-                {{-- LOKASI UNTUK BADGE KATEGORI --}}
-                <span class="badge {{ 'badge-category-' . Str::slug($post->category->name) }}">
-                    {{ $post->category->name }}
-                </span>
-                <!-- <span class="badge bg-primary me-2">{{ $post->category->name ?? 'Tanpa Kategori' }}</span> -->
                 <i class="bi bi-calendar"></i> Dipublikasi: {{ $post->created_at ? $post->created_at->translatedFormat('d F Y H:i') : '-' }} |
                 <i class="bi bi-person"></i> Oleh: {{ $post->author->name ?? 'Admin' }}
             </p>
             <hr>
 
-                @if ($post->hasMedia('featured_image'))
+            @if ($post->hasMedia('featured_image'))
+                <div class="text-center mb-4">
+                    <picture>
+                        <source
+                            srcset="{{ $post->getFirstMedia('featured_image')->getSrcset('webp-responsive') }}"
+                            type="image/webp"
+                        >
+                        <img
+                            src="{{ $post->getFirstMediaUrl('featured_image', 'thumb') }}"
+                            class="img-fluid rounded"
+                            alt="{{ $post->title }}"
+                            loading="lazy"
+                            style="width: auto; object-fit: contain;"
+                        >
+                    </picture>
+                </div>
+            @else
+                @if($post->featured_image_url)
                     <div class="text-center mb-4">
-                        <picture>
-                            <source
-                                srcset="{{ $post->getFirstMedia('featured_image')->getSrcset('webp-responsive') }}"
-                                type="image/webp"
-                            >
-                            <img
-                                src="{{ $post->getFirstMediaUrl('featured_image', 'thumb') }}"
-                                class="img-fluid rounded"
-                                alt="{{ $post->title }}"
-                                loading="lazy"
-                                style="width: auto; object-fit: contain;"
-                            >
-                        </picture>
+                        <img src="{{ asset('storage/' . $post->featured_image_url) }}" 
+                            class="img-fluid rounded" 
+                            alt="{{ $post->title }}" 
+                            loading="lazy" 
+                            style="width: auto; object-fit: contain;">
                     </div>
-                @else
-                    @if($post->featured_image_url)
-                        <div class="text-center mb-4">
-                            <img src="{{ asset('storage/' . $post->featured_image_url) }}" 
-                                class="img-fluid rounded" 
-                                alt="{{ $post->title }}" 
-                                loading="lazy" 
-                                style="width: auto; object-fit: contain;">
-                        </div>
-                    @endif
                 @endif
+            @endif
 
             <div class="post-content mb-4">
-                {!! $post->content_html !!} {{-- Konten sudah HTML, gunakan {!! !!} --}}
+                {!! $post->content_html !!}
             </div>
 
             @if($post->meta_description)
                 <p class="text-muted small mt-4">Meta Deskripsi: {{ $post->meta_description }}</p>
             @endif
-        </div>
-    </div>
 
-    <div class="text-center">
-        <a href="{{ route('berita.index') }}" class="btn btn-secondary me-2">Kembali ke Daftar Berita</a>
+            {{-- Bagian Komentar --}}
+            <div class="mt-5">
+                <h3>Komentar ({{ $approvedComments->count() }})</h3>
+                <hr>
+                
+                {{-- Pesan dari Controller --}}
+                @if(session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+                @if(session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+                
+                {{-- Formulir Komentar Universal --}}
+                <div class="card p-4 mb-4" id="comment-form-container">
+                    <h5 class="mb-3" id="form-title">Tambahkan Komentar</h5>
+                    <form action="{{ route('comments.store') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="post_id" value="{{ $post->id }}">
+                        <input type="hidden" name="parent_id" id="parent-id">
+                        
+                        {{-- Honeypot field: sembunyikan dari manusia --}}
+                        <div style="display:none;">
+                            <label for="website">Website</label>
+                            <input type="text" name="website" id="website" tabindex="-1" autocomplete="off">
+                        </div>
+
+                        {{-- Input Nama dan Email (untuk pengguna non-login) --}}
+                        @if(!auth()->check())
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nama Anda <span class="text-danger">*</span></label>
+                            <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" required>
+                            @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                            <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" required>
+                            @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+                        @endif
+
+                        <div class="mb-3">
+                            <textarea name="content" class="form-control @error('content') is-invalid @enderror" rows="3" placeholder="Tulis komentar Anda di sini..." required>{{ old('content') }}</textarea>
+                            @error('content') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+                        <button type="submit" class="btn btn-primary">Kirim Komentar</button>
+                    </form>
+                </div>
+
+                {{-- Daftar Komentar --}}
+                @forelse ($approvedComments as $comment)
+                    @include('berita.partials.comment', ['comment' => $comment, 'depth' => 0])
+                @empty
+                    <p>Belum ada komentar. Jadilah yang pertama!</p>
+                @endforelse
+            </div>
+        </div>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.reply-form').forEach(form => {
+            form.style.display = 'none';
+        });
+
+        document.querySelectorAll('.reply-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const commentId = this.getAttribute('data-comment-id');
+                const form = document.getElementById('reply-form-' + commentId);
+                
+                if (form.style.display === 'none') {
+                    form.style.display = 'block';
+                } else {
+                    form.style.display = 'none';
+                }
+            });
+        });
+    });
+</script>
+@endpush
