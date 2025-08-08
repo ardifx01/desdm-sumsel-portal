@@ -15,25 +15,29 @@
         <div class="card-body">
             <h2 class="card-title mb-3">{{ $post->title }}</h2>
             {{-- Tombol Berbagi Media Sosial --}}
-            <div class="d-flex align-items-center mb-4">
-                <span class="me-3 fw-bold">Bagikan:</span>
-                <a href="https://www.facebook.com/sharer/sharer.php?u={{ url()->current() }}"
-                   target="_blank" rel="noopener noreferrer" class="btn btn-primary me-2 rounded-circle" style="width: 40px; height: 40px; line-height: 25px;">
-                    <i class="bi bi-facebook"></i>
-                </a>
-                <a href="https://twitter.com/intent/tweet?text={{ urlencode($post->title) }}&url={{ url()->current() }}"
-                   target="_blank" rel="noopener noreferrer" class="btn btn-info me-2 rounded-circle" style="width: 40px; height: 40px; line-height: 25px;">
-                    <i class="bi bi-twitter"></i>
-                </a>
-                <a href="https://api.whatsapp.com/send?text={{ urlencode($post->title) }} - {{ url()->current() }}"
-                   target="_blank" rel="noopener noreferrer" class="btn btn-success me-2 rounded-circle" style="width: 40px; height: 40px; line-height: 25px;">
-                    <i class="bi bi-whatsapp"></i>
-                </a>
+
+            <div class="row align-items-center mb-4">
+                <div class="col-md-6 text-muted small">
+                    <i class="bi bi-calendar"></i> Dipublikasi: {{ $post->created_at ? $post->created_at->translatedFormat('d F Y H:i') : '-' }} |
+                    <i class="bi bi-person"></i> Oleh: {{ $post->author->name ?? 'Admin' }}
+                </div>
+
+                <div class="col-md-6 text-end d-flex align-items-center justify-content-end">
+                    <span class="me-2 fw-bold">Bagikan:</span>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ url()->current() }}"
+                    target="_blank" rel="noopener noreferrer" class="btn btn-primary me-2 rounded-circle" style="width: 40px; height: 40px; line-height: 25px;">
+                        <i class="bi bi-facebook"></i>
+                    </a>
+                    <a href="https://twitter.com/intent/tweet?text={{ urlencode($post->title) }}&url={{ url()->current() }}"
+                    target="_blank" rel="noopener noreferrer" class="btn btn-info me-2 rounded-circle" style="width: 40px; height: 40px; line-height: 25px;">
+                        <i class="bi bi-twitter"></i>
+                    </a>
+                    <a href="https://api.whatsapp.com/send?text={{ urlencode($post->title) }} - {{ url()->current() }}"
+                    target="_blank" rel="noopener noreferrer" class="btn btn-success me-2 rounded-circle" style="width: 40px; height: 40px; line-height: 25px;">
+                        <i class="bi bi-whatsapp"></i>
+                    </a>
+                </div>
             </div>
-            <p class="card-text text-muted small">
-                <i class="bi bi-calendar"></i> Dipublikasi: {{ $post->created_at ? $post->created_at->translatedFormat('d F Y H:i') : '-' }} |
-                <i class="bi bi-person"></i> Oleh: {{ $post->author->name ?? 'Admin' }}
-            </p>
             <hr>
 
             @if ($post->hasMedia('featured_image'))
