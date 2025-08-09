@@ -37,7 +37,18 @@
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card h-100 shadow-sm border-0">
                 <div class="card-body">
-                    <span class="badge bg-secondary mb-2">{{ $doc->category->nama }}</span>
+                    @if($doc->category)
+                        @php
+                            $colors = ['primary', 'secondary', 'success', 'danger', 'warning', 'info'];
+                            $colorIndex = ($doc->category->id ?? 0) % count($colors);
+                            $badgeClass = 'badge-' . $colors[$colorIndex];
+                        @endphp
+                        <span class="badge {{ $badgeClass }} mb-2">
+                            {{ $doc->category->nama }}
+                        </span>
+                    @else
+                        <span class="badge badge-secondary mb-2">Tanpa Kategori</span>
+                    @endif
                     <h5 class="card-title">{{ Str::limit($doc->judul, 60) }}</h5>
                     <p class="card-text text-muted small">
                         <i class="bi bi-calendar"></i> {{ $doc->tanggal_publikasi ? $doc->tanggal_publikasi->translatedFormat('d M Y') : '-' }} |

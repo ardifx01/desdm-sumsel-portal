@@ -17,7 +17,18 @@
         <div class="card-body">
             <h2 class="card-title mb-3">{{ $informasi->judul }}</h2>
             <p class="card-text text-muted small">
-                <span class="badge bg-info me-2">{{ $informasi->category->nama }}</span>
+                @if($informasi->category)
+                    @php
+                        $colors = ['primary', 'secondary', 'success', 'danger', 'warning', 'info'];
+                        $colorIndex = ($informasi->category->id ?? 0) % count($colors);
+                        $badgeClass = 'badge-' . $colors[$colorIndex];
+                    @endphp
+                    <span class="badge {{ $badgeClass }} me-2">
+                        {{ $informasi->category->nama }}
+                    </span>
+                @else
+                    <span class="badge badge-secondary me-2">Tanpa Kategori</span>
+                @endif
                 <i class="bi bi-calendar"></i> Dipublikasi: {{ $informasi->tanggal_publikasi ? $informasi->tanggal_publikasi->translatedFormat('d F Y H:i') : '-' }} |
                 <i class="bi bi-eye"></i> Dilihat: {{ $informasi->hits }}
             </p>

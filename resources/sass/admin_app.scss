@@ -70,10 +70,25 @@ body {
   line-height: 1;
 }
 
-// Warna untuk badge
+// Tambahkan warna-warna dasar yang bisa digunakan
+.badge-primary {
+  background-color: #dbeafe; // blue-100
+  color: #1e40af; // blue-800
+}
+
+.badge-secondary {
+  background-color: #e5e7eb; // gray-100
+  color: #374151; // gray-800
+}
+
 .badge-success {
   background-color: #d1fae5; // green-100
   color: #065f46; // green-800
+}
+
+.badge-danger {
+  background-color: #fee2e2; // red-100
+  color: #991b1b; // red-800
 }
 
 .badge-warning {
@@ -81,7 +96,7 @@ body {
   color: #78350f; // yellow-800
 }
 
-.badge-danger {
-  background-color: #fee2e2; // red-100
-  color: #991b1b; // red-800
+.badge-info {
+  background-color: #cffafe; // cyan-100
+  color: #0e7490; // cyan-800
 }

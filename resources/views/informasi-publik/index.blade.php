@@ -42,7 +42,20 @@
                     <img src="https://placehold.co/400x180?text=No+Thumbnail" class="card-img-top" alt="No Thumbnail" style="height: 180px; object-fit: cover;">
                 @endif
                 <div class="card-body">
-                    <span class="badge bg-info mb-2">{{ $info->category->nama }}</span>
+
+                    @if($info->category)
+                        @php
+                            $colors = ['primary', 'secondary', 'success', 'danger', 'warning', 'info'];
+                            $colorIndex = ($info->category->id ?? 0) % count($colors);
+                            $badgeClass = 'badge-' . $colors[$colorIndex];
+                        @endphp
+                        <span class="badge {{ $badgeClass }}">
+                            {{ $info->category->nama }}
+                        </span>
+                    @else
+                        <span class="badge badge-secondary">Tanpa Kategori</span>
+                    @endif
+
                     <h5 class="card-title">{{ Str::limit($info->judul, 60) }}</h5>
                     <p class="card-text text-muted small">
                         <i class="bi bi-calendar"></i> {{ $info->tanggal_publikasi ? $info->tanggal_publikasi->translatedFormat('d M Y') : '-' }} |

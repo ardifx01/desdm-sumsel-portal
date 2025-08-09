@@ -65,8 +65,19 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                         {{ Str::limit($doc->judul, 50) }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ $doc->category->nama ?? '-' }}
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        @if($doc->category)
+                                            @php
+                                                $colors = ['primary', 'secondary', 'success', 'danger', 'warning', 'info'];
+                                                $colorIndex = ($doc->category->id ?? 0) % count($colors);
+                                                $badgeClass = 'badge-' . $colors[$colorIndex];
+                                            @endphp
+                                            <span class="badge {{ $badgeClass }}">
+                                                {{ $doc->category->nama }}
+                                            </span>
+                                        @else
+                                            <span class="badge badge-secondary">Tanpa Kategori</span>
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{ $doc->tanggal_publikasi ? $doc->tanggal_publikasi->format('d M Y') : '-' }}

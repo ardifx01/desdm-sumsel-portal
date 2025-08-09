@@ -81,7 +81,7 @@
                         {{-- Dropdown untuk Layanan & Pengaduan --}}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle header-menu-link" href="#" id="navbarDropdownLayanan" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Layanan & Pengaduan
+                                Layanan
                             </a>
                             <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="navbarDropdownLayanan">
                                 <li><a class="dropdown-item dropdown-item-custom" href="{{ route('layanan-pengaduan.index') }}">Layanan Overview</a></li>

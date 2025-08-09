@@ -72,10 +72,21 @@
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        {{ Str::limit($item->judul, 50) }}
+                                        {{ Str::limit($item->judul, 30) }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ $item->category->nama ?? '-' }}
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        @if($item->category)
+                                            @php
+                                                $colors = ['primary', 'secondary', 'success', 'danger', 'warning', 'info'];
+                                                $colorIndex = ($item->category->id ?? 0) % count($colors);
+                                                $badgeClass = 'badge-' . $colors[$colorIndex];
+                                            @endphp
+                                            <span class="badge {{ $badgeClass }}">
+                                                {{ $item->category->nama }} {{-- Perbaikan ada di sini --}}
+                                            </span>
+                                        @else
+                                            <span class="badge badge-secondary">Tanpa Kategori</span>
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         @if($item->file_path)
