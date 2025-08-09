@@ -35,7 +35,7 @@
                             <img
                                 src="{{ $media->getUrl('thumb') }}"
                                 alt="Foto {{ $p->nama }}"
-                                class="img-thumbnail mb-3"
+                                class="img-fluid rounded-circle mx-auto d-block mb-3"
                                 style="width: 150px; height: 150px; object-fit: cover;"
                                 loading="lazy"
                             />
@@ -43,7 +43,7 @@
                             <img
                                 src="https://placehold.co/150x150/E5E7EB/6B7280?text=No+Photo"
                                 alt="No Photo"
-                                class="img-thumbnail rounded mb-3"
+                                class="img-fluid rounded-circle mx-auto d-block mb-3"
                                 style="width: 150px; height: 150px; object-fit: cover;"
                             />
                         @endif
