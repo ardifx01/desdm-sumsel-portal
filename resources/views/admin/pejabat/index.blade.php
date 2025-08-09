@@ -44,8 +44,19 @@
                                 @forelse ($pejabat as $item)
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        @if ($item->hasMedia('foto_pejabat'))
-                                            <img src="{{ $item->getFirstMediaUrl('foto_pejabat', 'thumb') }}" 
+                                        @php
+                                            $media = $item->getFirstMedia('foto_pejabat');
+                                            $imageExists = false;
+                                            if ($media) {
+                                                $mediaPath = $media->getPath();
+                                                if (file_exists($mediaPath)) {
+                                                    $imageExists = true;
+                                                }
+                                            }
+                                        @endphp
+
+                                        @if($imageExists)
+                                            <img src="{{ $media->getUrl('thumb') }}" 
                                                 alt="{{ $item->nama }}" 
                                                 class="w-16 h-16 object-cover rounded-full">
                                         @else

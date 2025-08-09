@@ -16,54 +16,72 @@
     <div class="mb-4">
         <div class="card-body">
             {{-- Bagian Struktur Pejabat (Jika ada kepala bidang/UPTD/cabang dinas) --}}
-@if($bidang->kepala || $bidang->seksis->isNotEmpty()) {{-- Tampilkan jika ada kepala bidang atau seksi --}}
-<h3>Struktur Pejabat</h3>
-<div class="row justify-content-center">
-    {{-- Pejabat Kepala Bidang/UPTD/Cabang Dinas --}}
-    @if($bidang->kepala)
-    <div class="col-sm-6 col-md-4 col-lg-3 mb-4 pejabat-card">
-        <div class="card h-100 shadow-sm border-0">
-            {{-- Mengambil foto dari Spatie Media Library --}}
-            @if ($bidang->kepala->hasMedia('foto_pejabat'))
-            <picture>
-                <source srcset="{{ $bidang->kepala->getFirstMedia('foto_pejabat')->getSrcset('webp-responsive') }}" type="image/webp">
-                <img src="{{ $bidang->kepala->getFirstMediaUrl('foto_pejabat', 'thumb') }}" alt="Foto {{ $bidang->kepala->nama }}" class="card-img-top" style="height: auto; object-fit: cover;" loading="lazy">
-            </picture>
-            @else
-            <img src="https://placehold.co/400x400/E5E7EB/6B7280?text=No+Photo" alt="No Photo" class="card-img-top" style="height: auto; object-fit: cover;" loading="lazy">
-            @endif
-            
-            <div class="card-body text-center">
-                <h5 class="card-title mb-1 text-nowrap text-truncate">{{ $bidang->kepala->nama }}</h5>
-                <p class="card-text text-muted small">{{ $bidang->kepala->jabatan }}</p>
-            </div>
-        </div>
-    </div>
-    @endif
-    
-    {{-- Pejabat Seksi --}}
-    @foreach($bidang->seksis->whereNotNull('pejabat_kepala_id')->sortBy('urutan') as $seksi)
-    <div class="col-sm-6 col-md-4 col-lg-3 mb-4 pejabat-card">
-        <div class="card h-100 shadow-sm border-0">
-            {{-- Mengambil foto dari Spatie Media Library --}}
-            @if ($seksi->kepala->hasMedia('foto_pejabat'))
-            <picture>
-                <source srcset="{{ $seksi->kepala->getFirstMedia('foto_pejabat')->getSrcset('webp-responsive') }}" type="image/webp">
-                <img src="{{ $seksi->kepala->getFirstMediaUrl('foto_pejabat', 'thumb') }}" alt="Foto {{ $seksi->kepala->nama }}" class="card-img-top" style="height: auto; object-fit: cover;" loading="lazy">
-            </picture>
-            @else
-            <img src="https://placehold.co/400x400/E5E7EB/6B7280?text=No+Photo" alt="No Photo" class="card-img-top" style="height: auto; object-fit: cover;" loading="lazy">
-            @endif
+            @if($bidang->kepala || $bidang->seksis->isNotEmpty()) {{-- Tampilkan jika ada kepala bidang atau seksi --}}
+                <h3>Struktur Pejabat</h3>
+                <div class="row justify-content-center">
+                    {{-- Pejabat Kepala Bidang/UPTD/Cabang Dinas --}}
+                    @if($bidang->kepala)
+                        <div class="col-sm-6 col-md-4 col-lg-3 mb-4 pejabat-card">
+                            <div class="card h-100 shadow-sm border-0">
+                                @php
+                                    $mediaKepala = $bidang->kepala->getFirstMedia('foto_pejabat');
+                                    $imageKepalaExists = false;
+                                    if ($mediaKepala) {
+                                        $mediaPath = $mediaKepala->getPath();
+                                        if (file_exists($mediaPath)) {
+                                            $imageKepalaExists = true;
+                                        }
+                                    }
+                                @endphp
+                                @if($imageKepalaExists)
+                                    <picture>
+                                        <source srcset="{{ $mediaKepala->getSrcset('webp-responsive') }}" type="image/webp">
+                                        <img src="{{ $mediaKepala->getUrl('thumb') }}" alt="Foto {{ $bidang->kepala->nama }}" class="card-img-top" style="height: auto; object-fit: cover;" loading="lazy">
+                                    </picture>
+                                @else
+                                    <img src="https://placehold.co/400x400/E5E7EB/6B7280?text=No+Photo" alt="No Photo" class="card-img-top" style="height: auto; object-fit: cover;" loading="lazy">
+                                @endif
+                                
+                                <div class="card-body text-center">
+                                    <h5 class="card-title mb-1 text-nowrap text-truncate">{{ $bidang->kepala->nama }}</h5>
+                                    <p class="card-text text-muted small">{{ $bidang->kepala->jabatan }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                    
+                    {{-- Pejabat Seksi --}}
+                    @foreach($bidang->seksis->whereNotNull('pejabat_kepala_id')->sortBy('urutan') as $seksi)
+                        <div class="col-sm-6 col-md-4 col-lg-3 mb-4 pejabat-card">
+                            <div class="card h-100 shadow-sm border-0">
+                                @php
+                                    $mediaSeksi = $seksi->kepala->getFirstMedia('foto_pejabat');
+                                    $imageSeksiExists = false;
+                                    if ($mediaSeksi) {
+                                        $mediaPath = $mediaSeksi->getPath();
+                                        if (file_exists($mediaPath)) {
+                                            $imageSeksiExists = true;
+                                        }
+                                    }
+                                @endphp
+                                @if($imageSeksiExists)
+                                    <picture>
+                                        <source srcset="{{ $mediaSeksi->getSrcset('webp-responsive') }}" type="image/webp">
+                                        <img src="{{ $mediaSeksi->getUrl('thumb') }}" alt="Foto {{ $seksi->kepala->nama }}" class="card-img-top" style="height: auto; object-fit: cover;" loading="lazy">
+                                    </picture>
+                                @else
+                                    <img src="https://placehold.co/400x400/E5E7EB/6B7280?text=No+Photo" alt="No Photo" class="card-img-top" style="height: auto; object-fit: cover;" loading="lazy">
+                                @endif
 
-            <div class="card-body text-center">
-                <h5 class="card-title mb-1 text-nowrap text-truncate">{{ $seksi->kepala->nama }}</h5>
-                <p class="card-text text-muted small">Kepala {{ $seksi->nama_seksi }}</p>
-            </div>
-        </div>
-    </div>
-    @endforeach
-</div>
-            <hr class="my-4">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title mb-1 text-nowrap text-truncate">{{ $seksi->kepala->nama }}</h5>
+                                    <p class="card-text text-muted small">Kepala {{ $seksi->nama_seksi }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+                <hr class="my-4">
             @endif
 
 

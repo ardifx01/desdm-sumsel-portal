@@ -15,38 +15,51 @@
 
     <div class="row">
         @forelse($pejabat as $p)
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm border-0 pejabat-card">
-                <div class="card-body text-center">
-                    @if($p->hasMedia('foto_pejabat'))
-                        <img
-                            src="{{ $p->getFirstMediaUrl('foto_pejabat', 'thumb') }}"
-                            alt="Foto {{ $p->nama }}"
-                            class="img-thumbnail mb-3"
-                            style="width: 150px; height: 150px; object-fit: cover;"
-                            loading="lazy"
-                        />
-                    @else
-                        <img
-                            src="https://placehold.co/150x150/E5E7EB/6B7280?text=No+Photo"
-                            alt="No Photo"
-                            class="img-thumbnail rounded mb-3"
-                            style="width: 150px; height: 150px; object-fit: cover;"
-                        />
-                    @endif
-                    <h5 class="card-title">{{ $p->nama }}</h5>
-                    <p class="card-text text-muted mb-2">{{ $p->jabatan }}</p>
-                    @if($p->nip)
-                        <p class="card-text small text-secondary">NIP: {{ $p->nip }}</p>
-                    @endif
-                    <a href="{{ route('tentang-kami.detail-pimpinan', $p->id) }}" class="btn btn-sm btn-primary mt-3">Lihat Detail</a>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm border-0 pejabat-card">
+                    <div class="card-body text-center">
+                        @php
+                            $media = $p->getFirstMedia('foto_pejabat');
+                            $imageExists = false;
+                            if ($media) {
+                                // Dapatkan path absolut file fisik
+                                $mediaPath = $media->getPath();
+                                // Cek apakah file fisik ada di server
+                                if (file_exists($mediaPath)) {
+                                    $imageExists = true;
+                                }
+                            }
+                        @endphp
+
+                        @if($imageExists)
+                            <img
+                                src="{{ $media->getUrl('thumb') }}"
+                                alt="Foto {{ $p->nama }}"
+                                class="img-thumbnail mb-3"
+                                style="width: 150px; height: 150px; object-fit: cover;"
+                                loading="lazy"
+                            />
+                        @else
+                            <img
+                                src="https://placehold.co/150x150/E5E7EB/6B7280?text=No+Photo"
+                                alt="No Photo"
+                                class="img-thumbnail rounded mb-3"
+                                style="width: 150px; height: 150px; object-fit: cover;"
+                            />
+                        @endif
+                        <h5 class="card-title">{{ $p->nama }}</h5>
+                        <p class="card-text text-muted mb-2">{{ $p->jabatan }}</p>
+                        @if($p->nip)
+                            <p class="card-text small text-secondary">NIP: {{ $p->nip }}</p>
+                        @endif
+                        <a href="{{ route('tentang-kami.detail-pimpinan', $p->id) }}" class="btn btn-sm btn-primary mt-3">Lihat Detail</a>
+                    </div>
                 </div>
             </div>
-        </div>
         @empty
-        <div class="col-12 text-center">
-            <p class="text-muted">Belum ada data pimpinan yang tersedia.</p>
-        </div>
+            <div class="col-12 text-center">
+                <p class="text-muted">Belum ada data pimpinan yang tersedia.</p>
+            </div>
         @endforelse
     </div>
 

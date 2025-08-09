@@ -19,14 +19,27 @@
                
                     <div class="row g-0">
                         <div class="col-md-4">
-                            @if ($pejabat->hasMedia('foto_pejabat'))
+                            @php
+                                $media = $pejabat->getFirstMedia('foto_pejabat');
+                                $imageExists = false;
+                                if ($media) {
+                                    $mediaPath = $media->getPath();
+                                    if (file_exists($mediaPath)) {
+                                        $imageExists = true;
+                                    }
+                                }
+                            @endphp
+
+                            @if($imageExists)
                                 <picture>
+                                    {{-- Menggunakan getSrcset untuk gambar responsif (WebP) --}}
                                     <source
-                                        srcset="{{ $pejabat->getFirstMedia('foto_pejabat')->getSrcset('webp-responsive') }}"
+                                        srcset="{{ $media->getSrcset('webp-responsive') }}"
                                         type="image/webp"
                                     >
+                                    {{-- Gambar fallback (misalnya JPG/PNG) --}}
                                     <img
-                                        src="{{ $pejabat->getFirstMediaUrl('foto_pejabat', 'thumb') }}"
+                                        src="{{ $media->getUrl('thumb') }}"
                                         alt="Foto {{ $pejabat->nama }}"
                                         class="img-fluid rounded-start"
                                         width=auto
@@ -34,6 +47,7 @@
                                     >
                                 </picture>
                             @else
+                                {{-- Tampilkan gambar placeholder jika file fisik tidak ditemukan --}}
                                 <img src="https://placehold.co/400x400/E5E7EB/6B7280?text=No+Photo" 
                                     alt="No Photo"
                                     class="img-fluid rounded-start"
