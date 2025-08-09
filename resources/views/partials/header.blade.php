@@ -33,12 +33,13 @@
                             <a class="nav-link header-menu-link" href="{{ url('/') }}">Beranda</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link header-menu-link" href="{{ url('/tentang-kami') }}">Tentang Kami</a>
+                            <a class="nav-link header-menu-link" href="{{ url('/') }}#tentang-kami">Tentang Kami</a>
+
                         </li>
-                        {{-- Item menu untuk Bidang & Data Sektoral --}}
+{{--                         Item menu untuk Bidang & Data Sektoral
                         <li class="nav-item">
                             <a class="nav-link header-menu-link" href="{{ route('bidang-sektoral.index') }}">Bidang</a>
-                        </li>
+                        </li> --}}
                         {{-- Dropdown untuk Informasi Publik (PPID) --}}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle header-menu-link" href="#" id="navbarDropdownPPID" role="button" data-bs-toggle="dropdown" aria-expanded="false">

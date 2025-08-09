@@ -100,14 +100,15 @@
         </p>
         <div class="d-grid gap-2 d-sm-flex justify-content-sm-center animated-buttons">
             <a href="{{ url('/informasi-publik') }}" class="btn btn-primary btn-lg px-4 me-sm-3">Akses Informasi Publik</a>
-            <a href="{{ url('/tentang-kami') }}" class="btn btn-outline-light btn-lg px-4">Pelajari Lebih Lanjut</a>
+            {{-- <a href="{{ url('/tentang-kami') }}" class="btn btn-outline-light btn-lg px-4">Pelajari Lebih Lanjut</a> --}}
+            <a href="{{ url('/') }}#tentang-kami" class="btn btn-outline-light btn-lg px-4">Pelajari Lebih Lanjut</a>
         </div>
     </div>
 </header>
 
 
 
-<section id="features" class="py-5 bg-light">
+<section id="tentang-kami" class="py-5 bg-light">
     <div class="container">
         <div class="row text-center mb-5">
             <div class="col-lg-8 mx-auto">
@@ -167,7 +168,7 @@
             <div class="card-body">
                 <i class="fas fa-puzzle-piece fa-3x text-primary mb-3"></i>
                 <h5 class="card-title fw-bold">Profil Bidang</h5>
-                <p class="card-text text-muted">Informasi lengkap mengenai tim, tugas, dan tanggung jawab setiap bidang yang menjalankan operasional kami.</p>
+                <p class="card-text text-muted">Informasi lengkap mengenai tim, tugas, dan tanggung jawab setiap bidang.</p>
                 <a href="{{ route('bidang-sektoral.index') }}" class="btn btn-link">Lihat Profil <i class="fas fa-arrow-right"></i></a>
             </div>
         </div>
