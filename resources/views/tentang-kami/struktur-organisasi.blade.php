@@ -20,19 +20,15 @@
         <div class="col-md-4 text-center">
             <div class="card p-3 shadow-sm">
                 @php
-                    $imageUrl = null;
-                    // Cek apakah ada media dan dapatkan URL-nya
-                    if ($kepalaDinas->hasMedia('foto_pejabat')) {
-                        $media = $kepalaDinas->getFirstMedia('foto_pejabat');
-                        // Cek apakah file fisik media ada di disk
-                        if ($media && Storage::disk($media->disk)->exists($media->getPath())) {
-                            $imageUrl = $media->getUrl('thumb');
-                        }
-                    }
+                    $media = $kepalaDinas->getFirstMedia('foto_pejabat');
+                    $imageExists = $media && file_exists($media->getPath());
                 @endphp
 
-                @if ($imageUrl)
-                    <img src="{{ $imageUrl }}" alt="Foto {{ $kepalaDinas->nama }}" class="img-fluid rounded-circle mx-auto d-block mb-3" style="width: 150px; height: 150px; object-fit: cover;" loading="lazy">
+                @if($imageExists)
+                    <picture>
+                        <source srcset="{{ $media->getSrcset('webp-responsive') }}" type="image/webp">
+                        <img src="{{ $media->getUrl('thumb') }}" alt="Foto {{ $kepalaDinas->nama }}" class="img-fluid rounded-circle mx-auto d-block mb-3" style="width: 150px; height: 150px; object-fit: cover;" loading="lazy">
+                    </picture>
                 @else
                     <img src="https://placehold.co/150x150/E5E7EB/6B7280?text=No+Photo" alt="No Photo" class="img-fluid rounded-circle mx-auto d-block mb-3" style="width: 150px; height: 150px; object-fit: cover;" loading="lazy">
                 @endif
@@ -49,7 +45,6 @@
     @endif
 
     {{-- Bagian Bidang dengan tata letak card hierarkis --}}
-
     <div class="row g-3 justify-content-center">
         @foreach($bidangs as $index => $bidang)
             <div class="col-md-4 d-flex">
@@ -68,19 +63,11 @@
                                 <div class="d-flex align-items-center">
                                     <div class="flex-shrink-0 me-2">
                                         @php
-                                            $imageUrl = null;
-                                            // Cek apakah ada media dan dapatkan URL-nya
-                                            if ($bidang->kepala->hasMedia('foto_pejabat')) {
-                                                $media = $bidang->kepala->getFirstMedia('foto_pejabat');
-                                                // Cek apakah file fisik media ada di disk
-                                                if ($media && Storage::disk($media->disk)->exists($media->getPath())) {
-                                                    $imageUrl = $media->getUrl('thumb');
-                                                }
-                                            }
+                                            $mediaKepala = $bidang->kepala->getFirstMedia('foto_pejabat');
+                                            $imageKepalaExists = $mediaKepala && file_exists($mediaKepala->getPath());
                                         @endphp
-
-                                        @if ($imageUrl)
-                                            <img src="{{ $imageUrl }}" alt="Foto {{ $bidang->kepala->nama }}" class="img-fluid rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+                                        @if($imageKepalaExists)
+                                            <img src="{{ $mediaKepala->getUrl('thumb') }}" alt="Foto {{ $bidang->kepala->nama }}" class="img-fluid rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
                                         @else
                                             <img src="https://placehold.co/50x50/E5E7EB/6B7280?text=NP" alt="No Photo" class="img-fluid rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
                                         @endif
@@ -110,18 +97,11 @@
                                             <div class="d-flex align-items-center">
                                                 <div class="flex-shrink-0 me-2">
                                                     @php
-                                                        $imageUrl = null;
-                                                        // Cek apakah ada media dan dapatkan URL-nya
-                                                        if ($seksi->kepala->hasMedia('foto_pejabat')) {
-                                                            $media = $seksi->kepala->getFirstMedia('foto_pejabat');
-                                                            // Cek apakah file fisik media ada di disk
-                                                            if ($media && Storage::disk($media->disk)->exists($media->getPath())) {
-                                                                $imageUrl = $media->getUrl('thumb');
-                                                            }
-                                                        }
+                                                        $mediaSeksi = $seksi->kepala->getFirstMedia('foto_pejabat');
+                                                        $imageSeksiExists = $mediaSeksi && file_exists($mediaSeksi->getPath());
                                                     @endphp
-                                                    @if ($imageUrl)
-                                                        <img src="{{ $imageUrl }}" alt="Foto {{ $seksi->kepala->nama }}" class="img-fluid rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+                                                    @if ($imageSeksiExists)
+                                                        <img src="{{ $mediaSeksi->getUrl('thumb') }}" alt="Foto {{ $seksi->kepala->nama }}" class="img-fluid rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
                                                     @else
                                                         <img src="https://placehold.co/50x50/E5E7EB/6B7280?text=NP" alt="No Photo" class="img-fluid rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
                                                     @endif
@@ -162,14 +142,15 @@
     pada Dinas Energi dan Sumber Daya Mineral Provinsi Sumatera Selatan</i></h6>
     <div class="row g-3 justify-content-center">
         @foreach($uptds as $uptd)
-        <div class="col-md-9"> {{-- Main column for each UPTD unit, no d-flex here --}}
-            <div class="card p-3 shadow-sm w-100 h-100"> {{-- Card for the entire UPTD block --}}
-                
-                <h6 class="text-center mb-3 text-primary text-nowrap overflow-hidden text-truncate" title="{{ $uptd->nama }}">
-                        <a href="{{ route('bidang-sektoral.show', $uptd->slug) }}" class="text-decoration-none text-primary">
-                            {{ $uptd->nama }}
-                        </a>
+            <div class="col-md-9"> {{-- Main column for each UPTD unit, no d-flex here --}}
+                <div class="card p-3 shadow-sm w-100 h-100"> {{-- Card for the entire UPTD block --}}
+                    
+                    <h6 class="text-center mb-3 text-primary text-nowrap overflow-hidden text-truncate" title="{{ $uptd->nama }}">
+                            <a href="{{ route('bidang-sektoral.show', $uptd->slug) }}" class="text-decoration-none text-primary">
+                                {{ $uptd->nama }}
+                            </a>
                     </h6>
+                    
                     {{-- Card for Kepala UPTD, centered and styled like a section card --}}
                     @if($uptd->kepala)
                     <div class="row justify-content-center"> {{-- Row to center the head card --}}
@@ -178,18 +159,11 @@
                                 <div class="d-flex align-items-center">
                                     <div class="flex-shrink-0 me-2">
                                         @php
-                                            $imageUrl = null;
-                                            // Cek apakah ada media dan dapatkan URL-nya
-                                            if ($uptd->kepala->hasMedia('foto_pejabat')) {
-                                                $media = $uptd->kepala->getFirstMedia('foto_pejabat');
-                                                // Cek apakah file fisik media ada di disk
-                                                if ($media && Storage::disk($media->disk)->exists($media->getPath())) {
-                                                    $imageUrl = $media->getUrl('thumb');
-                                                }
-                                            }
+                                            $mediaKepala = $uptd->kepala->getFirstMedia('foto_pejabat');
+                                            $imageKepalaExists = $mediaKepala && file_exists($mediaKepala->getPath());
                                         @endphp
-                                        @if ($imageUrl)
-                                            <img src="{{ $imageUrl }}" alt="Foto {{ $uptd->kepala->nama }}" class="img-fluid rounded-circle" style="width: 30px; height: 30px; object-fit: cover;">
+                                        @if($imageKepalaExists)
+                                            <img src="{{ $mediaKepala->getUrl('thumb') }}" alt="Foto {{ $uptd->kepala->nama }}" class="img-fluid rounded-circle" style="width: 30px; height: 30px; object-fit: cover;">
                                         @else
                                             <img src="https://placehold.co/30x30/E5E7EB/6B7280?text=NP" alt="No Photo" class="img-fluid rounded-circle" style="width: 30px; height: 30px; object-fit: cover;">
                                         @endif
@@ -222,18 +196,11 @@
                                     <div class="d-flex align-items-center">
                                         <div class="flex-shrink-0 me-2">
                                             @php
-                                                $imageUrl = null;
-                                                // Cek apakah ada media dan dapatkan URL-nya
-                                                if ($seksi->kepala->hasMedia('foto_pejabat')) {
-                                                    $media = $seksi->kepala->getFirstMedia('foto_pejabat');
-                                                    // Cek apakah file fisik media ada di disk
-                                                    if ($media && Storage::disk($media->disk)->exists($media->getPath())) {
-                                                        $imageUrl = $media->getUrl('thumb');
-                                                    }
-                                                }
+                                                $mediaSeksi = $seksi->kepala->getFirstMedia('foto_pejabat');
+                                                $imageSeksiExists = $mediaSeksi && file_exists($mediaSeksi->getPath());
                                             @endphp
-                                            @if ($imageUrl)
-                                                <img src="{{ $imageUrl }}" alt="Foto {{ $seksi->kepala->nama }}" class="img-fluid rounded-circle" style="width: 30px; height: 30px; object-fit: cover;">
+                                            @if ($imageSeksiExists)
+                                                <img src="{{ $mediaSeksi->getUrl('thumb') }}" alt="Foto {{ $seksi->kepala->nama }}" class="img-fluid rounded-circle" style="width: 30px; height: 30px; object-fit: cover;">
                                             @else
                                                 <img src="https://placehold.co/30x30/E5E7EB/6B7280?text=NP" alt="No Photo" class="img-fluid rounded-circle" style="width: 30px; height: 30px; object-fit: cover;">
                                             @endif
@@ -257,8 +224,8 @@
                         </div>
                     </div>
                     @endif
+                </div>
             </div>
-        </div>
         @endforeach
     </div>
     
@@ -287,18 +254,11 @@
                             <div class="d-flex align-items-center">
                                 <div class="flex-shrink-0 me-2">
                                     @php
-                                        $imageUrl = null;
-                                        // Cek apakah ada media dan dapatkan URL-nya
-                                        if ($cabang->kepala->hasMedia('foto_pejabat')) {
-                                            $media = $cabang->kepala->getFirstMedia('foto_pejabat');
-                                            // Cek apakah file fisik media ada di disk
-                                            if ($media && Storage::disk($media->disk)->exists($media->getPath())) {
-                                                $imageUrl = $media->getUrl('thumb');
-                                            }
-                                        }
+                                        $mediaKepala = $cabang->kepala->getFirstMedia('foto_pejabat');
+                                        $imageKepalaExists = $mediaKepala && file_exists($mediaKepala->getPath());
                                     @endphp
-                                    @if ($imageUrl)
-                                        <img src="{{ $imageUrl }}" alt="Foto {{ $cabang->kepala->nama }}" class="img-fluid rounded-circle" style="width: 30px; height: 30px; object-fit: cover;">
+                                    @if($imageKepalaExists)
+                                        <img src="{{ $mediaKepala->getUrl('thumb') }}" alt="Foto {{ $cabang->kepala->nama }}" class="img-fluid rounded-circle" style="width: 30px; height: 30px; object-fit: cover;">
                                     @else
                                         <img src="https://placehold.co/30x30/E5E7EB/6B7280?text=NP" alt="No Photo" class="img-fluid rounded-circle" style="width: 30px; height: 30px; object-fit: cover;">
                                     @endif
@@ -333,18 +293,11 @@
                                         <div class="d-flex align-items-center">
                                             <div class="flex-shrink-0 me-2">
                                                 @php
-                                                    $imageUrl = null;
-                                                    // Cek apakah ada media dan dapatkan URL-nya
-                                                    if ($seksi->kepala->hasMedia('foto_pejabat')) {
-                                                        $media = $seksi->kepala->getFirstMedia('foto_pejabat');
-                                                        // Cek apakah file fisik media ada di disk
-                                                        if ($media && Storage::disk($media->disk)->exists($media->getPath())) {
-                                                            $imageUrl = $media->getUrl('thumb');
-                                                        }
-                                                    }
+                                                    $mediaSeksi = $seksi->kepala->getFirstMedia('foto_pejabat');
+                                                    $imageSeksiExists = $mediaSeksi && file_exists($mediaSeksi->getPath());
                                                 @endphp
-                                                @if ($imageUrl)
-                                                    <img src="{{ $imageUrl }}" alt="Foto {{ $seksi->kepala->nama }}" class="img-fluid rounded-circle" style="width: 30px; height: 30px; object-fit: cover;">
+                                                @if ($imageSeksiExists)
+                                                    <img src="{{ $mediaSeksi->getUrl('thumb') }}" alt="Foto {{ $seksi->kepala->nama }}" class="img-fluid rounded-circle" style="width: 30px; height: 30px; object-fit: cover;">
                                                 @else
                                                     <img src="https://placehold.co/30x30/E5E7EB/6B7280?text=NP" alt="No Photo" class="img-fluid rounded-circle" style="width: 30px; height: 30px; object-fit: cover;">
                                                 @endif
