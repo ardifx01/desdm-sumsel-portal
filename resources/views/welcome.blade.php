@@ -141,10 +141,10 @@
     <div class="col-md-4">
         <div class="card h-100 border-0 shadow-sm text-center p-4 pejabat-card">
             <div class="card-body">
-                <i class="fas fa-users-cog fa-3x text-primary mb-3"></i>
-                <h5 class="card-title fw-bold">Struktur Organisasi</h5>
-                <p class="card-text text-muted">Kenali lebih dekat tim dan struktur yang menjalankan operasional kami.</p>
-                <a href="{{ url('/tentang-kami/struktur-organisasi') }}" class="btn btn-link">Lihat Detail <i class="fas fa-arrow-right"></i></a>
+                <i class="fas fa-crown fa-3x text-primary mb-3"></i>
+                <h5 class="card-title fw-bold">Profil Pimpinan</h5>
+                <p class="card-text text-muted">Kenali para pemimpin dan pejabat di lingkungan dinas kami.</p>
+                <a href="{{ url('/tentang-kami/profil-pimpinan') }}" class="btn btn-link">Lihat Detail <i class="fas fa-arrow-right"></i></a>
             </div>
         </div>
     </div>
@@ -154,14 +154,24 @@
     <div class="col-md-4">
         <div class="card h-100 border-0 shadow-sm text-center p-4 pejabat-card">
             <div class="card-body">
-                <i class="fas fa-crown fa-3x text-primary mb-3"></i>
-                <h5 class="card-title fw-bold">Profil Pimpinan</h5>
-                <p class="card-text text-muted">Kenali para pemimpin dan pejabat di lingkungan dinas kami.</p>
-                <a href="{{ url('/tentang-kami/profil-pimpinan') }}" class="btn btn-link">Lihat Detail <i class="fas fa-arrow-right"></i></a>
+                <i class="fas fa-users-cog fa-3x text-primary mb-3"></i>
+                <h5 class="card-title fw-bold">Struktur Organisasi</h5>
+                <p class="card-text text-muted">Kenali lebih dekat tim dan struktur yang menjalankan operasional kami.</p>
+                <a href="{{ url('/tentang-kami/struktur-organisasi') }}" class="btn btn-link">Lihat Detail <i class="fas fa-arrow-right"></i></a>
             </div>
         </div>
     </div>
 
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm text-center p-4 pejabat-card">
+            <div class="card-body">
+                <i class="fas fa-puzzle-piece fa-3x text-primary mb-3"></i>
+                <h5 class="card-title fw-bold">Profil Bidang</h5>
+                <p class="card-text text-muted">Informasi lengkap mengenai tim, tugas, dan tanggung jawab setiap bidang yang menjalankan operasional kami.</p>
+                <a href="{{ route('bidang-sektoral.index') }}" class="btn btn-link">Lihat Profil <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
     <div class="col-md-4">
         <div class="card h-100 border-0 shadow-sm text-center p-4 pejabat-card">
             <div class="card-body">

@@ -64,8 +64,10 @@ Route::prefix('tentang-kami')->name('tentang-kami.')->group(function () {
     Route::get('/profil-pimpinan/{id}', [TentangKamiController::class, 'detailPimpinan'])->name('detail-pimpinan');
 });
 
-
+// TAMBAHKAN RUTE MODAL PEJABAT DI SINI
+Route::get('/pejabat-modal/{pejabat}', [TentangKamiController::class, 'showModal'])->name('pejabat.showModal');
 // Modul Bidang & Data Sektoral
+
 Route::prefix('bidang-sektoral')->name('bidang-sektoral.')->group(function () {
     Route::get('/', [BidangSektoralController::class, 'index'])->name('index');
     Route::get('/data-statistik', [BidangSektoralController::class, 'showDataStatistik'])->name('data-statistik');

@@ -34,8 +34,11 @@
                 @endif
 
                 <h5>
-                    <a href="{{ route('tentang-kami.detail-pimpinan', $kepalaDinas->id) }}">
-                        <b>{{ $kepalaDinas->nama }}</b>
+                    <a href="#" class="link-pejabat"
+                    data-bs-toggle="modal"
+                    data-bs-target="#pejabatModal"
+                    data-pejabat-id="{{ $kepalaDinas->id }}">
+                        <h5 class="fw-bold fs-4 mb-0">{{ $kepalaDinas->nama }}</h5>
                     </a>
                 </h5>
                 <p class="text-muted">{{ $kepalaDinas->jabatan }}</p>
@@ -74,7 +77,12 @@
                                     </div>
                                     <div class="flex-grow-1 overflow-hidden">
                                         <small class="fw-bold d-block text-nowrap overflow-hidden text-truncate" title="{{ $bidang->kepala->nama }}">
-                                            <a href="{{ route('tentang-kami.detail-pimpinan', $bidang->kepala->id) }}">{{ $bidang->kepala->nama }}</a>
+                                            <a href="#" class="text-decoration-none text-dark card-title mb-1 text-nowrap text-truncate link-pejabat"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#pejabatModal"
+                                                data-pejabat-id="{{ $bidang->kepala->id }}">
+                                                {{ $bidang->kepala->nama }}
+                                            </a>
                                         </small>
                                         <small class="text-muted d-block text-nowrap overflow-hidden text-truncate" title="{{ $bidang->kepala->jabatan }}">{{ $bidang->kepala->jabatan }}</small>
                                     </div>
@@ -108,7 +116,16 @@
                                                 </div>
                                                 <div class="flex-grow-1 overflow-hidden">
                                                     <small class="fw-bold d-block text-nowrap overflow-hidden text-truncate" title="{{ $seksi->kepala->nama }}">
-                                                        <a href="{{ route('tentang-kami.detail-pimpinan', $seksi->kepala->id) }}">{{ $seksi->kepala->nama }}</a>
+                                                        {{-- <a href="{{ route('tentang-kami.detail-pimpinan', $seksi->kepala->id) }}">{{ $seksi->kepala->nama }}</a> --}}
+                                                        <a href="#" class="text-decoration-none text-dark card-title mb-1 text-nowrap text-truncate link-pejabat"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#pejabatModal"
+                                                            data-pejabat-id="{{ $seksi->kepala->id }}">
+                                                            {{ $seksi->kepala->nama }}
+                                                        </a>
+
+
+
                                                     </small>
                                                     <small class="text-muted d-block text-nowrap overflow-hidden text-truncate" title="{{ $seksi->kepala->jabatan }}">{{ $seksi->kepala->jabatan }}</small>
                                                 </div>
@@ -170,7 +187,13 @@
                                     </div>
                                     <div class="flex-grow-1 overflow-hidden">
                                         <small class="fw-bold d-block text-nowrap overflow-hidden text-truncate" title="{{ $uptd->kepala->nama }}">
-                                            <a href="{{ route('tentang-kami.detail-pimpinan', $uptd->kepala->id) }}">{{ $uptd->kepala->nama }}</a>
+                                            {{-- <a href="{{ route('tentang-kami.detail-pimpinan', $uptd->kepala->id) }}">{{ $uptd->kepala->nama }}</a> --}}
+                                            <a href="#" class="text-decoration-none text-dark card-title mb-1 text-nowrap text-truncate link-pejabat"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#pejabatModal"
+                                                data-pejabat-id="{{ $uptd->kepala->id }}">
+                                                {{ $uptd->kepala->nama }}
+                                            </a>                                            
                                         </small>
                                         <small class="text-muted d-block text-nowrap overflow-hidden text-truncate" title="{{ $uptd->kepala->jabatan }}">{{ $uptd->kepala->jabatan }}</small>
                                     </div>
@@ -207,7 +230,13 @@
                                         </div>
                                         <div class="flex-grow-1 overflow-hidden">
                                             <small class="fw-bold d-block text-nowrap overflow-hidden text-truncate" title="{{ $seksi->kepala->nama }}">
-                                                <a href="{{ route('tentang-kami.detail-pimpinan', $seksi->kepala->id) }}">{{ $seksi->kepala->nama }}</a>
+                                                {{-- <a href="{{ route('tentang-kami.detail-pimpinan', $seksi->kepala->id) }}">{{ $seksi->kepala->nama }}</a> --}}
+                                                <a href="#" class="text-decoration-none text-dark card-title mb-1 text-nowrap text-truncate link-pejabat"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#pejabatModal"
+                                                    data-pejabat-id="{{ $seksi->kepala->id }}">
+                                                    {{ $seksi->kepala->nama }}
+                                                </a>                                                
                                             </small>
                                             <small class="text-muted d-block text-nowrap overflow-hidden text-truncate" title="{{ $seksi->kepala->jabatan }}">{{ $seksi->kepala->jabatan }}</small>
                                         </div>
@@ -265,7 +294,13 @@
                                 </div>
                                 <div class="flex-grow-1 overflow-hidden">
                                     <small class="fw-bold d-block text-nowrap overflow-hidden text-truncate" title="{{ $cabang->kepala->nama }}">
-                                        <a href="{{ route('tentang-kami.detail-pimpinan', $cabang->kepala->id) }}">{{ $cabang->kepala->nama }}</a>
+                                        {{-- <a href="{{ route('tentang-kami.detail-pimpinan', $cabang->kepala->id) }}">{{ $cabang->kepala->nama }}</a> --}}
+                                        <a href="#" class="text-decoration-none text-dark card-title mb-1 text-nowrap text-truncate link-pejabat"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#pejabatModal"
+                                            data-pejabat-id="{{ $cabang->kepala->id }}">
+                                            {{ $cabang->kepala->nama }}
+                                        </a>                                        
                                     </small>
                                     <small class="text-muted d-block text-nowrap overflow-hidden text-truncate" title="{{ $cabang->kepala->jabatan }}">{{ $cabang->kepala->jabatan }}</small>
                                 </div>
@@ -304,7 +339,13 @@
                                             </div>
                                             <div class="flex-grow-1 overflow-hidden">
                                                 <small class="fw-bold d-block text-nowrap overflow-hidden text-truncate" title="{{ $seksi->kepala->nama }}">
-                                                    <a href="{{ route('tentang-kami.detail-pimpinan', $seksi->kepala->id) }}">{{ $seksi->kepala->nama }}</a>
+                                                    {{-- <a href="{{ route('tentang-kami.detail-pimpinan', $seksi->kepala->id) }}">{{ $seksi->kepala->nama }}</a> --}}
+                                                    <a href="#" class="text-decoration-none text-dark card-title mb-1 text-nowrap text-truncate link-pejabat"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#pejabatModal"
+                                                        data-pejabat-id="{{ $seksi->kepala->id }}">
+                                                        {{ $seksi->kepala->nama }}
+                                                    </a>                                                    
                                                 </small>
                                                 <small class="text-muted d-block text-nowrap overflow-hidden text-truncate" title="{{ $seksi->kepala->jabatan }}">{{ $seksi->kepala->jabatan }}</small>
                                             </div>
@@ -327,7 +368,71 @@
         </div>
         @endforeach
     </div>
+    <div class="text-center mt-4">
+        <button onclick="history.back()" class="btn btn-secondary btn-lg">Kembali</button>
+        <a href="{{ url('/') }}" class="btn btn-primary btn-lg">Kembali ke Beranda</a>
+    </div>
+
 </div>
+
+
+<div class="modal fade" id="pejabatModal" tabindex="-1" aria-labelledby="pejabatModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-body p-0">
+                <div class="pejabat-loading text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var pejabatModal = document.getElementById('pejabatModal');
+        pejabatModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var pejabatId = button.getAttribute('data-pejabat-id');
+            
+            var modalContent = pejabatModal.querySelector('.modal-content');
+            modalContent.innerHTML = `
+                <div class="modal-body text-center p-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            `;
+
+            fetch(`{{ route('pejabat.showModal', ['pejabat' => ':pejabatId']) }}`.replace(':pejabatId', pejabatId))
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
+                .then(html => {
+                    pejabatModal.querySelector('.modal-content').innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    modalContent.innerHTML = `
+                        <div class="modal-header">
+                            <h5 class="modal-title">Error</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <p>Terjadi kesalahan saat memuat data profil.</p>
+                        </div>
+                    `;
+                });
+        });
+    });
+</script>
+@endpush
 
 <style>
 .child-card-container {
@@ -365,4 +470,6 @@
 }
 
 </style>
+
+
 @endsection

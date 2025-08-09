@@ -7,7 +7,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ url('/') }}">Beranda</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('tentang-kami.index') }}">Tentang Kami</a></li>
+            {{-- <li class="breadcrumb-item"><a href="{{ route('tentang-kami.index') }}">Tentang Kami</a></li> --}}
             <li class="breadcrumb-item active" aria-current="page">Visi, Misi & Tujuan</li>
         </ol>
     </nav>
@@ -73,6 +73,9 @@
 
 
 
-    <a href="{{ route('tentang-kami.index') }}" class="btn btn-secondary mt-4">Kembali ke Tentang Kami</a>
+    <div class="text-center mt-4">
+        <button onclick="history.back()" class="btn btn-secondary btn-lg">Kembali</button>
+        <a href="{{ url('/') }}" class="btn btn-primary btn-lg">Kembali ke Beranda</a>
+    </div>
 </div>
 @endsection

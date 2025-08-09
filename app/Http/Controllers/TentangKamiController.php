@@ -6,7 +6,7 @@ use App\Models\Pejabat;
 use App\Models\Bidang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-
+use Illuminate\Database\Eloquent\Builder;
 class TentangKamiController extends Controller
 {
     public function index()
@@ -59,11 +59,14 @@ class TentangKamiController extends Controller
 
     public function profilPimpinan()
     {
-        // Halaman daftar profil pimpinan
-        $pejabat = Pejabat::where('is_active', true)
-                            ->orderBy('urutan', 'asc')
-                            ->orderBy('jabatan', 'asc')
-                            ->get(); // Ambil semua pejabat yang aktif, diurutkan
+        $pejabat = Pejabat::where(function (Builder $query) {
+            $query->where('jabatan', 'like', 'Kepala Dinas%')
+                  ->orWhere('jabatan', 'like', 'Sekretaris%')
+                  ->orWhere('jabatan', 'like', 'Kepala Bidang%')
+                  ->orWhere('jabatan', 'like', 'Kepala UPTD%')
+                  ->orWhere('jabatan', 'like', 'Kepala Cabang Dinas%');
+        })
+        ->get();
 
         return view('tentang-kami.profil-pimpinan.index', compact('pejabat'));
     }
@@ -75,6 +78,11 @@ class TentangKamiController extends Controller
         return view('tentang-kami.profil-pimpinan.show', compact('pejabat'));
     }
 
+public function showModal(Pejabat $pejabat)
+    {
+        // Mengembalikan hanya view parsial, bukan seluruh halaman
+        return view('tentang-kami.partials.pejabat-modal-content', compact('pejabat'));
+    }
 
 
 }

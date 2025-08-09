@@ -7,7 +7,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ url('/') }}">Beranda</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('bidang-sektoral.index') }}">Bidang & Data Sektoral</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('bidang-sektoral.index') }}">Bidang</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ $bidang->nama }}</li>
         </ol>
     </nav>
@@ -43,7 +43,14 @@
                                 @endif
                                 
                                 <div class="card-body text-center">
-                                    <h5 class="card-title mb-1 text-nowrap text-truncate">{{ $bidang->kepala->nama }}</h5>
+                                    {{-- <h5 class="card-title mb-1 text-nowrap text-truncate">{{ $bidang->kepala->nama }}</h5> --}}
+                                    <a href="#" class="card-title mb-1 text-nowrap text-truncate link-pejabat"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#pejabatModal"
+                                        data-pejabat-id="{{ $bidang->kepala->id }}">
+                                        {{ $bidang->kepala->nama }}
+                                    </a>
+                                
                                     <p class="card-text text-muted small">{{ $bidang->kepala->jabatan }}</p>
                                 </div>
                             </div>
@@ -74,7 +81,13 @@
                                 @endif
 
                                 <div class="card-body text-center">
-                                    <h5 class="card-title mb-1 text-nowrap text-truncate">{{ $seksi->kepala->nama }}</h5>
+                                    {{-- <h5 class="card-title mb-1 text-nowrap text-truncate">{{ $seksi->kepala->nama }}</h5> --}}
+                                    <a href="#" class="card-title mb-1 text-nowrap text-truncate link-pejabat"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#pejabatModal"
+                                        data-pejabat-id="{{ $seksi->kepala->id }}">
+                                        {{ $seksi->kepala->nama }}
+                                    </a>
                                     <p class="card-text text-muted small">Kepala {{ $seksi->nama_seksi }}</p>
                                 </div>
                             </div>
@@ -154,9 +167,71 @@
     </div>
 
     <div class="text-center mt-4">
-        <a href="{{ route('bidang-sektoral.index') }}" class="btn btn-secondary">Kembali ke Daftar Bidang</a>
+                <button onclick="history.back()" class="btn btn-secondary btn-lg">Kembali</button>
+                <a href="{{ url('/') }}" class="btn btn-primary btn-lg">Kembali ke Beranda</a>
     </div>
 </div>
+
+
+<div class="modal fade" id="pejabatModal" tabindex="-1" aria-labelledby="pejabatModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-body p-0">
+                <div class="pejabat-loading text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var pejabatModal = document.getElementById('pejabatModal');
+        pejabatModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var pejabatId = button.getAttribute('data-pejabat-id');
+            
+            var modalContent = pejabatModal.querySelector('.modal-content');
+            modalContent.innerHTML = `
+                <div class="modal-body text-center p-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            `;
+
+            // Lakukan permintaan AJAX
+            // Gunakan helper route() untuk menghasilkan URL yang benar
+            fetch(`{{ route('pejabat.showModal', ['pejabat' => ':pejabatId']) }}`.replace(':pejabatId', pejabatId))
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
+                .then(html => {
+                    pejabatModal.querySelector('.modal-content').innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    modalContent.innerHTML = `
+                        <div class="modal-header">
+                            <h5 class="modal-title">Error</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <p>Terjadi kesalahan saat memuat data profil.</p>
+                        </div>
+                    `;
+                });
+        });
+    });
+</script>
+@endpush
 @endsection
 
 @push('scripts')

@@ -7,7 +7,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ url('/') }}">Beranda</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Bidang & Data Sektoral</li>
+            <li class="breadcrumb-item active" aria-current="page">Bidang</li>
         </ol>
     </nav>
     <h2 class="mb-4 text-center">Bidang, Unit Pelaksana Teknis Dinas, & Cabang Dinas Regional</h2>
@@ -46,10 +46,9 @@
 
     <hr class="my-5">
 
-    <div class="text-center">
-        <h3 class="mb-4">Data dan Statistik Sektoral Umum</h3>
-        <p class="lead">Akses data dan statistik penting terkait sektor ESDM di Sumatera Selatan.</p>
-        <a href="{{ route('bidang-sektoral.data-statistik') }}" class="btn btn-lg btn-success">Lihat Data & Statistik Sektoral</a>
+    <div class="text-center mt-4">
+                <button onclick="history.back()" class="btn btn-secondary btn-lg">Kembali</button>
+                <a href="{{ url('/') }}" class="btn btn-primary btn-lg">Kembali ke Beranda</a>
     </div>
 
 </div>
