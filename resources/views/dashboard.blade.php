@@ -10,7 +10,21 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     {{ __("You're logged in!") }}
+                    <div class="mt-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="fw-bold">Total Pengunjung Website</h5>
+                            <form action="{{ route('admin.settings.reset-counter') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin mereset counter pengunjung?');">
+                                @csrf
+                                <button type="submit" class="btn btn-sm btn-danger">Reset Counter</button>
+                            </form>
+                        </div>
+                        <p class="text-muted">Jumlah kunjungan sejak terakhir kali direset</p>
+                        <div class="card p-4 shadow-sm">
+                            <h1 class="display-4 fw-bold">{{ $settings['visitors'] ?? 0 }}</h1>
+                        </div>
+                    </div>
                 </div>
+                
             </div>
         </div>
     </div>

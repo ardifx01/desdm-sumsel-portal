@@ -149,7 +149,8 @@ Route::prefix('informasi-publik')->name('informasi-publik.')->group(function () 
 
     // Rute Daftar Informasi Publik (DIP) - khusus index
     Route::get('/', [InformasiPublikController::class, 'index'])->name('index');
-
+    
+    Route::get('/laporan-statistik', [InformasiPublikController::class, 'laporanStatistik'])->name('laporan-statistik');
     // Rute paling umum dengan {slug} untuk detail informasi publik (HARUS DI PALING BAWAH)
     Route::get('/{slug}', [InformasiPublikController::class, 'show'])->name('show');
 });
@@ -278,6 +279,7 @@ Route::middleware('auth')->group(function () {
         // Rute untuk Pengaturan Umum Web
         Route::get('settings', [SettingController::class, 'edit'])->name('settings.edit');
         Route::post('settings', [SettingController::class, 'update'])->name('settings.update');
+        Route::post('settings/reset-counter', [SettingController::class, 'resetCounter'])->name('settings.reset-counter');
     });
 });
 

@@ -96,4 +96,18 @@ class SettingController extends Controller
         return redirect()->route('admin.settings.edit')
                          ->with('success', 'Pengaturan berhasil diperbarui!');
     }
+
+    public function resetCounter()
+    {
+        // Temukan entri 'visitors' dan atur nilainya menjadi 0
+        $visitorCount = Setting::where('key', 'visitors')->first();
+
+        if ($visitorCount) {
+            $visitorCount->value = 0;
+            $visitorCount->save();
+        }
+
+        return redirect()->route('dashboard')
+                         ->with('success', 'Counter pengunjung berhasil direset!');
+    }
 }
