@@ -25,6 +25,8 @@ class Post extends Model implements HasMedia
         'category_id',
         'author_id',
         'status',
+        'hits',
+        'share_count',
     ];
 
     public function category()

@@ -44,7 +44,8 @@ class BeritaController extends Controller
         {
             // Ambil post beserta relasi kategori dan author
             $post = Post::with(['author', 'category'])->where('slug', $slug)->firstOrFail();
-
+            // Naikkan counter hits
+            $post->increment('hits');
             // Ambil HANYA komentar utama yang sudah disetujui
             // Gunakan with('replies.user') untuk mengambil balasan secara rekursif
             $approvedComments = $post->comments()
@@ -60,4 +61,11 @@ class BeritaController extends Controller
 
             return view('berita.show', compact('post', 'approvedComments'));
         }
+        
+    public function incrementShareCount(Post $post)
+    {
+        $post->increment('share_count');
+        return response()->json(['success' => true, 'share_count' => $post->share_count]);
+    }
+
 }

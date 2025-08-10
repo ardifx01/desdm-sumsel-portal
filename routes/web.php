@@ -99,6 +99,7 @@ Route::prefix('publikasi')->name('publikasi.')->group(function () {
 Route::prefix('berita')->name('berita.')->group(function () {
     Route::get('/', [BeritaController::class, 'index'])->name('index');
     Route::get('/{slug}', [BeritaController::class, 'show'])->name('show');
+    Route::post('/{post}/share-count', [BeritaController::class, 'incrementShareCount'])->name('share.count');
 });
 // Rute untuk Komentar
 Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');

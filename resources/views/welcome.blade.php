@@ -197,11 +197,12 @@
                         <h5 class="card-title fw-bold text-primary">Berita Terkini</h5>
                         <p class="card-text text-muted">Lihat berita dan pengumuman terbaru dari Dinas ESDM Sumsel.</p>
                         <div class="list-group list-group-flush mb-3">
-                            {{-- Menggunakan variabel $posts dari controller --}}
                             @forelse($posts as $post)
                             <a href="{{ route('berita.show', $post->slug) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                                 <span class="text-truncate">{{ $post->title }}</span>
                                 @if($loop->first)
+                                    <span class="badge bg-danger rounded-pill">Hot</span>
+                                @else
                                     <span class="badge bg-primary rounded-pill">Baru</span>
                                 @endif
                             </a>
@@ -223,11 +224,14 @@
                         <h5 class="card-title fw-bold text-primary">Publikasi Resmi</h5>
                         <p class="card-text text-muted">Akses dokumen perencanaan, regulasi, dan laporan kinerja.</p>
                         <div class="list-group list-group-flush mb-3">
-                            {{-- Menggunakan variabel $dokumen dari controller --}}
                             @forelse($dokumen as $doc)
                             <a href="{{ route('publikasi.show', $doc->slug) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                                 <span class="text-truncate">{{ $doc->judul }}</span>
-
+                                @if($loop->first)
+                                    <span class="badge bg-danger rounded-pill">Hot</span>
+                                @else
+                                    <span class="badge bg-primary rounded-pill">Baru</span>
+                                @endif
                             </a>
                             @empty
                             <div class="list-group-item">
