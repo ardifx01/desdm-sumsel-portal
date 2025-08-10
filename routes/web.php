@@ -34,6 +34,9 @@ use App\Http\Controllers\Admin\BidangController;
 use App\Http\Controllers\Admin\SeksiController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\CommentsController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\DashboardController;
+
 use App\Http\Controllers\WelcomeController;
 // Controllers bawaan Laravel/Breeze
 use App\Http\Controllers\ProfileController;
@@ -173,9 +176,7 @@ Route::prefix('halaman-statis')->name('static-pages.')->group(function () {
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 
 // --- Rute AUTENTIKASI BREEZE (Tetap di bagian paling bawah) ---
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -186,6 +187,18 @@ Route::middleware('auth')->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
         // Dashboard Admin Utama
         Route::get('/', function () { return view('admin.dashboard'); })->name('dashboard');
+
+        // Rute untuk manajemen pengguna yang dilindungi oleh middleware 'can:manage-users'
+        Route::middleware('can:manage-users')->group(function () {
+            Route::get('users', [UserController::class, 'index'])->name('users.index');
+            Route::get('users/create', [UserController::class, 'create'])->name('users.create');
+            Route::post('users', [UserController::class, 'store'])->name('users.store');
+            Route::get('users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+            Route::patch('users/{user}', [UserController::class, 'updateProfile'])->name('users.updateProfile');
+            Route::patch('users/{user}/password', [UserController::class, 'updatePassword'])->name('users.updatePassword');
+            Route::patch('users/{user}/role', [UserController::class, 'updateRole'])->name('users.updateRole');
+            Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+        });
 
         // CRUD halaman statis
         Route::resource('static-pages', StaticPageController::class);

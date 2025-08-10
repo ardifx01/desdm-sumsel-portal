@@ -7,12 +7,14 @@
                         <img src="{{ asset('storage/images/logo-desdm.png') }}" alt="Logo DESDM Sumsel" style="height: 50px; margin-right: 15px;">
                     </a>
                 </div>
+
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
-                    {{-- Dropdown Pengaturan --}}
+                    {{-- Dropdown Pengaturan (Hanya untuk Super Admin) --}}
+                    @if(Auth::user()->role === 'super_admin')
                     <div class="relative flex items-center">
                         <x-dropdown align="left" width="48">
                             <x-slot name="trigger">
@@ -26,6 +28,11 @@
                                 </button>
                             </x-slot>
                             <x-slot name="content">
+                                @can('manage-users')
+                                    <x-dropdown-link :href="route('admin.users.index')">
+                                        {{ __('Manajemen Pengguna') }}
+                                    </x-dropdown-link>
+                                @endcan
                                 <x-dropdown-link :href="route('admin.settings.edit')">
                                     {{ __('Pengaturan Global Web') }}
                                 </x-dropdown-link>
@@ -35,8 +42,10 @@
                             </x-slot>
                         </x-dropdown>
                     </div>
+                    @endif
 
-                    {{-- Dropdown Media Center --}}
+                    {{-- Dropdown Media Center (Untuk Super Admin dan Editor) --}}
+                    @if(Auth::user()->role === 'super_admin' || Auth::user()->role === 'editor')
                     <div class="relative flex items-center">
                         <x-dropdown align="left" width="48">
                             <x-slot name="trigger">
@@ -50,8 +59,7 @@
                                 </button>
                             </x-slot>
                             <x-slot name="content">
-                                {{-- Submenu: Berita --}}
-                                <div class="block px-4 py-2 text-xs text-gray-400">Manajemen Berita</div>
+                                <h6 class="dropdown-header px-4 py-2 text-xs text-gray-400">Manajemen Berita</h6>
                                 <x-dropdown-link :href="route('admin.categories.index')">
                                     {{ __('Kategori Berita') }}
                                 </x-dropdown-link>
@@ -60,8 +68,7 @@
                                 </x-dropdown-link>
                                 <div class="border-t border-gray-200"></div>
 
-                                {{-- Submenu: Dokumen --}}
-                                <div class="block px-4 py-2 text-xs text-gray-400">Manajemen Dokumen</div>
+                                <h6 class="dropdown-header px-4 py-2 text-xs text-gray-400">Manajemen Dokumen</h6>
                                 <x-dropdown-link :href="route('admin.dokumen-categories.index')">
                                     {{ __('Kategori Dokumen') }}
                                 </x-dropdown-link>
@@ -70,8 +77,7 @@
                                 </x-dropdown-link>
                                 <div class="border-t border-gray-200"></div>
 
-                                {{-- Submenu: Galeri --}}
-                                <div class="block px-4 py-2 text-xs text-gray-400">Manajemen Galeri</div>
+                                <h6 class="dropdown-header px-4 py-2 text-xs text-gray-400">Manajemen Galeri</h6>
                                 <x-dropdown-link :href="route('admin.albums.index')">
                                     {{ __('Album Foto') }}
                                 </x-dropdown-link>
@@ -81,10 +87,12 @@
                             </x-slot>
                         </x-dropdown>
                     </div>
+                    @endif
 
-                    {{-- Dropdown PPID --}}
+                    {{-- Dropdown PPID (Untuk Super Admin dan PPID Admin) --}}
+                    @if(Auth::user()->role === 'super_admin' || Auth::user()->role === 'ppid_admin')
                     <div class="relative flex items-center">
-                        <x-dropdown align="left" width="48">
+                        <x-dropdown align="left" width="60">
                             <x-slot name="trigger">
                                 <button class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
                                     <div>PPID</div>
@@ -96,7 +104,7 @@
                                 </button>
                             </x-slot>
                             <x-slot name="content">
-                                <div class="block px-4 py-2 text-xs text-gray-400">Manajemen Informasi Publik</div>
+                                <h6 class="dropdown-header px-4 py-2 text-xs text-gray-400">Manajemen Informasi Publik</h6>
                                 <x-dropdown-link :href="route('admin.informasi-publik-categories.index')">
                                     {{ __('Kategori Informasi Publik') }}
                                 </x-dropdown-link>
@@ -105,7 +113,7 @@
                                 </x-dropdown-link>
                                 <div class="border-t border-gray-200"></div>
 
-                                <div class="block px-4 py-2 text-xs text-gray-400">Manajemen Permohonan & Keberatan</div>
+                                <h6 class="dropdown-header px-4 py-2 text-xs text-gray-400">Manajemen Permohonan & Keberatan</h6>
                                 <x-dropdown-link :href="route('admin.permohonan.index')">
                                     {{ __('Permohonan Informasi') }}
                                 </x-dropdown-link>
@@ -115,8 +123,10 @@
                             </x-slot>
                         </x-dropdown>
                     </div>
+                    @endif
                     
-                    {{-- Dropdown OPD --}}
+                    {{-- Dropdown OPD (Hanya untuk Super Admin) --}}
+                    @if(Auth::user()->role === 'super_admin')
                     <div class="relative flex items-center">
                         <x-dropdown align="left" width="48">
                             <x-slot name="trigger">
@@ -130,19 +140,20 @@
                                 </button>
                             </x-slot>
                             <x-slot name="content">
-                                <div class="block px-4 py-2 text-xs text-gray-400">Pejabat/Pimpinan Unit</div>
+                                <h6 class="dropdown-header px-4 py-2 text-xs text-gray-400">Pejabat/Pimpinan Unit</h6>
                                 <x-dropdown-link :href="route('admin.pejabat.index')">
                                     {{ __('Manajemen Pejabat') }}
                                 </x-dropdown-link>
                                 <div class="border-t border-gray-200"></div>
 
-                                <div class="block px-4 py-2 text-xs text-gray-400">Bidang/UPTD/Cabdin</div>
+                                <h6 class="dropdown-header px-4 py-2 text-xs text-gray-400">Bidang/UPTD/Cabdin</h6>
                                 <x-dropdown-link :href="route('admin.bidang.index')">
                                     {{ __('Manajemen Bidang') }}
                                 </x-dropdown-link>
                             </x-slot>
                         </x-dropdown>
                     </div>
+                    @endif
                 </div>
             </div>
 
@@ -173,12 +184,11 @@
                     </x-slot>
                 </x-dropdown>
             </div>
-
             <div class="-me-2 flex items-center sm:hidden">
                 <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        <path :class="{'hidden': open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
@@ -191,15 +201,17 @@
             </x-responsive-nav-link>
             {{-- Tambahkan menu responsif di sini --}}
         </div>
+
         <div class="pt-4 pb-1 border-t border-gray-200">
             <div class="px-4">
                 <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
                 <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
             </div>
+
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}
-                </x-responsive-nav-link>
+                </x-dropdown-link>
 
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
