@@ -7,26 +7,27 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate; // <-- Tambahkan fasad Gate
 
 class PostController extends Controller
 {
     public function index(Request $request)
     {
-        //Log::info('Halaman manajemen berita diakses.');
-        //Log::warning('Testing warning log entry.');
+        // Otorisasi menggunakan fasad Gate
+        Gate::authorize('viewAny', Post::class);
 
         $categories = Category::ofTypePost()->orderBy('name')->get();
+        
         $query = Post::with('category', 'author');
+
+        if (Auth::user()->role === 'editor') {
+            $query->where('author_id', Auth::id());
+        }
 
         if ($request->has('q') && $request->q) {
             $search = $request->q;
-            $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', '%' . $search . '%')
-                  ->orWhere('excerpt', 'like', '%' . $search . '%')
-                  ->orWhere('content_html', 'like', '%' . $search . '%');
-            });
+            $query->where('title', 'like', '%' . $search . '%');
         }
         if ($request->has('category_id') && $request->category_id) {
             $query->where('category_id', $request->category_id);
@@ -35,37 +36,37 @@ class PostController extends Controller
             $query->where('status', $request->status);
         }
 
-        $posts = $query->orderBy('created_at', 'desc')->paginate(10);
+        $posts = $query->latest()->paginate(10);
 
         return view('admin.posts.index', compact('posts', 'categories'));
     }
 
     public function create()
     {
+        // Otorisasi menggunakan fasad Gate
+        Gate::authorize('create', Post::class);
+
         $categories = Category::ofTypePost()->orderBy('name')->get();
         return view('admin.posts.create', compact('categories'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'excerpt' => 'nullable|string',
-            'content_html' => 'required|string',
-            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'status' => 'required|in:published,draft',
-            'meta_title' => 'nullable|string|max:255',
-            'meta_description' => 'nullable|string|max:255',
-        ]);
+        // Otorisasi menggunakan fasad Gate
+        Gate::authorize('create', Post::class);
 
-        $metaTitle = $request->meta_title ?: $request->title;
-        $metaDescription = $request->meta_description ?: Str::limit(strip_tags($request->excerpt ?: $request->content_html), 160);
+        $request->validate([
+            'title' => 'required|string|max:255|unique:posts,title',
+            'category_id' => 'required|exists:categories,id',
+            'content_html' => 'required|string',
+            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'status' => 'required|in:published,draft',
+        ]);
 
         $post = Post::create([
             'title' => $request->title,
-            'meta_title' => $metaTitle,
-            'meta_description' => $metaDescription,
+            'meta_title' => $request->meta_title ?: $request->title,
+            'meta_description' => $request->meta_description ?: Str::limit(strip_tags($request->content_html), 160),
             'slug' => Str::slug($request->title),
             'excerpt' => $request->excerpt,
             'content_html' => $request->content_html,
@@ -75,42 +76,38 @@ class PostController extends Controller
         ]);
         
         if ($request->hasFile('featured_image')) {
-            $post->addMediaFromRequest('featured_image')
-                ->toMediaCollection('featured_image'); // Ini yang benar
+            $post->addMediaFromRequest('featured_image')->toMediaCollection('featured_image');
         }
 
-        return redirect()->route('admin.posts.index')->with('success', 'Berita "' . $post->title . '" berhasil ditambahkan!');
+        return redirect()->route('admin.posts.index')->with('success', 'Berita berhasil ditambahkan!');
     }
 
     public function edit(Post $post)
     {
+        // Otorisasi menggunakan fasad Gate
+        Gate::authorize('update', $post);
+
         $categories = Category::ofTypePost()->orderBy('name')->get();
         return view('admin.posts.edit', compact('post', 'categories'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Post $post)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'excerpt' => 'nullable|string',
-            'content_html' => 'required|string',
-            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'status' => 'required|in:published,draft',
-            'meta_title' => 'nullable|string|max:255',
-            'meta_description' => 'nullable|string|max:255',
-        ]);
+        // Otorisasi menggunakan fasad Gate
+        Gate::authorize('update', $post);
 
-        $metaTitle = $request->meta_title ?: $request->title;
-        $metaDescription = $request->meta_description ?: Str::limit(strip_tags($request->excerpt ?: $request->content_html), 160);
+        $request->validate([
+            'title' => 'required|string|max:255|unique:posts,title,' . $post->id,
+            'category_id' => 'required|exists:categories,id',
+            'content_html' => 'required|string',
+            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'status' => 'required|in:published,draft',
+        ]);
 
         $post->update([
             'title' => $request->title,
-            'meta_title' => $metaTitle,
-            'meta_description' => $metaDescription,
+            'meta_title' => $request->meta_title ?: $request->title,
+            'meta_description' => $request->meta_description ?: Str::limit(strip_tags($request->content_html), 160),
             'slug' => Str::slug($request->title),
             'excerpt' => $request->excerpt,
             'content_html' => $request->content_html,
@@ -120,19 +117,19 @@ class PostController extends Controller
         
         if ($request->hasFile('featured_image')) {
             $post->clearMediaCollection('featured_image');
-
-            $post->addMediaFromRequest('featured_image')
-                ->toMediaCollection('featured_image'); // Ini yang benar
+            $post->addMediaFromRequest('featured_image')->toMediaCollection('featured_image');
         }
 
-        return redirect()->route('admin.posts.index')->with('success', 'Berita "' . $post->title . '" berhasil diperbarui!');
+        return redirect()->route('admin.posts.index')->with('success', 'Berita berhasil diperbarui!');
     }
     
     public function destroy(Post $post)
     {
-        $post->clearMediaCollection('featured_image');
+        // Otorisasi menggunakan fasad Gate
+        Gate::authorize('delete', $post);
 
+        $post->clearMediaCollection('featured_image');
         $post->delete();
-        return redirect()->route('admin.posts.index')->with('success', 'Berita "' . $post->title . '" berhasil dihapus!');
+        return redirect()->route('admin.posts.index')->with('success', 'Berita berhasil dihapus!');
     }
 }

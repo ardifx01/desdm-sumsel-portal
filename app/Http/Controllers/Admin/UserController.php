@@ -61,38 +61,18 @@ class UserController extends Controller
         return view('admin.users.edit', compact('user'));
     }
     
-    /**
-     * Perbarui peran pengguna lain.
-     */
-    public function updateRole(Request $request, User $user)
+    public function update(Request $request, User $user)
     {
         $request->validate([
-            'role' => 'required|in:super_admin,ppid_admin,editor,moderator,user',
-        ]);
-        
-        $user->role = $request->input('role');
-        $user->save();
-
-        return back()->with('success', "Peran pengguna '{$user->name}' berhasil diperbarui.");
-    }
-    
-    /**
-     * Perbarui informasi profil pengguna lain.
-     */
-    public function updateProfile(Request $request, User $user)
-    {
-        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
+            'role' => 'required|in:super_admin,ppid_admin,editor,moderator,user',
         ]);
-        
-        $user->name = $validated['name'];
-        $user->email = $validated['email'];
-        
-        $user->save();
+
+        $user->update($request->only('name', 'email', 'role'));
 
         return redirect()->route('admin.users.edit', $user)
-                         ->with('success', "Informasi profil pengguna berhasil diperbarui.");
+                        ->with('success', 'Informasi profil pengguna berhasil diperbarui.');
     }
     
     /**
