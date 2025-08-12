@@ -3,6 +3,37 @@
 @section('title', 'Galeri Foto & Video')
 
 @section('content')
+<style>
+    /* CSS tambahan untuk efek hover yang halus */
+    .card-galeri {
+        transition: all 0.3s ease;
+        border: 1px solid #e9ecef; /* Border awal yang halus */
+    }
+    .card-galeri:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+        border-color: #0d6efd; /* Border biru saat hover */
+    }
+    .card-galeri .card-img-overlay {
+        background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    .card-galeri:hover .card-img-overlay {
+        opacity: 1;
+    }
+    .card-galeri .card-title-overlay {
+        transform: translateY(20px);
+        transition: transform 0.3s ease;
+    }
+    .card-galeri:hover .card-title-overlay {
+        transform: translateY(0);
+    }
+</style>
+
 <div class="container py-5">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -10,25 +41,32 @@
             <li class="breadcrumb-item active" aria-current="page">Galeri</li>
         </ol>
     </nav>
-    <h2 class="mb-4 text-center">Galeri Foto & Video Dinas ESDM Provinsi Sumatera Selatan</h2>
+    <h2 class="mb-4 text-center">Galeri Foto & Video</h2>
+    <p class="text-center text-muted mb-5">Dokumentasi Kegiatan Dinas ESDM Provinsi Sumatera Selatan</p>
 
     {{-- Bagian Galeri Foto --}}
-    <h3 class="mt-5 mb-3 text-primary">Galeri Foto</h3>
+    <h3 class="mt-5 mb-4">Galeri Foto</h3>
     <div class="row">
         @forelse($albums as $album)
-        <div class="col-md-4 col-lg-3 mb-4">
-            <div class="card h-100 shadow-sm border-0">
-                @if($album->thumbnail)
-                    <img src="{{ asset('storage/' . $album->thumbnail) }}" class="card-img-top" alt="{{ $album->nama }}" style="height: 180px; object-fit: cover;"> {{-- UBAH INI --}}
-                @else
-                    <img src="https://via.placeholder.com/400x180?text=Album" class="card-img-top" alt="Album Thumbnail" style="height: 180px; object-fit: cover;">
-                @endif
-                <div class="card-body text-center">
-                    <h5 class="card-title mb-2">{{ Str::limit($album->nama, 40) }}</h5>
-                    <p class="card-text text-muted small">{{ $album->photos->count() }} Foto</p>
-                    <a href="{{ route('galeri.album', $album->slug) }}" class="btn btn-sm btn-outline-primary mt-2">Lihat Album</a>
+        <div class="col-md-6 col-lg-4 mb-4">
+            <a href="{{ route('galeri.album', $album->slug) }}" class="text-decoration-none">
+                <div class="card card-galeri h-100 shadow-sm">
+                    @if($album->thumbnail)
+                        <img src="{{ asset('storage/' . $album->thumbnail) }}" class="card-img" alt="{{ $album->nama }}" style="height: 250px; object-fit: cover;">
+                    @else
+                        <div class="d-flex align-items-center justify-content-center bg-light" style="height: 250px;">
+                            <i class="bi bi-images" style="font-size: 3rem; color: #ccc;"></i>
+                        </div>
+                    @endif
+                    <div class="card-img-overlay text-white p-3">
+                        <h5 class="card-title card-title-overlay">{{ $album->nama }}</h5>
+                    </div>
+                    <div class="card-footer bg-white d-flex justify-content-between align-items-center">
+                        <small class="text-muted">{{ $album->photos->count() }} Foto</small>
+                        <span class="text-primary fw-bold">Lihat Album</span>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
         @empty
         <div class="col-12 text-center py-3">
@@ -38,33 +76,32 @@
     </div>
 
     {{-- Bagian Galeri Video --}}
-    <h3 class="mt-5 mb-3 text-success">Galeri Video</h3>
+    <h3 class="mt-5 mb-4">Galeri Video</h3>
     <div class="row">
         @forelse($videos as $video)
         <div class="col-md-6 col-lg-4 mb-4">
-            <div class="card h-100 shadow-sm border-0">
-                @if($video->thumbnail)
-                    <img src="{{ $video->thumbnail }}" class="card-img-top" alt="{{ $video->judul }}" style="height: 200px; object-fit: cover;">
-                @else
-                    {{-- Default thumbnail untuk YouTube --}}
-                    @php
-                        $videoId = '';
-                        if (preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i', $video->embed_code, $matches)) {
-                            $videoId = $matches[1];
-                        }
-                    @endphp
-                    @if($videoId)
-                        <img src="http://img.youtube.com/vi/{{ $videoId }}/hqdefault.jpg" class="card-img-top" alt="{{ $video->judul }}" style="height: 200px; object-fit: cover;"> {{-- MENGGUNAKAN PATH BARU --}}
-                    @else
-                        <img src="https://via.placeholder.com/400x200?text=Video" class="card-img-top" alt="Video Thumbnail" style="height: 200px; object-fit: cover;">
-                    @endif
-                @endif
-                <div class="card-body">
-                    <h5 class="card-title mb-2">{{ Str::limit($video->judul, 60) }}</h5>
-                    <p class="card-text text-muted small">{{ Str::limit(strip_tags($video->deskripsi), 80) }}</p>
-                    <a href="{{ route('galeri.video', $video->slug) }}" class="btn btn-sm btn-outline-success mt-2">Tonton Video</a>
+            <a href="{{ route('galeri.video', $video->slug) }}" class="text-decoration-none">
+                <div class="card card-galeri h-100 shadow-sm">
+                    <div class="position-relative">
+                        @if($video->thumbnail)
+                            <img src="{{ $video->thumbnail }}" class="card-img-top" alt="{{ $video->judul }}" style="height: 200px; object-fit: cover;">
+                        @else
+                            <div class="d-flex align-items-center justify-content-center bg-dark" style="height: 200px;">
+                                <i class="bi bi-camera-video-off-fill" style="font-size: 3rem; color: #555;"></i>
+                            </div>
+                        @endif
+                        <div class="position-absolute top-50 start-50 translate-middle">
+                            <i class="bi bi-play-circle-fill text-white" style="font-size: 4rem; opacity: 0.8;"></i>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title mb-2" style="min-height: 48px;">{{ Str::limit($video->judul, 50) }}</h5>
+                    </div>
+                    <div class="card-footer bg-white">
+                        <span class="text-primary fw-bold">Tonton Video</span>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
         @empty
         <div class="col-12 text-center py-3">

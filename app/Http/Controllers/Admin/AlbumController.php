@@ -1,49 +1,52 @@
 <?php
 
-namespace App\Http\Controllers\Admin; // Namespace yang benar
+namespace App\Http\Controllers\Admin;
 
-use App\Models\Album; // Import model Album Anda
+use App\Models\Album;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller; // Base Controller
-use Illuminate\Support\Str; // Untuk slug
-use Illuminate\Support\Facades\Storage; // Untuk upload file
-use Illuminate\Support\Facades\Log; // Untuk logging
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Gate;
+use Spatie\ImageOptimizer\OptimizerChainFactory;
 
-class AlbumController extends Controller // Nama kelas adalah AlbumController
+class AlbumController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // ... (method index, create, edit, destroy tidak berubah) ...
     public function index()
     {
-        $albums = Album::orderBy('created_at', 'desc')->paginate(10);
+        Gate::authorize('viewAny', Album::class);
+        $albums = Album::withCount('photos')->orderBy('created_at', 'desc')->paginate(10);
         return view('admin.albums.index', compact('albums'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
+        Gate::authorize('create', Album::class);
         return view('admin.albums.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
+        Gate::authorize('create', Album::class);
+
         $request->validate([
             'nama' => 'required|string|max:255|unique:albums,nama',
             'deskripsi' => 'nullable|string',
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Max 2MB, hanya gambar
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'is_active' => 'required|boolean',
         ]);
 
         $thumbnailPath = null;
         if ($request->hasFile('thumbnail')) {
-            $folderRelativePath = 'thumbnails/albums/' . date('Y') . '/' . date('m'); // Path: storage/app/public/thumbnails/albums/YYYY/MM
+            $folderRelativePath = 'thumbnails/albums/' . date('Y') . '/' . date('m');
             $thumbnailPath = $request->file('thumbnail')->store($folderRelativePath, 'public');
+
+            // --- PERBAIKAN UNTUK MENGHILANGKAN ERROR IDE ---
+            $absolutePath = storage_path('app/public/' . $thumbnailPath);
+            OptimizerChainFactory::create()->optimize($absolutePath);
+            // -------------------------------------------
         }
 
         Album::create([
@@ -57,34 +60,35 @@ class AlbumController extends Controller // Nama kelas adalah AlbumController
         return redirect()->route('admin.albums.index')->with('success', 'Album foto berhasil ditambahkan!');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Album $album) // Menggunakan Route Model Binding
+    public function edit(Album $album)
     {
+        Gate::authorize('update', $album);
         return view('admin.albums.edit', compact('album'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Album $album)
     {
+        Gate::authorize('update', $album);
+
         $request->validate([
             'nama' => 'required|string|max:255|unique:albums,nama,' . $album->id,
             'deskripsi' => 'nullable|string',
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'is_active' => 'required|boolean',
         ]);
 
-        $thumbnailPath = $album->thumbnail; // Default ke thumbnail lama
+        $thumbnailPath = $album->thumbnail;
         if ($request->hasFile('thumbnail')) {
-            // Hapus thumbnail lama jika ada
             if ($album->thumbnail && Storage::disk('public')->exists($album->thumbnail)) {
                 Storage::disk('public')->delete($album->thumbnail);
             }
             $folderRelativePath = 'thumbnails/albums/' . date('Y') . '/' . date('m');
             $thumbnailPath = $request->file('thumbnail')->store($folderRelativePath, 'public');
+
+            // --- PERBAIKAN UNTUK MENGHILANGKAN ERROR IDE ---
+            $absolutePath = storage_path('app/public/' . $thumbnailPath);
+            OptimizerChainFactory::create()->optimize($absolutePath);
+            // -------------------------------------------
         }
 
         $album->update([
@@ -98,38 +102,23 @@ class AlbumController extends Controller // Nama kelas adalah AlbumController
         return redirect()->route('admin.albums.index')->with('success', 'Album foto berhasil diperbarui!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Album $album)
     {
-        try {
-            // Hapus thumbnail album jika ada
-            if ($album->thumbnail && Storage::disk('public')->exists($album->thumbnail)) {
-                Storage::disk('public')->delete($album->thumbnail);
-            }
-            // Hapus semua foto dalam album ini
-            if ($album->photos->count() > 0) {
-                foreach ($album->photos as $photo) {
-                    if ($photo->file_path && Storage::disk('public')->exists($photo->file_path)) {
-                        Storage::disk('public')->delete($photo->file_path);
-                    }
-                    $photo->delete(); // Hapus record foto dari database
-                }
-            }
+        Gate::authorize('delete', $album);
 
-            $deleteResult = $album->delete(); // Hapus album dari database
-
-            if ($deleteResult) {
-                Log::info('Album foto berhasil dihapus: ' . $album->nama);
-                return redirect()->route('admin.albums.index')->with('success', 'Album foto berhasil dihapus!');
-            } else {
-                Log::error('Album foto GAGAL dihapus dari database (delete() mengembalikan false): ' . $album->nama);
-                return redirect()->route('admin.albums.index')->with('error', 'Gagal menghapus album foto.');
-            }
-        } catch (\Exception $e) {
-            Log::error('Gagal menghapus album foto (Exception): ' . $e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine());
-            return redirect()->route('admin.albums.index')->with('error', 'Gagal menghapus album foto: ' . $e->getMessage());
+        if ($album->thumbnail && Storage::disk('public')->exists($album->thumbnail)) {
+            Storage::disk('public')->delete($album->thumbnail);
         }
+        
+        foreach ($album->photos as $photo) {
+            if ($photo->file_path && Storage::disk('public')->exists($photo->file_path)) {
+                Storage::disk('public')->delete($photo->file_path);
+            }
+            $photo->delete();
+        }
+
+        $album->delete();
+
+        return redirect()->route('admin.albums.index')->with('success', 'Album foto dan semua isinya berhasil dihapus!');
     }
 }

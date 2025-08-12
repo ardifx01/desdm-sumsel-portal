@@ -1,105 +1,108 @@
 <?php
 
-namespace App\Http\Controllers\Admin; // Namespace yang benar
+namespace App\Http\Controllers\Admin;
 
-use App\Models\Photo; // Import model Photo Anda
-use App\Models\Album; // Import model Album Anda
+use App\Models\Photo;
+use App\Models\Album;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller; // Base Controller
-use Illuminate\Support\Str; // Untuk nama file acak
-use Illuminate\Support\Facades\Storage; // Untuk upload file
-use Illuminate\Support\Facades\Log; // Untuk logging
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Gate;
+use Spatie\ImageOptimizer\OptimizerChainFactory;
 
-class PhotoController extends Controller // Nama kelas adalah PhotoController
+class PhotoController extends Controller
 {
-    /**
-     * Display a listing of the resource (photos within a specific album).
-     */
-    public function index(Album $album) // Menggunakan Route Model Binding untuk Album
+    // ... (method index, create, edit, destroy tidak berubah) ...
+    public function index(Album $album)
     {
-        $photos = $album->photos()->orderBy('created_at', 'desc')->paginate(10);
+        Gate::authorize('view', $album);
+        $photos = $album->photos()->orderBy('created_at', 'desc')->paginate(12);
         return view('admin.photos.index', compact('photos', 'album'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(Album $album)
     {
+        Gate::authorize('update', $album);
         return view('admin.photos.create', compact('album'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request, Album $album)
     {
+        Gate::authorize('update', $album);
+
         $request->validate([
-            'file_photo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Max 2MB, hanya gambar
-            'judul' => 'nullable|string|max:255',
-            'deskripsi' => 'nullable|string',
+            'photos' => 'required|array',
+            'photos.*' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'is_active' => 'required|boolean',
         ]);
 
-        $filePath = null;
-        $fileNameOriginal = null;
-        if ($request->hasFile('file_photo')) {
-            $uploadedFile = $request->file('file_photo');
-            $folderRelativePath = 'photos/' . date('Y') . '/' . date('m'); // Path: storage/app/public/photos/YYYY/MM
-            $filePath = $uploadedFile->store($folderRelativePath, 'public');
-            $fileNameOriginal = $uploadedFile->getClientOriginalName();
+        if ($request->hasFile('photos')) {
+            $optimizerChain = OptimizerChainFactory::create();
+
+            foreach ($request->file('photos') as $uploadedFile) {
+                $folderRelativePath = 'photos/' . date('Y') . '/' . date('m');
+                $filePath = $uploadedFile->store($folderRelativePath, 'public');
+                
+                // --- PERBAIKAN UNTUK MENGHILANGKAN ERROR IDE ---
+                $absolutePath = storage_path('app/public/' . $filePath);
+                $optimizerChain->optimize($absolutePath);
+                // -------------------------------------------
+
+                $fileNameOriginal = $uploadedFile->getClientOriginalName();
+
+                $album->photos()->create([
+                    'judul' => pathinfo($fileNameOriginal, PATHINFO_FILENAME),
+                    'deskripsi' => null,
+                    'file_path' => $filePath,
+                    'file_name' => $fileNameOriginal,
+                    'is_active' => $request->boolean('is_active'),
+                ]);
+            }
         }
 
-        $album->photos()->create([ // Membuat foto terkait langsung dengan album
-            'judul' => $request->judul,
-            'deskripsi' => $request->deskripsi,
-            'file_path' => $filePath,
-            'file_name' => $fileNameOriginal,
-            'is_active' => $request->boolean('is_active'),
-        ]);
-
-        return redirect()->route('admin.albums.photos.index', $album)->with('success', 'Foto berhasil ditambahkan ke album!');
+        return redirect()->route('admin.albums.photos.index', $album)->with('success', 'Foto-foto berhasil diunggah dan dioptimalkan!');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Album $album, Photo $photo) // Nested Route Model Binding
+    public function edit(Album $album, Photo $photo)
     {
-        // Pastikan foto ini milik album yang benar
+        Gate::authorize('update', $album);
         if ($photo->album_id !== $album->id) {
             abort(404);
         }
         return view('admin.photos.edit', compact('album', 'photo'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Album $album, Photo $photo)
     {
-        // Pastikan foto ini milik album yang benar
+        Gate::authorize('update', $album);
         if ($photo->album_id !== $album->id) {
             abort(404);
         }
 
         $request->validate([
-            'file_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'file_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'judul' => 'nullable|string|max:255',
             'deskripsi' => 'nullable|string',
             'is_active' => 'required|boolean',
         ]);
 
-        $filePath = $photo->file_path; // Default ke file lama
+        $filePath = $photo->file_path;
         $fileNameOriginal = $photo->file_name;
         if ($request->hasFile('file_photo')) {
-            // Hapus file lama jika ada
             if ($photo->file_path && Storage::disk('public')->exists($photo->file_path)) {
                 Storage::disk('public')->delete($photo->file_path);
             }
             $uploadedFile = $request->file('file_photo');
             $folderRelativePath = 'photos/' . date('Y') . '/' . date('m');
             $filePath = $uploadedFile->store($folderRelativePath, 'public');
+            
+            // --- PERBAIKAN UNTUK MENGHILANGKAN ERROR IDE ---
+            $absolutePath = storage_path('app/public/' . $filePath);
+            OptimizerChainFactory::create()->optimize($absolutePath);
+            // -------------------------------------------
+
             $fileNameOriginal = $uploadedFile->getClientOriginalName();
         }
 
@@ -111,37 +114,21 @@ class PhotoController extends Controller // Nama kelas adalah PhotoController
             'is_active' => $request->boolean('is_active'),
         ]);
 
-        return redirect()->route('admin.albums.photos.index', $album)->with('success', 'Foto berhasil diperbarui!');
+        return redirect()->route('admin.albums.photos.index', $album)->with('success', 'Detail foto berhasil diperbarui!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Album $album, Photo $photo) // Nested Route Model Binding
+    public function destroy(Album $album, Photo $photo)
     {
-        // Pastikan foto ini milik album yang benar
+        Gate::authorize('update', $album);
         if ($photo->album_id !== $album->id) {
             abort(404);
         }
 
-        try {
-            // Hapus file fisik jika ada
-            if ($photo->file_path && Storage::disk('public')->exists($photo->file_path)) {
-                Storage::disk('public')->delete($photo->file_path);
-            }
-
-            $deleteResult = $photo->delete(); // Hapus record dari database
-
-            if ($deleteResult) {
-                Log::info('Foto berhasil dihapus: ' . ($photo->judul ?: $photo->file_name));
-                return redirect()->route('admin.albums.photos.index', $album)->with('success', 'Foto berhasil dihapus!');
-            } else {
-                Log::error('Foto GAGAL dihapus dari database (delete() mengembalikan false): ' . ($photo->judul ?: $photo->file_name));
-                return redirect()->route('admin.albums.photos.index', $album)->with('error', 'Gagal menghapus foto.');
-            }
-        } catch (\Exception $e) {
-            Log::error('Gagal menghapus foto (Exception): ' . $e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine());
-            return redirect()->route('admin.albums.photos.index', $album)->with('error', 'Gagal menghapus foto: ' . $e->getMessage());
+        if ($photo->file_path && Storage::disk('public')->exists($photo->file_path)) {
+            Storage::disk('public')->delete($photo->file_path);
         }
+        $photo->delete();
+
+        return redirect()->route('admin.albums.photos.index', $album)->with('success', 'Foto berhasil dihapus!');
     }
 }

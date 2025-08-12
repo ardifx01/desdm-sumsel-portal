@@ -1,95 +1,70 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Manajemen Video') }}
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ __('Manajemen Video') }}
+            </h2>
+            <a href="{{ route('admin.videos.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700">
+                <i class="bi bi-plus-lg mr-2"></i> Tambah Video Baru
+            </a>
+        </div>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-medium text-gray-900">Daftar Video</h3>
-                        <a href="{{ route('admin.videos.create') }}" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Tambah Video Baru</a>
+            @if (session('success'))
+                <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-md" role="alert">
+                    <p>{{ session('success') }}</p>
+                </div>
+            @endif
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                @forelse ($videos as $video)
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    {{-- STRUKTUR PALING SEDERHANA TANPA OVERLAY --}}
+                    <div class="h-40 bg-gray-200">
+                        @if($video->thumbnail)
+                            <img src="{{ $video->thumbnail }}" alt="{{ $video->judul }}" class="w-full h-full object-cover">
+                        @else
+                            <div class="w-full h-full flex items-center justify-center">
+                                <i class="bi bi-camera-video-off-fill text-5xl text-gray-400"></i>
+                            </div>
+                        @endif
                     </div>
-
-                    @if (session('success'))
-                        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-                            <span class="block sm:inline">{{ session('success') }}</span>
-                        </div>
-                    @endif
-                    @if (session('error'))
-                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-                            <span class="block sm:inline">{{ session('error') }}</span>
-                        </div>
-                    @endif
-
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thumbnail</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Judul Video</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                    <th scope="col" class="relative px-6 py-3">
-                                        <span class="sr-only">Aksi</span>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                @forelse ($videos as $video)
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        @if($video->thumbnail)
-                                            <img src="{{ $video->thumbnail }}" alt="{{ $video->judul }}" class="h-10 w-10 rounded-md object-cover">
-                                        @else
-                                            {{-- Coba ambil thumbnail YouTube default --}}
-                                            @php
-                                                $videoId = '';
-                                                if (preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i', $video->embed_code, $matches)) {
-                                                    $videoId = $matches[1];
-                                                }
-                                            @endphp
-                                            @if($videoId)
-                                                <img src="http://googleusercontent.com/youtube.com/thumbnail/0/{{ $videoId }}/hqdefault.jpg" alt="{{ $video->judul }}" class="h-10 w-10 rounded-md object-cover">
-                                            @else
-                                                <div class="h-10 w-10 bg-gray-200 rounded-md flex items-center justify-center text-gray-400 text-xs">N/A</div>
-                                            @endif
-                                        @endif
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        {{ Str::limit($video->judul, 50) }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $video->is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
-                                            {{ $video->is_active ? 'Aktif' : 'Non-Aktif' }}
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <a href="{{ route('admin.videos.edit', $video) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
-                                        <form action="{{ route('admin.videos.destroy', $video) }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin menghapus video ini?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-900">Hapus</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="4" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                                        Tidak ada video yang ditemukan.
-                                    </td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+                    <div class="p-4 flex-grow">
+                        <h4 class="font-bold text-gray-800 truncate h-12" title="{{ $video->judul }}">{{ $video->judul }}</h4>
                     </div>
-
-                    <div class="mt-4">
-                        {{ $videos->links() }}
+                    <div class="px-4 pb-3 flex justify-between items-center border-t border-gray-100 pt-3">
+                        <div>
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $video->is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
+                                {{ $video->is_active ? 'Aktif' : 'Non-Aktif' }}
+                            </span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            {{-- IKON PLAY DITAMBAHKAN DI SINI --}}
+                            <i class="bi bi-play-circle-fill text-gray-400 text-lg" title="Video"></i>
+                            <a href="{{ route('admin.videos.edit', $video) }}" class="text-indigo-600 hover:text-indigo-900" title="Edit Video">
+                                <i class="bi bi-pencil-square text-lg"></i>
+                            </a>
+                            <form action="{{ route('admin.videos.destroy', $video) }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin menghapus video ini?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-600 hover:text-red-900" title="Hapus Video">
+                                    <i class="bi bi-trash3-fill text-lg"></i>
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
+                @empty
+                <div class="col-span-full text-center py-10">
+                    <p class="text-gray-500">Belum ada video yang ditambahkan.</p>
+                </div>
+                @endforelse
+            </div>
+
+            <div class="mt-6">
+                {{ $videos->links() }}
             </div>
         </div>
     </div>

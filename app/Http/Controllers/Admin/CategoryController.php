@@ -1,19 +1,21 @@
 <?php
 
-namespace App\Http\Controllers\Admin; // Namespace yang benar untuk controller ini
+namespace App\Http\Controllers\Admin;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Routing\Controller; // <-- TAMBAHKAN BARIS INI
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Gate; // <-- Ditambahkan
 
-class CategoryController extends Controller // <-- Sekarang Controller ini dikenali
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        Gate::authorize('viewAny', Category::class);
         $categories = Category::ofTypePost()->orderBy('name')->paginate(10);
         return view('admin.categories.index', compact('categories'));
     }
@@ -23,6 +25,7 @@ class CategoryController extends Controller // <-- Sekarang Controller ini diken
      */
     public function create()
     {
+        Gate::authorize('create', Category::class);
         return view('admin.categories.create');
     }
 
@@ -31,6 +34,8 @@ class CategoryController extends Controller // <-- Sekarang Controller ini diken
      */
     public function store(Request $request)
     {
+        Gate::authorize('create', Category::class);
+
         $request->validate([
             'name' => 'required|string|max:100|unique:categories,name',
             'type' => 'required|in:post,document',
@@ -52,6 +57,8 @@ class CategoryController extends Controller // <-- Sekarang Controller ini diken
      */
     public function edit(Category $category)
     {
+        Gate::authorize('update', $category);
+
         if ($category->type !== 'post') {
             abort(404, 'Kategori tidak ditemukan atau bukan tipe berita.');
         }
@@ -63,6 +70,8 @@ class CategoryController extends Controller // <-- Sekarang Controller ini diken
      */
     public function update(Request $request, Category $category)
     {
+        Gate::authorize('update', $category);
+
         $request->validate([
             'name' => 'required|string|max:100|unique:categories,name,' . $category->id,
             'type' => 'required|in:post,document',
@@ -83,6 +92,8 @@ class CategoryController extends Controller // <-- Sekarang Controller ini diken
      */
     public function destroy(Category $category)
     {
+        Gate::authorize('delete', $category);
+
         if ($category->type !== 'post') {
             abort(404, 'Kategori tidak ditemukan atau bukan tipe berita.');
         }

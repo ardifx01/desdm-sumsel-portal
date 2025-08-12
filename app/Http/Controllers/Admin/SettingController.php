@@ -5,25 +5,22 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate; // <-- Tambahkan ini
 
 class SettingController extends Controller
 {
-    /**
-     * Tampilkan form untuk mengedit pengaturan umum.
-     */
     public function edit()
     {
+        Gate::authorize('view', Setting::class); // <-- Terapkan Policy
         $settings = Setting::pluck('value', 'key')->all();
         return view('admin.settings.edit', compact('settings'));
     }
 
-    /**
-     * Update pengaturan di database.
-     */
     public function update(Request $request)
     {
+        Gate::authorize('update', Setting::class); // <-- Terapkan Policy
         
-        // Aturan validasi dasar
+        // ... sisa kode method update Anda tidak berubah ...
         $validationRules = [
             'app_name' => 'required|string|max:255',
             'alamat_kantor' => 'required|string',
@@ -35,7 +32,6 @@ class SettingController extends Controller
             'youtube_url' => 'nullable|url',
         ];
 
-        // Tambahkan aturan 'image' hanya jika file diunggah
         if ($request->file('app_logo')) {
             $validationRules['app_logo'] = 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048';
         }
@@ -45,47 +41,34 @@ class SettingController extends Controller
         }
 
         $validatedData = $request->validate($validationRules);
-        
-        // Siapkan array untuk menyimpan data yang akan diupdate ke database
         $dataToUpdate = $validatedData;
 
-        // --- Perbaikan Logika Penyimpanan ---
-
-        // Tangani unggahan logo
         $logoFile = $request->file('app_logo');
         if ($logoFile) {
             $fileName = 'logo.' . $logoFile->getClientOriginalExtension();
             $path = public_path('storage/images/settings');
-            
             if (!is_dir($path)) {
                 mkdir($path, 0777, true);
             }
-
             $logoFile->move($path, $fileName);
             $dataToUpdate['app_logo'] = 'images/settings/' . $fileName;
         } else {
-            // Hapus dari data jika tidak ada file yang diunggah
             unset($dataToUpdate['app_logo']);
         }
 
-        // Tangani unggahan favicon
         $faviconFile = $request->file('app_favicon');
         if ($faviconFile) {
             $fileName = 'favicon.' . $faviconFile->getClientOriginalExtension();
             $path = public_path('storage/images/settings');
-            
             if (!is_dir($path)) {
                 mkdir($path, 0777, true);
             }
-            
             $faviconFile->move($path, $fileName);
             $dataToUpdate['app_favicon'] = 'images/settings/' . $fileName;
         } else {
-            // Hapus dari data jika tidak ada file yang diunggah
             unset($dataToUpdate['app_favicon']);
         }
 
-        // Simpan semua data ke database
         foreach ($dataToUpdate as $key => $value) {
             Setting::updateOrCreate(
                 ['key' => $key],
@@ -99,9 +82,10 @@ class SettingController extends Controller
 
     public function resetCounter()
     {
-        // Temukan entri 'visitors' dan atur nilainya menjadi 0
-        $visitorCount = Setting::where('key', 'visitors')->first();
+        // Asumsi hanya super_admin yang bisa reset, kita bisa kunci juga
+        Gate::authorize('update', Setting::class); // <-- Terapkan Policy
 
+        $visitorCount = Setting::where('key', 'visitors')->first();
         if ($visitorCount) {
             $visitorCount->value = 0;
             $visitorCount->save();
