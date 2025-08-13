@@ -1,45 +1,40 @@
 <header class="header-transparent py-3 shadow-sm">
     <div class="container">
         <div class="d-flex justify-content-between align-items-center">
-        <a href="{{ url('/') }}" class="header-menu-link logo-link text-decoration-none d-flex align-items-center">
-            <div class="d-flex align-items-center logo-container">
-                {{-- Logo Dinas --}}
-
-                <a class="navbar-brand me-3" href="{{ url('/') }}">
-                    @if(isset($settings['app_logo']))
-                        <img src="{{ asset('storage/' . $settings['app_logo']) }}" alt="Logo {{ $settings['app_name'] }}" style="max-height: 50px;">
-                    @else
-                        <img src="{{ asset('images/logo.png') }}" alt="Logo Default" style="max-height: 50px;">
-                    @endif
-                </a>                
-                {{-- Teks Logo untuk Desktop (dua baris) --}}
-                <div class="logo-text-group d-none d-lg-block">
-                    <div class="logo-main-title">PEMERINTAH PROVINSI SUMATERA SELATAN</div>
-                    <div class="logo-sub-title">DINAS ENERGI DAN SUMBER DAYA MINERAL</div>
+            <a href="{{ url('/') }}" class="header-menu-link logo-link text-decoration-none d-flex align-items-center">
+                <div class="d-flex align-items-center logo-container">
+                    {{-- Logo Dinas --}}
+                    <a class="navbar-brand me-3" href="{{ url('/') }}">
+                        @if(isset($settings['app_logo']))
+                            <img src="{{ asset('storage/' . $settings['app_logo']) }}" alt="Logo {{ $settings['app_name'] ?? '' }}" style="max-height: 50px;">
+                        @else
+                            <img src="{{ asset('images/logo.png') }}" alt="Logo Default" style="max-height: 50px;">
+                        @endif
+                    </a>                
+                    {{-- Teks Logo untuk Desktop (dua baris) --}}
+                    <div class="logo-text-group d-none d-lg-block">
+                        <div class="logo-main-title">PEMERINTAH PROVINSI SUMATERA SELATAN</div>
+                        <div class="logo-sub-title">DINAS ENERGI DAN SUMBER DAYA MINERAL</div>
+                    </div>
+                    
+                    {{-- Teks Logo untuk Mobile (satu baris) --}}
+                    <span class="logo-text d-lg-none">{{ config('app.name', 'DESDM') }}</span>
                 </div>
-                
-                {{-- Teks Logo untuk Mobile (satu baris) --}}
-                <span class="logo-text d-lg-none">{{ config('app.name', 'DESDM') }}</span>
-            </div>
-        </a>
+            </a>
             {{-- Navigasi Utama --}}
             <nav class="navbar navbar-expand-lg p-0">
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
+                    {{-- PERUBAHAN DI SINI: Menambahkan kelas align-items-center --}}
+                    <ul class="navbar-nav ms-auto align-items-center">
                         <li class="nav-item">
                             <a class="nav-link header-menu-link" href="{{ url('/') }}">Beranda</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link header-menu-link" href="{{ url('/') }}#tentang-kami">Tentang Kami</a>
-
                         </li>
-{{--                         Item menu untuk Bidang & Data Sektoral
-                        <li class="nav-item">
-                            <a class="nav-link header-menu-link" href="{{ route('bidang-sektoral.index') }}">Bidang</a>
-                        </li> --}}
                         {{-- Dropdown untuk Informasi Publik (PPID) --}}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle header-menu-link" href="#" id="navbarDropdownPPID" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -96,15 +91,49 @@
                         <li class="nav-item">
                             <a class="nav-link header-menu-link" href="{{ route('kontak.index') }}">Kontak</a>
                         </li>
+                        
+                        {{-- Logika untuk Pengguna Login/Tamu --}}
+                        @auth
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-person-circle me-1"></i> {{ Auth::user()->name }}
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                    <li><a class="dropdown-item" href="{{ route('dashboard') }}">Dasbor Saya</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('profile.edit.public') }}">Edit Profil</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form method="POST" action="{{ route('logout') }}">
+                                            @csrf
+                                            <a class="dropdown-item text-danger" href="{{ route('logout') }}" 
+                                               onclick="event.preventDefault(); this.closest('form').submit();">
+                                                Keluar
+                                            </a>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        @else
+                            <li class="nav-item ms-lg-2">
+                                <a class="btn btn-outline-primary btn-sm" href="{{ route('login') }}">Masuk</a>
+                            </li>
+                            <li class="nav-item ms-lg-1">
+                                <a class="btn btn-primary btn-sm" href="{{ route('register') }}">Daftar</a>
+                            </li>
+                        @endauth
+
+                        {{-- PERUBAHAN DI SINI: Membungkus form pencarian dalam <li> --}}
+                        <li class="nav-item ms-lg-3">
+                            <form class="d-flex" action="{{ route('search') }}" method="GET">
+                                <div class="input-group">
+                                    <input class="form-control form-control-sm" type="search" name="query" placeholder="Cari..." aria-label="Search" value="{{ request('query') }}">
+                                    <button class="btn btn-outline-secondary btn-sm" type="submit">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </li>
                     </ul>
-                    <form class="d-flex ms-lg-3" action="{{ route('search') }}" method="GET">
-                        <div class="input-group">
-                            <input class="form-control form-control-sm" type="search" name="query" placeholder="Cari..." aria-label="Search" value="{{ request('query') }}">
-                            <button class="btn btn-outline-secondary btn-sm" type="submit">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                    </form>
                 </div>
             </nav>
         </div>

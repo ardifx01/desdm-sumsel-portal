@@ -1,43 +1,33 @@
 <?php
 
-namespace App\Http\Controllers\Admin; // Namespace yang benar
+namespace App\Http\Controllers\Admin;
 
-use App\Models\PermohonanInformasi; // Import model PermohonanInformasi Anda
+use App\Models\PermohonanInformasi;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller; // Base Controller
-use Illuminate\Support\Facades\Log; // Untuk logging
-use Illuminate\Support\Facades\Storage; // Untuk file identitas
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Gate;
 
-class PermohonanInformasiController extends Controller // Nama kelas adalah PermohonanInformasiController
+class PermohonanInformasiController extends Controller
 {
-    // Daftar status yang mungkin untuk permohonan
     private $statuses = ['Menunggu Diproses', 'Diproses', 'Diterima', 'Ditolak', 'Selesai'];
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
-        $statuses = $this->statuses; // Kirim daftar status ke view
+        Gate::authorize('viewAny', PermohonanInformasi::class);
+        
+        $statuses = $this->statuses;
+        $query = PermohonanInformasi::with('user')->orderBy('tanggal_permohonan', 'desc');
 
-        $query = PermohonanInformasi::orderBy('tanggal_permohonan', 'desc');
-
-        // Implementasi Filter dan Pencarian
-        if ($request->filled('q')) { // Pencarian nama pemohon atau nomor registrasi
+        if ($request->filled('q')) {
             $search = $request->q;
-            $query->where(function ($q) use ($search) {
-                $q->where('nama_pemohon', 'like', '%' . $search . '%')
-                  ->orWhere('nomor_registrasi', 'like', '%' . $search . '%');
-            });
+            $query->where('nomor_registrasi', 'like', '%' . $search . '%')
+                  ->orWhereHas('user', function ($q) use ($search) {
+                      $q->where('name', 'like', '%' . $search . '%');
+                  });
         }
-        if ($request->filled('status')) { // Filter status permohonan
+        if ($request->filled('status')) {
             $query->where('status', $request->status);
-        }
-        if ($request->filled('start_date')) { // Filter tanggal mulai
-            $query->whereDate('tanggal_permohonan', '>=', $request->start_date);
-        }
-        if ($request->filled('end_date')) { // Filter tanggal akhir
-            $query->whereDate('tanggal_permohonan', '<=', $request->end_date);
         }
 
         $permohonan = $query->paginate(10);
@@ -45,70 +35,40 @@ class PermohonanInformasiController extends Controller // Nama kelas adalah Perm
         return view('admin.permohonan.index', compact('permohonan', 'statuses'));
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($id) // <-- Menerima $id
+    public function show($id)
     {
-        // Ambil data permohonan secara eksplisit menggunakan ID
-        $permohonan_informasi = PermohonanInformasi::findOrFail($id); // <-- Menggunakan findOrFail
-
-        $statuses = $this->statuses; // Kirim daftar status ke view
+        $permohonan_informasi = PermohonanInformasi::with('user')->findOrFail($id);
+        Gate::authorize('view', $permohonan_informasi);
+        
+        $statuses = $this->statuses;
         return view('admin.permohonan.show', compact('permohonan_informasi', 'statuses'));
     }
 
-    /**
-     * Update the specified resource in storage. (Hanya untuk update status & catatan admin)
-     */
-    public function update(Request $request, $id) // <-- UBAH PARAMETER INI MENJADI $id
+    public function update(Request $request, $id)
     {
-        // Ambil instance model secara eksplisit di sini
-        $permohonan_informasi = PermohonanInformasi::findOrFail($id); // <-- Tambahkan ini
-
-        // Hapus dd() setelah debugging
-        // dd($request->method(), $permohonan_informasi);
+        $permohonan_informasi = PermohonanInformasi::findOrFail($id);
+        Gate::authorize('update', $permohonan_informasi);
 
         $request->validate([
             'status' => 'required|in:' . implode(',', $this->statuses),
             'catatan_admin' => 'nullable|string',
         ]);
 
-        $permohonan_informasi->update([
-            'status' => $request->status,
-            'catatan_admin' => $request->catatan_admin,
-        ]);
+        $permohonan_informasi->update($request->only('status', 'catatan_admin'));
 
         return redirect()->route('admin.permohonan.show', ['permohonan_item' => $permohonan_informasi->id])->with('success', 'Status permohonan berhasil diperbarui!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id) // <-- UBAH PARAMETER INI MENJADI $id
+    public function destroy($id)
     {
-        // Ambil instance model secara eksplisit di sini
-        $permohonan_informasi = PermohonanInformasi::findOrFail($id); // <-- Tambahkan ini
+        $permohonan_informasi = PermohonanInformasi::findOrFail($id);
+        Gate::authorize('delete', $permohonan_informasi);
 
-        Log::info('Memulai proses hapus permohonan informasi: ' . $permohonan_informasi->nomor_registrasi . ' (ID: ' . $permohonan_informasi->id . ')');
-
-        try {
-            // Hapus file identitas jika ada
-            if ($permohonan_informasi->identitas_pemohon && Storage::disk('public')->exists($permohonan_informasi->identitas_pemohon)) {
-                Storage::disk('public')->delete($permohonan_informasi->identitas_pemohon);
-            }
-
-            $deleteResult = $permohonan_informasi->delete();
-
-            if ($deleteResult) {
-                Log::info('Permohonan informasi berhasil dihapus: ' . $permohonan_informasi->nomor_registrasi);
-                return redirect()->route('admin.permohonan.index')->with('success', 'Permohonan berhasil dihapus!');
-            } else {
-                Log::error('Permohonan informasi GAGAL dihapus (delete() mengembalikan false): ' . $permohonan_informasi->nomor_registrasi);
-                return redirect()->route('admin.permohonan.index')->with('error', 'Gagal menghapus permohonan.');
-            }
-        } catch (\Exception $e) {
-            Log::error('Gagal menghapus permohonan (Exception): ' . $e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine());
-            return redirect()->route('admin.permohonan.index')->with('error', 'Gagal menghapus permohonan: ' . $e->getMessage());
+        if ($permohonan_informasi->identitas_pemohon && Storage::disk('public')->exists($permohonan_informasi->identitas_pemohon)) {
+            Storage::disk('public')->delete($permohonan_informasi->identitas_pemohon);
         }
+
+        $permohonan_informasi->delete();
+        return redirect()->route('admin.permohonan.index')->with('success', 'Permohonan berhasil dihapus!');
     }
 }

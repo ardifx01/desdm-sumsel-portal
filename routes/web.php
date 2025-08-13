@@ -27,15 +27,16 @@ use App\Http\Controllers\Admin\AlbumController; // CRUD Album Foto
 use App\Http\Controllers\Admin\PhotoController; // CRUD Foto dalam Album
 use App\Http\Controllers\Admin\VideoController; // CRUD Video
 use App\Http\Controllers\Admin\PejabatController;
-use App\Http\Controllers\Admin\PermohonanInformasiController; // <-- TAMBAHKAN BARIS INI
-use App\Http\Controllers\Admin\PengajuanKeberatanController; // <-- TAMBAHKAN BARIS INI
+use App\Http\Controllers\Admin\PermohonanInformasiController;
+use App\Http\Controllers\Admin\PengajuanKeberatanController;
 use App\Http\Controllers\Admin\StaticPageController;
 use App\Http\Controllers\Admin\BidangController;
 use App\Http\Controllers\Admin\SeksiController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\CommentsController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DashboardController; // Admin Dashboard
+use App\Http\Controllers\UserDashboardController; // User Dashboard
 
 use App\Http\Controllers\WelcomeController;
 // Controllers bawaan Laravel/Breeze
@@ -48,14 +49,10 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-
-
 // Rute Halaman Beranda
 Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
-// Rute Halaman Beranda
 
-
-// --- Rute MODUL PUBLIK (Pastikan Urutan Ini) ---
+// --- Rute MODUL PUBLIK ---
 
 // Modul Tentang Kami
 Route::prefix('tentang-kami')->name('tentang-kami.')->group(function () {
@@ -67,14 +64,14 @@ Route::prefix('tentang-kami')->name('tentang-kami.')->group(function () {
     Route::get('/profil-pimpinan/{id}', [TentangKamiController::class, 'detailPimpinan'])->name('detail-pimpinan');
 });
 
-// TAMBAHKAN RUTE MODAL PEJABAT DI SINI
+// Rute Modal Pejabat
 Route::get('/pejabat-modal/{pejabat}', [TentangKamiController::class, 'showModal'])->name('pejabat.showModal');
-// Modul Bidang & Data Sektoral
 
+// Modul Bidang & Data Sektoral
 Route::prefix('bidang-sektoral')->name('bidang-sektoral.')->group(function () {
     Route::get('/', [BidangSektoralController::class, 'index'])->name('index');
     Route::get('/data-statistik', [BidangSektoralController::class, 'showDataStatistik'])->name('data-statistik');
-    Route::get('/{slug}', [BidangSektoralController::class, 'show'])->name('show'); // <--- BARIS INI
+    Route::get('/{slug}', [BidangSektoralController::class, 'show'])->name('show');
 });
 
 // Modul Layanan & Pengaduan
@@ -83,12 +80,7 @@ Route::prefix('layanan-pengaduan')->name('layanan-pengaduan.')->group(function (
     Route::get('/pengaduan', [LayananPengaduanController::class, 'showPengaduan'])->name('pengaduan');
     Route::get('/faq-umum', [LayananPengaduanController::class, 'showFaqUmum'])->name('faq-umum');
     Route::get('/daftar-layanan', [LayananPengaduanController::class, 'showDaftarLayanan'])->name('daftar-layanan');
-    // Route::get('/cek-status', [LayananPengaduanController::class, 'showCekStatus'])->name('cek-status');
-
-    // Route GET untuk menampilkan form Cek Status (sudah ada, kita pakai ini)
     Route::get('/cek-status', [LayananPengaduanController::class, 'showCekStatus'])->name('cek-status');
-
-    // TAMBAHKAN ROUTE POST INI UNTUK MEMPROSES FORM
     Route::post('/cek-status', [LayananPengaduanController::class, 'processCekStatus'])->name('cek-status.process');
 });
 
@@ -104,9 +96,11 @@ Route::prefix('berita')->name('berita.')->group(function () {
     Route::get('/{slug}', [BeritaController::class, 'show'])->name('show');
     Route::post('/{post}/share-count', [BeritaController::class, 'incrementShareCount'])->name('share.count');
 });
+
 // Rute untuk Komentar
 Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
 Route::get('/comments/{comment}/verify', [CommentController::class, 'verifyEmail'])->name('comments.verify-email');
+
 // Modul Galeri (Sisi Publik)
 Route::prefix('galeri')->name('galeri.')->group(function () {
     Route::get('/', [GaleriController::class, 'index'])->name('index');
@@ -115,10 +109,7 @@ Route::prefix('galeri')->name('galeri.')->group(function () {
 });
 
 // Modul Informasi Publik (PPID)
-// Pastikan rute spesifik (profil-ppid, permohonan, keberatan, laporan-statistik, kontak)
-// berada DI ATAS rute generik '/{slug}' di dalam grup ini.
 Route::prefix('informasi-publik')->name('informasi-publik.')->group(function () {
-
     // Rute Profil PPID
     Route::prefix('profil-ppid')->name('profil-ppid.')->group(function () {
         Route::get('/', [ProfilPpidController::class, 'index'])->name('index');
@@ -134,16 +125,22 @@ Route::prefix('informasi-publik')->name('informasi-publik.')->group(function () 
     // Rute Prosedur Pelayanan Informasi (Permohonan)
     Route::prefix('permohonan')->name('permohonan.')->group(function () {
         Route::get('/prosedur', [LayananInformasiController::class, 'showProsedurPermohonan'])->name('prosedur');
-        Route::get('/form', [LayananInformasiController::class, 'showFormPermohonan'])->name('form');
-        Route::post('/store', [LayananInformasiController::class, 'storePermohonan'])->name('store');
+        
+        // Rute yang dilindungi: hanya untuk pengguna yang sudah login
+        Route::get('/form', [LayananInformasiController::class, 'showFormPermohonan'])->middleware('auth')->name('form');
+        Route::post('/store', [LayananInformasiController::class, 'storePermohonan'])->middleware('auth')->name('store');
+        
         Route::get('/sukses', [LayananInformasiController::class, 'showPermohonanSukses'])->name('sukses');
     });
 
     // Rute Prosedur Pelayanan Informasi (Keberatan)
     Route::prefix('keberatan')->name('keberatan.')->group(function () {
         Route::get('/prosedur', [LayananInformasiController::class, 'showProsedurKeberatan'])->name('prosedur');
-        Route::get('/form', [LayananInformasiController::class, 'showFormKeberatan'])->name('form');
-        Route::post('/store', [LayananInformasiController::class, 'storeKeberatan'])->name('store');
+
+        // Rute yang dilindungi: hanya untuk pengguna yang sudah login
+        Route::get('/form', [LayananInformasiController::class, 'showFormKeberatan'])->middleware('auth')->name('form');
+        Route::post('/store', [LayananInformasiController::class, 'storeKeberatan'])->middleware('auth')->name('store');
+
         Route::get('/sukses', [LayananInformasiController::class, 'showKeberatanSukses'])->name('sukses');
     });
 
@@ -152,12 +149,11 @@ Route::prefix('informasi-publik')->name('informasi-publik.')->group(function () 
 
     // Rute Daftar Informasi Publik (DIP) - khusus index
     Route::get('/', [InformasiPublikController::class, 'index'])->name('index');
-    
     Route::get('/laporan-statistik', [InformasiPublikController::class, 'laporanStatistik'])->name('laporan-statistik');
+    
     // Rute paling umum dengan {slug} untuk detail informasi publik (HARUS DI PALING BAWAH)
     Route::get('/{slug}', [InformasiPublikController::class, 'show'])->name('show');
 });
-
 
 // Modul Kontak Umum
 Route::prefix('kontak')->name('kontak.')->group(function () {
@@ -175,18 +171,40 @@ Route::prefix('halaman-statis')->name('static-pages.')->group(function () {
 // Tambahkan di bagian rute publik
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 
-// --- Rute AUTENTIKASI BREEZE (Tetap di bagian paling bawah) ---
-Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+// --- Rute AUTENTIKASI BREEZE ---
+
+// Rute Dashboard Cerdas (Mengarah ke Admin atau User Dashboard)
+Route::get('/dashboard', function () {
+    // Periksa peran pengguna yang sedang login
+    if (in_array(auth()->user()->role, ['super_admin', 'ppid_admin', 'editor'])) {
+        // Jika peran adalah salah satu dari admin, panggil controller dasbor admin
+        return app(DashboardController::class)->index();
+    } else {
+        // Jika tidak (misalnya peran 'user'), panggil controller dasbor pengguna publik
+        return app(UserDashboardController::class)->index();
+    }
+})->middleware(['auth', 'verified'])->name('dashboard');
+
 
 Route::middleware('auth')->group(function () {
+    // Rute Profil Pengguna (Breeze)
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    // RUTE BARU untuk edit profil publik
+    Route::get('/profil-saya', [ProfileController::class, 'editPublic'])->name('profile.edit.public');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // --- RUTE BARU UNTUK DASBOR PENGGUNA ---
+    Route::get('/dasbor/permohonan/{permohonan}', [UserDashboardController::class, 'showPermohonan'])
+        ->name('user-dashboard.permohonan.show');
+        
+    Route::get('/dasbor/keberatan/{keberatan}', [UserDashboardController::class, 'showKeberatan'])
+        ->name('user-dashboard.keberatan.show');
 
     // --- Rute ADMIN / BACKEND (CRUD) ---
     Route::prefix('admin')->name('admin.')->group(function () {
-        // Dashboard Admin Utama
-        Route::get('/', function () { return view('admin.dashboard'); })->name('dashboard');
+        // Dashboard Admin Utama (Jika diperlukan, tapi sudah ditangani oleh rute /dashboard di atas)
+        // Route::get('/', function () { return view('admin.dashboard'); })->name('dashboard');
 
         // Rute untuk manajemen pengguna yang dilindungi oleh middleware 'can:manage-users'
         Route::middleware('can:manage-users')->group(function () {
@@ -224,7 +242,7 @@ Route::middleware('auth')->group(function () {
         ]);
 
         // CRUD Informasi Publik (Item)
-        Route::resource('informasi-publik', AdminInformasiPublikController::class)->parameters([ // <-- TAMBAHKAN BARIS INI
+        Route::resource('informasi-publik', AdminInformasiPublikController::class)->parameters([
             'informasi-publik' => 'informasi_publik_item',
         ]);
 
@@ -240,45 +258,43 @@ Route::middleware('auth')->group(function () {
         Route::resource('videos', VideoController::class);
 
         // CRUD Pejabat Dinas
-        Route::resource('pejabat', PejabatController::class); // <-- TAMBAHKAN BARIS INI
+        Route::resource('pejabat', PejabatController::class);
 
         // CRUD Permohonan Informasi
         Route::resource('permohonan', PermohonanInformasiController::class)->only(['index', 'show', 'update', 'destroy'])->parameters([
-            'permohonan' => 'permohonan_item', // Mengubah nama parameter
-        ]); // <-- TAMBAHKAN BARIS INI
+            'permohonan' => 'permohonan_item',
+        ]);
 
         // CRUD Pengajuan Keberatan
         Route::resource('keberatan', PengajuanKeberatanController::class)->only(['index', 'show', 'update', 'destroy'])->parameters([
-            'keberatan' => 'keberatan_item', // Mengubah nama parameter
-        ]); // <-- TAMBAHKAN BARIS INI
+            'keberatan' => 'keberatan_item',
+        ]);
 
         // =========================================================================
-            // RUTE BARU: PENGELOLAAN BIDANG (BACKEND ADMIN)
-            // =========================================================================
-            // URL-nya menjadi /admin/bidang karena prefix 'admin' sudah ada di atasnya
-            Route::resource('bidang', BidangController::class)->names([ // <--- CUKUP "bidang"
-                'index' => 'bidang.index', // <--- CUKUP "bidang.index"
-                'create' => 'bidang.create',
-                'store' => 'bidang.store',
-                'edit' => 'bidang.edit',
-                'update' => 'bidang.update',
-                'destroy' => 'bidang.destroy',
-                'show' => 'bidang.show_preview',
-            ]);
+        // RUTE BARU: PENGELOLAAN BIDANG (BACKEND ADMIN)
+        // =========================================================================
+        Route::resource('bidang', BidangController::class)->names([
+            'index' => 'bidang.index',
+            'create' => 'bidang.create',
+            'store' => 'bidang.store',
+            'edit' => 'bidang.edit',
+            'update' => 'bidang.update',
+            'destroy' => 'bidang.destroy',
+            'show' => 'bidang.show_preview',
+        ]);
 
-            // =========================================================================
-            // RUTE BARU: PENGELOLAAN SEKSI (BACKEND ADMIN)
-            // =========================================================================
-            // URL-nya menjadi /admin/bidang/{bidang}/seksi
-            Route::resource('bidang/{bidang}/seksi', SeksiController::class)->names([ // <--- CUKUP "bidang/{bidang}/seksi"
-                'index' => 'bidang.seksi.index', // <--- CUKUP "bidang.seksi.index"
-                'create' => 'bidang.seksi.create',
-                'store' => 'bidang.seksi.store',
-                'edit' => 'bidang.seksi.edit',
-                'update' => 'bidang.seksi.update',
-                'destroy' => 'bidang.seksi.destroy',
-                'show' => 'bidang.seksi.show_preview',
-            ]);
+        // =========================================================================
+        // RUTE BARU: PENGELOLAAN SEKSI (BACKEND ADMIN)
+        // =========================================================================
+        Route::resource('bidang/{bidang}/seksi', SeksiController::class)->names([
+            'index' => 'bidang.seksi.index',
+            'create' => 'bidang.seksi.create',
+            'store' => 'bidang.seksi.store',
+            'edit' => 'bidang.seksi.edit',
+            'update' => 'bidang.seksi.update',
+            'destroy' => 'bidang.seksi.destroy',
+            'show' => 'bidang.seksi.show_preview',
+        ]);
 
         // ... di dalam grup rute admin
         Route::get('comments', [CommentsController::class, 'index'])->name('comments.index');
@@ -294,6 +310,5 @@ Route::middleware('auth')->group(function () {
         Route::post('settings/reset-counter', [SettingController::class, 'resetCounter'])->name('settings.reset-counter');
     });
 });
-
 
 require __DIR__.'/auth.php'; // Memasukkan rute autentikasi dari auth.php

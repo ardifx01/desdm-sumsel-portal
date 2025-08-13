@@ -17,6 +17,14 @@ use App\Models\Setting; // <-- Tambahkan ini
 use App\Policies\SettingPolicy; // <-- Tambahkan ini
 use App\Models\Comment; // <-- Tambahkan ini
 use App\Policies\CommentPolicy; // <-- Tambahkan ini
+use App\Models\InformasiPublik; // <-- Tambahkan ini
+use App\Policies\InformasiPublikPolicy; // <-- Tambahkan ini
+use App\Models\InformasiPublikCategory; // <-- Tambahkan ini
+use App\Policies\InformasiPublikCategoryPolicy; // <-- Tambahkan ini
+use App\Models\PermohonanInformasi;
+use App\Models\PengajuanKeberatan;
+use App\Policies\PermohonanInformasiPolicy;
+use App\Policies\PengajuanKeberatanPolicy;
 
 // use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -36,6 +44,10 @@ class AuthServiceProvider extends ServiceProvider
         DokumenCategory::class => DokumenCategoryPolicy::class, // <-- Tambahkan ini
         Setting::class => SettingPolicy::class,
         Comment::class => CommentPolicy::class,
+        InformasiPublik::class => InformasiPublikPolicy::class,
+        InformasiPublikCategory::class => InformasiPublikCategoryPolicy::class,
+        PermohonanInformasi::class => PermohonanInformasiPolicy::class,
+        PengajuanKeberatan::class => PengajuanKeberatanPolicy::class,
     ];
 
     /**

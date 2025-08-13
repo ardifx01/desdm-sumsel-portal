@@ -15,10 +15,11 @@
     <h2 class="mb-4 text-center">Formulir Permohonan Informasi Publik</h2>
 
     <div class="card shadow-sm mb-4">
-        <div class="card-body">
+        <div class="card-body p-4 p-md-5">
             @if ($errors->any())
                 <div class="alert alert-danger">
-                    <ul>
+                    <h5 class="alert-heading">Terjadi Kesalahan!</h5>
+                    <ul class="mb-0">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
@@ -26,50 +27,35 @@
                 </div>
             @endif
 
-            <form action="{{ route('informasi-publik.permohonan.store') }}" method="POST" enctype="multipart/form-data">
+            <div class="alert alert-info">
+                Anda mengajukan permohonan sebagai <strong>{{ Auth::user()->name }}</strong>. Pastikan data profil Anda (telepon & alamat) sudah lengkap dan benar. <a href="{{ route('profile.edit.public') }}" class="alert-link">Edit Profil di sini</a>.
+            </div>
+
+            <form action="{{ route('informasi-publik.permohonan.store') }}" method="POST" enctype="multipart/form-data" class="mt-4">
                 @csrf
 
                 <fieldset class="mb-4 p-3 border rounded">
-                    <legend class="float-none w-auto px-2 fs-5">Data Pemohon</legend>
+                    <legend class="float-none w-auto px-2 fs-5">Data Tambahan Pemohon</legend>
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="nama_pemohon" class="form-label">Nama Lengkap Pemohon <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('nama_pemohon') is-invalid @enderror" id="nama_pemohon" name="nama_pemohon" value="{{ old('nama_pemohon') }}" required>
-                            @error('nama_pemohon') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="email_pemohon" class="form-label">Email <span class="text-danger">*</span></label>
-                            <input type="email" class="form-control @error('email_pemohon') is-invalid @enderror" id="email_pemohon" name="email_pemohon" value="{{ old('email_pemohon') }}" required>
-                            @error('email_pemohon') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="telp_pemohon" class="form-label">Nomor Telepon/HP</label>
-                            <input type="tel" class="form-control @error('telp_pemohon') is-invalid @enderror" id="telp_pemohon" name="telp_pemohon" value="{{ old('telp_pemohon') }}">
-                            @error('telp_pemohon') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                        </div>
                         <div class="col-md-6 mb-3">
                             <label for="pekerjaan_pemohon" class="form-label">Pekerjaan</label>
                             <input type="text" class="form-control @error('pekerjaan_pemohon') is-invalid @enderror" id="pekerjaan_pemohon" name="pekerjaan_pemohon" value="{{ old('pekerjaan_pemohon') }}">
                             @error('pekerjaan_pemohon') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
-                        <div class="col-12 mb-3">
-                            <label for="alamat_pemohon" class="form-label">Alamat Lengkap Pemohon <span class="text-danger">*</span></label>
-                            <textarea class="form-control @error('alamat_pemohon') is-invalid @enderror" id="alamat_pemohon" name="alamat_pemohon" rows="3" required>{{ old('alamat_pemohon') }}</textarea>
-                            @error('alamat_pemohon') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                        </div>
                         <div class="col-md-6 mb-3">
-                            <label for="jenis_pemohon" class="form-label">Jenis Pemohon <span class="text-danger">*</span></label>
+                            <label for="jenis_pemohon" class="form-label">Mengajukan Atas Nama <span class="text-danger">*</span></label>
                             <select class="form-select @error('jenis_pemohon') is-invalid @enderror" id="jenis_pemohon" name="jenis_pemohon" required>
-                                <option value="">-- Pilih Jenis Pemohon --</option>
-                                <option value="Perorangan" {{ old('jenis_pemohon') == 'Perorangan' ? 'selected' : '' }}>Perorangan</option>
+                                <option value="">-- Pilih Jenis --</option>
+                                <option value="Perorangan" {{ old('jenis_pemohon') == 'Perorangan' ? 'selected' : '' }}>Perorangan (Diri Sendiri)</option>
                                 <option value="Badan Hukum" {{ old('jenis_pemohon') == 'Badan Hukum' ? 'selected' : '' }}>Badan Hukum</option>
                                 <option value="Kelompok Masyarakat" {{ old('jenis_pemohon') == 'Kelompok Masyarakat' ? 'selected' : '' }}>Kelompok Masyarakat</option>
                             </select>
                             @error('jenis_pemohon') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="identitas_pemohon" class="form-label">Upload Identitas (KTP/Akta Pendirian) <small>(JPG/PNG/PDF, Max 2MB)</small></label>
+                        <div class="col-12 mb-3">
+                            <label for="identitas_pemohon" class="form-label">Upload Identitas Pendukung (KTP/Akta Pendirian) <small>(JPG/PNG/PDF, Max 2MB)</small></label>
                             <input type="file" class="form-control @error('identitas_pemohon') is-invalid @enderror" id="identitas_pemohon" name="identitas_pemohon" accept=".jpg,.jpeg,.png,.pdf">
+                            <div class="form-text">Unggah KTP jika mengajukan sebagai perorangan, atau Akta Pendirian jika sebagai Badan Hukum/Kelompok.</div>
                             @error('identitas_pemohon') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                     </div>
@@ -133,15 +119,8 @@
                     </div>
                 </fieldset>
 
-                {{-- ReCAPTCHA (Jika diimplementasikan) --}}
-                {{-- <div class="mb-3">
-                    <div class="g-recaptcha @error('g-recaptcha-response') is-invalid @enderror" data-sitekey="YOUR_RECAPTCHA_SITE_KEY"></div>
-                    @error('g-recaptcha-response') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
-                </div> --}}
-
                 <div class="d-grid gap-2">
                     <button type="submit" class="btn btn-success btn-lg">Kirim Permohonan</button>
-                    <a href="{{ route('informasi-publik.permohonan.prosedur') }}" class="btn btn-outline-secondary">Kembali ke Prosedur</a>
                 </div>
             </form>
         </div>
@@ -161,7 +140,7 @@
             } else {
                 caraSalinanOptions.style.display = 'none';
                 caraSalinanOptions.querySelectorAll('input[type="radio"]').forEach(radio => radio.required = false);
-                caraSalinanOptions.querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false); // Clear selection if hidden
+                caraSalinanOptions.querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
             }
         }
 
@@ -169,12 +148,7 @@
             radio.addEventListener('change', toggleCaraSalinanOptions);
         });
 
-        // Initial check on page load
         toggleCaraSalinanOptions();
     });
 </script>
-
-{{-- Script for reCAPTCHA if implemented --}}
-{{-- <script src="https://www.google.com/recaptcha/api.js" async defer></script> --}}
-
 @endsection

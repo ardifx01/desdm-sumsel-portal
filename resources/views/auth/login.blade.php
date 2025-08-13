@@ -43,5 +43,21 @@
                 {{ __('Log in') }}
             </x-primary-button>
         </div>
+
+        {{-- PERUBAHAN DI SINI: Menambahkan Tautan ke Halaman Registrasi dan beranda--}}
+        <div class="text-center mt-4 pt-4 border-t">
+            <p class="text-sm text-gray-600">
+                {{ __("Belum punya akun?") }}
+                <a class="underline text-sm text-indigo-600 hover:text-indigo-900" href="{{ route('register') }}">
+                    {{ __('Daftar di sini') }}
+                </a>
+            </p>
+
+            <p class="text-sm text-gray-600 mt-2">
+                <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('welcome') }}">
+                    &larr; {{ __('Kembali ke Beranda') }}
+                </a>
+            </p>
+        </div>
     </form>
 </x-guest-layout>

@@ -47,6 +47,14 @@
             <x-primary-button class="ms-4">
                 {{ __('Register') }}
             </x-primary-button>
+     
         </div>
+        <div class="text-center mt-4 pt-4 border-t">
+            <p class="text-sm text-gray-600">
+                <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('welcome') }}">
+                    &larr; {{ __('Kembali ke Beranda') }}
+                </a>
+            </p>
+        </div>        
     </form>
 </x-guest-layout>

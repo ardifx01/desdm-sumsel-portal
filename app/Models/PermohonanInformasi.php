@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon; // <-- Tambahkan ini
 
 class PermohonanInformasi extends Model
 {
@@ -11,17 +12,19 @@ class PermohonanInformasi extends Model
 
     protected $table = 'permohonan_informasi';
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
+        'user_id',
         'nomor_registrasi',
-        'nama_pemohon',
-        'email_pemohon',
-        'telp_pemohon',
-        'alamat_pemohon',
-        'pekerjaan_pemohon',
-        'identitas_pemohon',
-        'jenis_pemohon',
-        'tujuan_penggunaan_informasi',
+        'jenis_pemohon', // <-- Tambahkan kembali
+        'pekerjaan_pemohon', // <-- Tambahkan kembali
+        'identitas_pemohon', // <-- Tambahkan kembali
         'rincian_informasi',
+        'tujuan_penggunaan_informasi',
         'cara_mendapatkan_informasi',
         'cara_mendapatkan_salinan',
         'status',
@@ -29,25 +32,57 @@ class PermohonanInformasi extends Model
         'tanggal_permohonan',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
     protected $casts = [
         'tanggal_permohonan' => 'datetime',
     ];
 
-    // Contoh: Generate nomor registrasi secara otomatis saat membuat data baru
+    /**
+     * Get the user that owns the permohonan.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * The "booted" method of the model.
+     */
     protected static function boot()
     {
         parent::boot();
 
+        // Otomatis generate nomor registrasi saat membuat data baru
         static::creating(function ($model) {
-            if (empty($model->nomor_registrasi)) {
-                $year = date('Y');
-                $lastPermohonan = static::whereYear('tanggal_permohonan', $year)->orderBy('id', 'desc')->first();
-                $lastNumber = $lastPermohonan ? (int)substr($lastPermohonan->nomor_registrasi, -4) : 0;
-                $newNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
-                $model->nomor_registrasi = 'PI/DESDM/' . $year . '/' . $newNumber;
-            }
             if (empty($model->tanggal_permohonan)) {
                 $model->tanggal_permohonan = now();
+            }
+
+            if (empty($model->nomor_registrasi)) {
+                // --- LOGIKA PENOMORAN BARU DI SINI ---
+                $today = Carbon::today();
+                $prefix = $today->format('Ymd'); // Format: 20250814
+
+                // Cari permohonan terakhir yang dibuat HARI INI
+                $lastPermohonanToday = static::whereDate('tanggal_permohonan', $today)->orderBy('id', 'desc')->first();
+
+                if ($lastPermohonanToday) {
+                    // Jika ada, ambil nomor urut terakhir dan tambahkan 1
+                    $lastNumber = (int)substr($lastPermohonanToday->nomor_registrasi, -3);
+                    $newNumber = $lastNumber + 1;
+                } else {
+                    // Jika ini yang pertama hari ini, mulai dari 1
+                    $newNumber = 1;
+                }
+
+                // Format nomor urut menjadi 3 digit (001, 002, dst.)
+                $sequence = str_pad($newNumber, 3, '0', STR_PAD_LEFT);
+
+                $model->nomor_registrasi = $prefix . $sequence; // Hasil: 20250814001
             }
         });
     }

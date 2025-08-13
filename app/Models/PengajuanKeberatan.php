@@ -11,29 +11,47 @@ class PengajuanKeberatan extends Model
 
     protected $table = 'pengajuan_keberatan';
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
+        'user_id',
         'nomor_registrasi_permohonan',
-        'nama_pemohon',
-        'email_pemohon',
-        'telp_pemohon',
-        'alamat_pemohon',
         'alasan_keberatan',
         'jenis_keberatan',
         'kasus_posisi',
-        'identitas_pemohon',
         'status',
         'catatan_admin',
         'tanggal_pengajuan',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
     protected $casts = [
         'tanggal_pengajuan' => 'datetime',
     ];
 
+    /**
+     * Get the user that owns the keberatan.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * The "booted" method of the model.
+     */
     protected static function boot()
     {
         parent::boot();
 
+        // Otomatis set tanggal pengajuan saat membuat data baru
         static::creating(function ($model) {
             if (empty($model->tanggal_pengajuan)) {
                 $model->tanggal_pengajuan = now();

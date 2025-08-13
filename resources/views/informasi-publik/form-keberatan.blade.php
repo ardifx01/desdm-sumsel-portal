@@ -1,6 +1,6 @@
 @extends('layouts.public_app')
 
-@section('title', 'Formulir Pengajuan Keberatan Informasi')
+@section('title', 'Formulir Pengajuan Keberatan')
 
 @section('content')
 <div class="container py-5">
@@ -15,10 +15,11 @@
     <h2 class="mb-4 text-center">Formulir Pengajuan Keberatan Informasi Publik</h2>
 
     <div class="card shadow-sm mb-4">
-        <div class="card-body">
+        <div class="card-body p-4 p-md-5">
             @if ($errors->any())
                 <div class="alert alert-danger">
-                    <ul>
+                    <h5 class="alert-heading">Terjadi Kesalahan!</h5>
+                    <ul class="mb-0">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
@@ -26,42 +27,20 @@
                 </div>
             @endif
 
-            <form action="{{ route('informasi-publik.keberatan.store') }}" method="POST" enctype="multipart/form-data">
+            <div class="alert alert-info">
+                Anda mengajukan keberatan sebagai <strong>{{ Auth::user()->name }}</strong>.
+            </div>
+
+            <form action="{{ route('informasi-publik.keberatan.store') }}" method="POST" class="mt-4">
                 @csrf
 
                 <fieldset class="mb-4 p-3 border rounded">
-                    <legend class="float-none w-auto px-2 fs-5">Data Pemohon Keberatan</legend>
+                    <legend class="float-none w-auto px-2 fs-5">Data Permohonan yang Dikeberatan</legend>
                     <div class="mb-3">
-                        <label for="nomor_registrasi_permohonan" class="form-label">Nomor Registrasi Permohonan Informasi Sebelumnya <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control @error('nomor_registrasi_permohonan') is-invalid @enderror" id="nomor_registrasi_permohonan" name="nomor_registrasi_permohonan" value="{{ old('nomor_registrasi_permohonan') }}" placeholder="Contoh: PI/DESDM/2024/0001" required>
+                        <label for="nomor_registrasi_permohonan" class="form-label">Nomor Registrasi Permohonan Informasi <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control @error('nomor_registrasi_permohonan') is-invalid @enderror" id="nomor_registrasi_permohonan" name="nomor_registrasi_permohonan" value="{{ old('nomor_registrasi_permohonan', request('no_reg')) }}" placeholder="Contoh: 20250814001" required>
+                        <div class="form-text">Masukkan nomor registrasi dari permohonan yang ingin Anda ajukan keberatan. Pastikan permohonan tersebut diajukan oleh akun Anda.</div>
                         @error('nomor_registrasi_permohonan') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="nama_pemohon" class="form-label">Nama Lengkap Pemohon <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('nama_pemohon') is-invalid @enderror" id="nama_pemohon" name="nama_pemohon" value="{{ old('nama_pemohon') }}" required>
-                            @error('nama_pemohon') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="email_pemohon" class="form-label">Email <span class="text-danger">*</span></label>
-                            <input type="email" class="form-control @error('email_pemohon') is-invalid @enderror" id="email_pemohon" name="email_pemohon" value="{{ old('email_pemohon') }}" required>
-                            @error('email_pemohon') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="telp_pemohon" class="form-label">Nomor Telepon/HP</label>
-                            <input type="tel" class="form-control @error('telp_pemohon') is-invalid @enderror" id="telp_pemohon" name="telp_pemohon" value="{{ old('telp_pemohon') }}">
-                            @error('telp_pemohon') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="identitas_pemohon" class="form-label">Upload Identitas (KTP/Akta Pendirian) <small>(JPG/PNG/PDF, Max 2MB)</small></label>
-                            <input type="file" class="form-control @error('identitas_pemohon') is-invalid @enderror" id="identitas_pemohon" name="identitas_pemohon" accept=".jpg,.jpeg,.png,.pdf">
-                            @error('identitas_pemohon') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                        </div>
-                        <div class="col-12 mb-3">
-                            <label for="alamat_pemohon" class="form-label">Alamat Lengkap Pemohon <span class="text-danger">*</span></label>
-                            <textarea class="form-control @error('alamat_pemohon') is-invalid @enderror" id="alamat_pemohon" name="alamat_pemohon" rows="3" required>{{ old('alamat_pemohon') }}</textarea>
-                            @error('alamat_pemohon') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                        </div>
                     </div>
                 </fieldset>
 
@@ -92,22 +71,11 @@
                     </div>
                 </fieldset>
 
-                {{-- ReCAPTCHA (Jika diimplementasikan) --}}
-                {{-- <div class="mb-3">
-                    <div class="g-recaptcha @error('g-recaptcha-response') is-invalid @enderror" data-sitekey="YOUR_RECAPTCHA_SITE_KEY"></div>
-                    @error('g-recaptcha-response') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
-                </div> --}}
-
                 <div class="d-grid gap-2">
                     <button type="submit" class="btn btn-warning btn-lg">Kirim Pengajuan Keberatan</button>
-                    <a href="{{ route('informasi-publik.keberatan.prosedur') }}" class="btn btn-outline-secondary">Kembali ke Prosedur</a>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
-{{-- Script for reCAPTCHA if implemented --}}
-{{-- <script src="https://www.google.com/recaptcha/api.js" async defer></script> --}}
-
 @endsection

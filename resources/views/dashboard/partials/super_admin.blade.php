@@ -62,7 +62,7 @@
         </div>
     </div>
 
-    <!-- Kartu Total Permohonan -->
+    <!-- Kartu Total Permohonan (DENGAN STATISTIK DETAIL) -->
     <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-red-500">
         <div class="flex items-center justify-between">
             <div>
@@ -73,9 +73,16 @@
                 <i class="bi bi-file-earmark-check-fill text-2xl text-red-600"></i>
             </div>
         </div>
+        {{-- STATISTIK STATUS BARU --}}
+        <div class="mt-4 pt-2 border-t border-gray-100 flex flex-wrap gap-2 text-xs">
+            <span class="px-2 py-1 rounded-full bg-yellow-100 text-yellow-800 font-semibold">Menunggu: {{ $permohonanStatus['Menunggu Diproses'] ?? 0 }}</span>
+            <span class="px-2 py-1 rounded-full bg-blue-100 text-blue-800 font-semibold">Diproses: {{ $permohonanStatus['Diproses'] ?? 0 }}</span>
+            <span class="px-2 py-1 rounded-full bg-green-100 text-green-800 font-semibold">Selesai: {{ $permohonanStatus['Selesai'] ?? 0 }}</span>
+            <span class="px-2 py-1 rounded-full bg-red-100 text-red-800 font-semibold">Ditolak: {{ $permohonanStatus['Ditolak'] ?? 0 }}</span>
+        </div>
     </div>
 
-    <!-- Kartu Total Keberatan -->
+    <!-- Kartu Total Keberatan (DENGAN STATISTIK DETAIL) -->
     <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-gray-500">
         <div class="flex items-center justify-between">
             <div>
@@ -85,6 +92,13 @@
             <div class="bg-gray-200 p-3 rounded-full">
                 <i class="bi bi-file-earmark-excel-fill text-2xl text-gray-600"></i>
             </div>
+        </div>
+        {{-- STATISTIK STATUS BARU --}}
+        <div class="mt-4 pt-2 border-t border-gray-100 flex flex-wrap gap-2 text-xs">
+            <span class="px-2 py-1 rounded-full bg-yellow-100 text-yellow-800 font-semibold">Menunggu: {{ $keberatanStatus['Menunggu Diproses'] ?? 0 }}</span>
+            <span class="px-2 py-1 rounded-full bg-blue-100 text-blue-800 font-semibold">Diproses: {{ $keberatanStatus['Diproses'] ?? 0 }}</span>
+            <span class="px-2 py-1 rounded-full bg-green-100 text-green-800 font-semibold">Selesai: {{ $keberatanStatus['Selesai'] ?? 0 }}</span>
+            <span class="px-2 py-1 rounded-full bg-red-100 text-red-800 font-semibold">Ditolak: {{ $keberatanStatus['Ditolak'] ?? 0 }}</span>
         </div>
     </div>
 </div>
@@ -118,8 +132,9 @@
                     <p class="font-semibold text-sm text-gray-800 flex items-center">
                         <i class="bi bi-file-earmark-check-fill text-red-500 mr-2"></i> Permohonan Baru
                     </p>
-                    <p class="text-xs text-gray-600">Oleh: {{ $permohonan->nama_pemohon }}</p>
-                    <p class="text-xs text-gray-400 mt-1">No. Reg: {{ $permohonan->no_register }}</p>
+                    {{-- PERBAIKAN DI SINI --}}
+                    <p class="text-xs text-gray-600">Oleh: {{ $permohonan->user->name ?? '[N/A]' }}</p>
+                    <p class="text-xs text-gray-400 mt-1">No. Reg: {{ $permohonan->nomor_registrasi }}</p>
                 </a>
             @empty
                 <p class="text-sm text-gray-500">Tidak ada permohonan baru.</p>
@@ -131,8 +146,9 @@
                     <p class="font-semibold text-sm text-gray-800 flex items-center">
                         <i class="bi bi-file-earmark-excel-fill text-gray-500 mr-2"></i> Keberatan Baru
                     </p>
-                    <p class="text-xs text-gray-600">Oleh: {{ $keberatan->nama_pemohon }}</p>
-                    <p class="text-xs text-gray-400 mt-1">No. Reg: {{ $keberatan->no_register }}</p>
+                    {{-- PERBAIKAN DI SINI --}}
+                    <p class="text-xs text-gray-600">Oleh: {{ $keberatan->user->name ?? '[N/A]' }}</p>
+                    <p class="text-xs text-gray-400 mt-1">No. Reg Permohonan: {{ $keberatan->nomor_registrasi_permohonan }}</p>
                 </a>
             @empty
                 <p class="text-sm text-gray-500">Tidak ada keberatan baru.</p>

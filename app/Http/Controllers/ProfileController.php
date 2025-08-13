@@ -22,17 +22,32 @@ class ProfileController extends Controller
     }
 
     /**
+     * Menampilkan form edit profil untuk pengguna publik.
+     */
+    public function editPublic(Request $request): View
+    {
+        return view('profile.public-edit', [
+            'user' => $request->user(),
+        ]);
+    }
+
+    /**
      * Update the user's profile information.
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $request->user()->fill($request->only(['name', 'email', 'telp', 'alamat']));
 
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
         }
 
         $request->user()->save();
+
+        // Logika pengalihan cerdas
+        if ($request->input('source') === 'public') {
+            return Redirect::route('profile.edit.public')->with('status', 'profile-updated');
+        }
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }

@@ -1,71 +1,61 @@
 <?php
 
-namespace App\Http\Controllers\Admin; // Namespace yang benar
+namespace App\Http\Controllers\Admin;
 
-use App\Models\InformasiPublikCategory; // Import model InformasiPublikCategory Anda
+use App\Models\InformasiPublikCategory;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller; // Base Controller
-use Illuminate\Support\Str; // Untuk Str::slug
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Gate;
 
-class InformasiPublikCategoryController extends Controller // Nama kelas adalah InformasiPublikCategoryController
+class InformasiPublikCategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        // Ambil semua kategori informasi publik
-        $categories = InformasiPublikCategory::orderBy('nama')->paginate(10);
+        Gate::authorize('viewAny', InformasiPublikCategory::class);
+        $categories = InformasiPublikCategory::withCount('informasiPublik')->orderBy('nama')->paginate(10);
         return view('admin.informasi-publik-categories.index', compact('categories'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
+        Gate::authorize('create', InformasiPublikCategory::class);
         return view('admin.informasi-publik-categories.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
+        Gate::authorize('create', InformasiPublikCategory::class);
+
         $request->validate([
             'nama' => 'required|string|max:100|unique:informasi_publik_categories,nama',
-            'deskripsi' => 'nullable|string', // Tambahkan validasi untuk deskripsi
-        ], [
-            'nama.unique' => 'Nama kategori informasi publik sudah ada.',
+            'deskripsi' => 'nullable|string',
         ]);
 
-        InformasiPublikCategory::create([
+        $category = InformasiPublikCategory::create([
             'nama' => $request->nama,
-            'slug' => Str::slug($request->nama), // Otomatis membuat slug dari nama
+            'slug' => Str::slug($request->nama),
             'deskripsi' => $request->deskripsi,
         ]);
 
-        return redirect()->route('admin.informasi-publik-categories.index')->with('success', 'Kategori informasi publik berhasil ditambahkan!');
+        // PERUBAHAN DI SINI
+        return redirect()->route('admin.informasi-publik-categories.index')->with('success', 'Kategori "' . $category->nama . '" berhasil ditambahkan!');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(InformasiPublikCategory $informasi_publik_category) // Menggunakan Route Model Binding
+    public function edit(InformasiPublikCategory $informasi_publik_category)
     {
+        Gate::authorize('update', $informasi_publik_category);
         return view('admin.informasi-publik-categories.edit', compact('informasi_publik_category'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, InformasiPublikCategory $informasi_publik_category)
     {
+        Gate::authorize('update', $informasi_publik_category);
+
         $request->validate([
             'nama' => 'required|string|max:100|unique:informasi_publik_categories,nama,' . $informasi_publik_category->id,
-            'deskripsi' => 'nullable|string', // Tambahkan validasi untuk deskripsi
-        ], [
-            'nama.unique' => 'Nama kategori informasi publik sudah ada.',
+            'deskripsi' => 'nullable|string',
         ]);
 
         $informasi_publik_category->update([
@@ -74,30 +64,22 @@ class InformasiPublikCategoryController extends Controller // Nama kelas adalah 
             'deskripsi' => $request->deskripsi,
         ]);
 
-        return redirect()->route('admin.informasi-publik-categories.index')->with('success', 'Kategori informasi publik berhasil diperbarui!');
+        // PERUBAHAN DI SINI
+        return redirect()->route('admin.informasi-publik-categories.index')->with('success', 'Kategori "' . $informasi_publik_category->nama . '" berhasil diperbarui!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(InformasiPublikCategory $informasi_publik_category)
     {
-        try {
-            // Hapus semua item informasi publik yang terkait dengan kategori ini
-            $informasi_publik_category->informasiPublik()->delete(); // Relasi 'informasiPublik()' di model InformasiPublikCategory
+        Gate::authorize('delete', $informasi_publik_category);
 
-            $deleteResult = $informasi_publik_category->delete(); // Hapus kategori
-
-            if ($deleteResult) {
-                Log::info('Kategori informasi publik berhasil dihapus dari database: ' . $informasi_publik_category->nama);
-                return redirect()->route('admin.informasi-publik-categories.index')->with('success', 'Kategori informasi publik berhasil dihapus!');
-            } else {
-                Log::error('Kategori informasi publik GAGAL dihapus dari database (delete() mengembalikan false): ' . $informasi_publik_category->nama);
-                return redirect()->route('admin.informasi-publik-categories.index')->with('error', 'Gagal menghapus kategori informasi publik.');
-            }
-        } catch (\Exception $e) {
-            Log::error('Gagal menghapus kategori informasi publik (Exception): ' . $e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine());
-            return redirect()->route('admin.informasi-publik-categories.index')->with('error', 'Gagal menghapus kategori informasi publik: ' . $e->getMessage());
+        if ($informasi_publik_category->informasiPublik()->count() > 0) {
+            return redirect()->route('admin.informasi-publik-categories.index')->with('error', 'Gagal menghapus! Masih ada ' . $informasi_publik_category->informasiPublik()->count() . ' item dalam kategori ini.');
         }
+
+        $categoryName = $informasi_publik_category->nama; // Simpan nama sebelum dihapus
+        $informasi_publik_category->delete();
+
+        // PERUBAHAN DI SINI
+        return redirect()->route('admin.informasi-publik-categories.index')->with('success', 'Kategori "' . $categoryName . '" berhasil dihapus!');
     }
 }
