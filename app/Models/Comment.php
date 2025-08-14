@@ -8,10 +8,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class Comment extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $fillable = [
         'content',
@@ -44,5 +46,21 @@ class Comment extends Model
     public function parent(): BelongsTo
     {
         return $this->belongsTo(Comment::class, 'parent_id');
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['status'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs()
+            ->setDescriptionForEvent(function(string $eventName) {
+                if ($eventName === 'updated') {
+                    $oldStatus = $this->getOriginal('status');
+                    $newStatus = $this->getChanges()['status'];
+                    return "Status Komentar #{$this->id} diubah dari '{$oldStatus}' menjadi '{$newStatus}'";
+                }
+                return "Komentar #{$this->id} telah di-{$eventName}";
+            });
     }
 }

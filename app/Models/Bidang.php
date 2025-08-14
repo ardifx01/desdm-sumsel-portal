@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str; // Tambahkan ini untuk helper string
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class Bidang extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     // Nama tabel yang terkait dengan model ini (Laravel secara otomatis mengasumsikan 'bidangs')
     protected $table = 'bidangs';
@@ -73,5 +75,21 @@ class Bidang extends Model
         }
 
         return $slug;
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['nama', 'tipe', 'pejabat_kepala_id', 'is_active'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs()
+            ->setDescriptionForEvent(function(string $eventName) {
+                $subjectName = $this->nama ?? 'tanpa nama';
+                if ($eventName === 'updated') {
+                    $changedFields = implode(', ', array_keys($this->getChanges()));
+                    return "Data Bidang/Unit \"{$subjectName}\" telah diperbarui (kolom: {$changedFields})";
+                }
+                return "Data Bidang/Unit \"{$subjectName}\" telah di-{$eventName}";
+            });
     }
 }

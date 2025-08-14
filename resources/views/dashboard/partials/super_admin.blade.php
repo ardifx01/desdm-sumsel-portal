@@ -1,10 +1,8 @@
-{{-- Judul Bagian --}}
-<h3 class="text-2xl font-bold text-gray-800 mb-6">Ringkasan Statistik Global</h3>
-
-{{-- Grid untuk Kartu Statistik --}}
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+{{-- Bagian 1: Statistik Konten Umum --}}
+<h3 class="text-2xl font-bold text-gray-800 mb-6">Ringkasan Konten & Interaksi</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
     
-    <!-- Kartu Total Pengunjung -->
+    {{-- Kartu Total Pengunjung --}}
     <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-purple-500">
         <div class="flex items-center justify-between">
             <div>
@@ -34,18 +32,38 @@
                 <i class="bi bi-newspaper text-2xl text-blue-600"></i>
             </div>
         </div>
+        <div class="mt-4 pt-2 border-t border-gray-100 flex flex-wrap gap-2 text-xs">
+            {{-- PERBAIKAN DI SINI: Menggunakan warna standar --}}
+            @php $colorIndex = 0; $colors = ['green', 'gray', 'yellow', 'red', 'blue', 'pink', 'orange']; @endphp
+            @forelse($postCategories as $category => $total)
+                @php $color = $colors[$colorIndex % count($colors)]; $colorIndex++; @endphp
+                <span class="px-2 py-1 rounded-full bg-{{ $color }}-100 text-{{ $color }}-800 font-semibold">{{ $category }}: {{ $total }}</span>
+            @empty
+                <span class="text-gray-400">Belum ada kategori.</span>
+            @endforelse
+        </div>
     </div>
 
-    <!-- Kartu Total Dokumen -->
+    <!-- Kartu Total Dokumen Publikasi -->
     <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-green-500">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Total Dokumen</p>
+                <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Dokumen Publikasi</p>
                 <p class="text-3xl font-extrabold text-gray-900">{{ $totalDokumen ?? 0 }}</p>
             </div>
             <div class="bg-green-100 p-3 rounded-full">
                 <i class="bi bi-file-earmark-text-fill text-2xl text-green-600"></i>
             </div>
+        </div>
+        <div class="mt-4 pt-2 border-t border-gray-100 flex flex-wrap gap-2 text-xs">
+            {{-- PERBAIKAN DI SINI: Menggunakan warna standar --}}
+            @php $colorIndex = 0; $colors = ['green', 'gray', 'yellow', 'red', 'blue', 'indigo', 'purple']; @endphp
+            @forelse($dokumenCategories as $category => $total)
+                @php $color = $colors[$colorIndex % count($colors)]; $colorIndex++; @endphp
+                <span class="px-2 py-1 rounded-full bg-{{ $color }}-100 text-{{ $color }}-800 font-semibold">{{ $category }}: {{ $total }}</span>
+            @empty
+                <span class="text-gray-400">Belum ada kategori.</span>
+            @endforelse
         </div>
     </div>
 
@@ -61,8 +79,36 @@
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Kartu Total Permohonan (DENGAN STATISTIK DETAIL) -->
+{{-- Bagian 2: Statistik Layanan PPID --}}
+<h3 class="text-2xl font-bold text-gray-800 mb-6">Ringkasan Layanan PPID</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    
+    <!-- Kartu Total Informasi Publik (BARU) -->
+    <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-cyan-500">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Informasi Publik</p>
+                <p class="text-3xl font-extrabold text-gray-900">{{ $totalInformasiPublik ?? 0 }}</p>
+            </div>
+            <div class="bg-cyan-100 p-3 rounded-full">
+                <i class="bi bi-info-circle-fill text-2xl text-cyan-600"></i>
+            </div>
+        </div>
+        <div class="mt-4 pt-2 border-t border-gray-100 flex flex-wrap gap-2 text-xs">
+            {{-- PERBAIKAN DI SINI: Menggunakan warna standar --}}
+            @php $colorIndex = 0; $colors = ['yellow', 'green', 'indigo']; @endphp
+            @forelse($infoPublikCategories as $category => $total)
+                @php $color = $colors[$colorIndex % count($colors)]; $colorIndex++; @endphp
+                <span class="px-2 py-1 rounded-full bg-{{ $color }}-100 text-{{ $color }}-800 font-semibold">{{ $category }}: {{ $total }}</span>
+            @empty
+                <span class="text-gray-400">Belum ada kategori.</span>
+            @endforelse
+        </div>
+    </div>
+
+    <!-- Kartu Total Permohonan -->
     <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-red-500">
         <div class="flex items-center justify-between">
             <div>
@@ -73,7 +119,6 @@
                 <i class="bi bi-file-earmark-check-fill text-2xl text-red-600"></i>
             </div>
         </div>
-        {{-- STATISTIK STATUS BARU --}}
         <div class="mt-4 pt-2 border-t border-gray-100 flex flex-wrap gap-2 text-xs">
             <span class="px-2 py-1 rounded-full bg-yellow-100 text-yellow-800 font-semibold">Menunggu: {{ $permohonanStatus['Menunggu Diproses'] ?? 0 }}</span>
             <span class="px-2 py-1 rounded-full bg-blue-100 text-blue-800 font-semibold">Diproses: {{ $permohonanStatus['Diproses'] ?? 0 }}</span>
@@ -82,7 +127,7 @@
         </div>
     </div>
 
-    <!-- Kartu Total Keberatan (DENGAN STATISTIK DETAIL) -->
+    <!-- Kartu Total Keberatan -->
     <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-gray-500">
         <div class="flex items-center justify-between">
             <div>
@@ -93,7 +138,6 @@
                 <i class="bi bi-file-earmark-excel-fill text-2xl text-gray-600"></i>
             </div>
         </div>
-        {{-- STATISTIK STATUS BARU --}}
         <div class="mt-4 pt-2 border-t border-gray-100 flex flex-wrap gap-2 text-xs">
             <span class="px-2 py-1 rounded-full bg-yellow-100 text-yellow-800 font-semibold">Menunggu: {{ $keberatanStatus['Menunggu Diproses'] ?? 0 }}</span>
             <span class="px-2 py-1 rounded-full bg-blue-100 text-blue-800 font-semibold">Diproses: {{ $keberatanStatus['Diproses'] ?? 0 }}</span>
@@ -159,37 +203,60 @@
     <!-- Kolom Konten Populer (Gabungan) -->
     <div class="lg:col-span-2 bg-white p-6 rounded-lg shadow-lg">
         <h4 class="font-bold text-lg mb-4">Konten Terpopuler</h4>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+{{-- PERUBAHAN DI SINI: Menggunakan grid 3 baris --}}
+        <div class="grid grid-cols-1 gap-y-6">
+            
+            {{-- Baris 1: Berita --}}
             <div>
-                <h5 class="font-semibold mb-3">Berita</h5>
+                <h5 class="font-semibold mb-3 flex items-center text-gray-700"><i class="bi bi-newspaper mr-2"></i>Berita</h5>
                 <ul class="space-y-3">
                     @forelse($popularPosts as $post)
                         <li class="flex items-center justify-between text-sm">
-                            <a href="{{ route('berita.show', $post->slug) }}" target="_blank" class="text-gray-700 hover:text-blue-600 transition truncate pr-4">
-                                {{ $post->title }}
+                            <a href="{{ route('berita.show', $post->slug) }}" target="_blank" class="text-gray-700 hover:text-blue-600 transition truncate pr-4" title="{{ $post->title }}">
+                                {{ Str::limit($post->title, 50) }}
                             </a>
-                            <span class="flex-shrink-0 font-bold text-gray-600 bg-gray-100 px-2 py-1 rounded-full text-xs">{{ $post->hits }} <span class="hidden sm:inline">views</span></span>
+                            <span class="flex-shrink-0 font-bold text-gray-600 bg-gray-100 px-2 py-1 rounded-full text-xs">{{ $post->hits }} views</span>
                         </li>
                     @empty
-                        <li class="text-sm text-gray-500">Tidak ada data.</li>
+                        <li class="text-sm text-gray-500">Tidak ada data berita.</li>
                     @endforelse
                 </ul>
             </div>
+
+            {{-- Baris 2: Dokumen Publikasi --}}
             <div>
-                <h5 class="font-semibold mb-3">Dokumen</h5>
+                <h5 class="font-semibold mb-3 flex items-center text-gray-700"><i class="bi bi-file-earmark-text-fill mr-2"></i>Dokumen Publikasi</h5>
                 <ul class="space-y-3">
                     @forelse($popularDokumen as $dokumen)
                         <li class="flex items-center justify-between text-sm">
-                            <a href="{{ route('publikasi.show', $dokumen->slug) }}" target="_blank" class="text-gray-700 hover:text-blue-600 transition truncate pr-4">
-                                {{ $dokumen->judul }}
+                            <a href="{{ route('publikasi.show', $dokumen->slug) }}" target="_blank" class="text-gray-700 hover:text-blue-600 transition truncate pr-4" title="{{ $dokumen->judul }}">
+                                {{ Str::limit($dokumen->judul, 50) }}
                             </a>
-                            <span class="flex-shrink-0 font-bold text-gray-600 bg-gray-100 px-2 py-1 rounded-full text-xs">{{ $dokumen->hits }} <span class="hidden sm:inline">views</span></span>
+                            <span class="flex-shrink-0 font-bold text-gray-600 bg-gray-100 px-2 py-1 rounded-full text-xs">{{ $dokumen->hits }} views</span>
                         </li>
                     @empty
-                        <li class="text-sm text-gray-500">Tidak ada data.</li>
+                        <li class="text-sm text-gray-500">Tidak ada data dokumen.</li>
                     @endforelse
                 </ul>
             </div>
+
+            {{-- Baris 3: Informasi Publik (PPID) --}}
+            <div>
+                <h5 class="font-semibold mb-3 flex items-center text-gray-700"><i class="bi bi-info-square-fill mr-2"></i>Informasi Publik (PPID)</h5>
+                <ul class="space-y-3">
+                    @forelse($popularInformasiPublik as $info)
+                        <li class="flex items-center justify-between text-sm">
+                            <a href="{{ route('informasi-publik.show', $info->slug) }}" target="_blank" class="text-gray-700 hover:text-blue-600 transition truncate pr-4" title="{{ $info->judul }}">
+                                {{ Str::limit($info->judul, 50) }}
+                            </a>
+                            <span class="flex-shrink-0 font-bold text-gray-600 bg-gray-100 px-2 py-1 rounded-full text-xs">{{ $info->hits }} views</span>
+                        </li>
+                    @empty
+                        <li class="text-sm text-gray-500">Tidak ada data informasi publik.</li>
+                    @endforelse
+                </ul>
+            </div>
+
         </div>
     </div>
 </div>

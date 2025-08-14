@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon; // <-- Tambahkan ini
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class PermohonanInformasi extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $table = 'permohonan_informasi';
 
@@ -85,5 +87,29 @@ class PermohonanInformasi extends Model
                 $model->nomor_registrasi = $prefix . $sequence; // Hasil: 20250814001
             }
         });
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['status', 'catatan_admin'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs()
+            ->setDescriptionForEvent(function(string $eventName) {
+                $regNum = $this->nomor_registrasi ?? 'N/A';
+                if ($eventName === 'updated') {
+                    $changes = $this->getChanges();
+                    $details = [];
+                    if (isset($changes['status'])) {
+                        $oldStatus = $this->getOriginal('status');
+                        $details[] = "status diubah dari '{$oldStatus}' menjadi '{$changes['status']}'";
+                    }
+                    if (isset($changes['catatan_admin'])) {
+                        $details[] = "catatan admin diperbarui";
+                    }
+                    return "Permohonan #{$regNum} diperbarui: " . implode(', ', $details);
+                }
+                return "Permohonan #{$regNum} telah di-{$eventName}";
+            });
     }
 }

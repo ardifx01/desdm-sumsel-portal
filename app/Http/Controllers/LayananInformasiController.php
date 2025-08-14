@@ -7,6 +7,7 @@ use App\Models\PengajuanKeberatan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+// Tidak perlu 'use' untuk helper 'activity()', ia tersedia secara global.
 
 class LayananInformasiController extends Controller
 {
@@ -52,6 +53,12 @@ class LayananInformasiController extends Controller
             'status' => 'Menunggu Diproses',
         ]);
 
+        // --- LOG KUSTOM DI SINI ---
+        activity()
+            ->causedBy(Auth::user())
+            ->performedOn($permohonan)
+            ->log('Mengajukan permohonan informasi baru');
+
         return redirect()->route('informasi-publik.permohonan.sukses')->with('nomor_registrasi', $permohonan->nomor_registrasi);
     }
 
@@ -81,7 +88,7 @@ class LayananInformasiController extends Controller
             'kasus_posisi' => 'nullable|string',
         ]);
 
-        PengajuanKeberatan::create([
+        $keberatan = PengajuanKeberatan::create([
             'user_id' => Auth::id(), // Selalu dari pengguna yang login
             'nomor_registrasi_permohonan' => $request->nomor_registrasi_permohonan,
             'alasan_keberatan' => $request->alasan_keberatan,
@@ -90,6 +97,12 @@ class LayananInformasiController extends Controller
             'tanggal_pengajuan' => now(),
             'status' => 'Menunggu Diproses',
         ]);
+
+        // --- LOG KUSTOM DI SINI ---
+        activity()
+            ->causedBy(Auth::user())
+            ->performedOn($keberatan)
+            ->log('Mengajukan keberatan informasi'); // Deskripsi diubah sedikit agar lebih spesifik
 
         return redirect()->route('informasi-publik.keberatan.sukses');
     }

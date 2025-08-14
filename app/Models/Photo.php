@@ -4,23 +4,34 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class Photo extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
-    protected $fillable = [
-        'album_id',
-        'judul',
-        'deskripsi',
-        'file_path',
-        'file_name',
-        'is_active',
-    ];
+    protected $fillable = ['album_id', 'judul', 'deskripsi', 'file_path', 'file_name', 'is_active'];
 
-    // Relasi: Satu foto termasuk dalam satu album
     public function album()
     {
         return $this->belongsTo(Album::class);
     }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['judul', 'deskripsi', 'is_active'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs()
+            ->setDescriptionForEvent(function(string $eventName) {
+                $subjectName = $this->judul ?: $this->file_name;
+                if ($eventName === 'updated') {
+                    $changedFields = implode(', ', array_keys($this->getChanges()));
+                    return "Foto \"{$subjectName}\" telah diperbarui (kolom: {$changedFields})";
+                }
+                return "Foto \"{$subjectName}\" telah di-{$eventName}";
+            });
+    }
+    
 }

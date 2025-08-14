@@ -37,6 +37,7 @@ use App\Http\Controllers\Admin\CommentsController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\DashboardController; // Admin Dashboard
 use App\Http\Controllers\UserDashboardController; // User Dashboard
+use App\Http\Controllers\Admin\ActivityLogController;
 
 use App\Http\Controllers\WelcomeController;
 // Controllers bawaan Laravel/Breeze
@@ -220,6 +221,9 @@ Route::middleware('auth')->group(function () {
         // CRUD halaman statis
         Route::resource('static-pages', StaticPageController::class);
 
+        Route::get('activity-log', [ActivityLogController::class, 'index'])->name('activity-log.index');
+        Route::delete('activity-log/clear', [ActivityLogController::class, 'clearLog'])->name('activity-log.clear');
+        
         // CRUD Kategori Berita
         Route::resource('categories', CategoryController::class);
 

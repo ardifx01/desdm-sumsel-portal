@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class Seksi extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     // Nama tabel yang terkait dengan model ini (Laravel secara otomatis mengasumsikan 'seksis')
     protected $table = 'seksis';
@@ -37,5 +39,21 @@ class Seksi extends Model
     public function kepala()
     {
         return $this->belongsTo(Pejabat::class, 'pejabat_kepala_id');
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['nama_seksi', 'urutan', 'pejabat_kepala_id', 'is_active'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs()
+            ->setDescriptionForEvent(function(string $eventName) {
+                $subjectName = $this->nama_seksi ?? 'tanpa nama';
+                if ($eventName === 'updated') {
+                    $changedFields = implode(', ', array_keys($this->getChanges()));
+                    return "Data Seksi \"{$subjectName}\" telah diperbarui (kolom: {$changedFields})";
+                }
+                return "Data Seksi \"{$subjectName}\" telah di-{$eventName}";
+            });
     }
 }

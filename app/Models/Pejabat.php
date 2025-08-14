@@ -9,10 +9,12 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class Pejabat extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia;
+    use HasFactory, InteractsWithMedia, LogsActivity;
 
     protected $table = 'pejabat';
 
@@ -46,5 +48,21 @@ class Pejabat extends Model implements HasMedia
     public function getPathGenerator(): ModulePathGenerator
     {
         return new ModulePathGenerator();
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['nama', 'jabatan', 'nip', 'urutan', 'is_active'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs()
+            ->setDescriptionForEvent(function(string $eventName) {
+                $subjectName = $this->nama ?? 'tanpa nama';
+                if ($eventName === 'updated') {
+                    $changedFields = implode(', ', array_keys($this->getChanges()));
+                    return "Data Pejabat \"{$subjectName}\" telah diperbarui (kolom: {$changedFields})";
+                }
+                return "Data Pejabat \"{$subjectName}\" telah di-{$eventName}";
+            });
     }
 }

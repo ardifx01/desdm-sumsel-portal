@@ -4,32 +4,33 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class Category extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
-    protected $table = 'categories'; // Menunjuk ke tabel 'categories'
+    protected $table = 'categories';
+    public $timestamps = false;
+    protected $fillable = ['name', 'slug', 'type'];
 
-    // Karena tabel categories Anda tidak memiliki timestamps, nonaktifkan
-    public $timestamps = false; // TIDAK ADA created_at dan updated_at
-
-    protected $fillable = [
-        'name',
-        'slug',
-        'type',
-    ];
-
-    // Relasi: Satu kategori bisa memiliki banyak post
     public function posts()
     {
         return $this->hasMany(Post::class, 'category_id');
     }
 
-    // Scope untuk hanya mengambil kategori type 'post'
-    // Ini yang seharusnya dipanggil secara statis
-    public function scopeOfTypePost($query) // <-- UBAH NAMA METODE INI
+    public function scopeOfTypePost($query)
     {
         return $query->where('type', 'post');
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['name'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs()
+            ->setDescriptionForEvent(fn(string $eventName) => "Kategori Berita \"{$this->name}\" telah di-{$eventName}");
     }
 }

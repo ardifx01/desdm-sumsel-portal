@@ -70,7 +70,7 @@
                                             </div>
                                             <div class="ml-4">
                                                 <div class="text-sm font-medium text-gray-900">{{ $item->nama }}</div>
-                                                <div class="text-sm text-gray-500">{{ $item->nip ?: 'NIP: -' }}</div>
+                                                {{-- <div class="text-sm text-gray-500">{{ $item->nip ?: 'NIP: -' }}</div> --}}
                                             </div>
                                         </div>
                                     </td>

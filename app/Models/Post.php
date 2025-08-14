@@ -9,9 +9,12 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use App\Support\ModulePathGenerator;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
+
 class Post extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia;
+    use HasFactory, InteractsWithMedia, LogsActivity;
 
     protected $table = 'posts';
 
@@ -28,6 +31,25 @@ class Post extends Model implements HasMedia
         'hits',
         'share_count',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['title', 'category_id', 'status'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs()
+            ->setDescriptionForEvent(function(string $eventName) {
+                $title = $this->title ?? 'tanpa judul';
+                if ($eventName === 'updated') {
+                    $changes = $this->getChanges();
+                    // Hapus updated_at dari daftar perubahan
+                    unset($changes['updated_at']);
+                    $changedFields = implode(', ', array_keys($changes));
+                    return "Berita \"{$title}\" telah diperbarui (kolom: {$changedFields})";
+                }
+                return "Berita \"{$title}\" telah di-{$eventName}";
+            });
+    }
 
     public function category()
     {

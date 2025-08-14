@@ -4,7 +4,30 @@
 {{-- Grid untuk Kartu Statistik --}}
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
     
-    <!-- Kartu Total Permohonan (DENGAN STATISTIK DETAIL) -->
+    <!-- Kartu Total Informasi Publik (DENGAN STATISTIK DETAIL) -->
+    <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-cyan-500">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Total Informasi Publik</p>
+                <p class="text-3xl font-extrabold text-gray-900">{{ $totalInformasiPublik ?? 0 }}</p>
+            </div>
+            <div class="bg-cyan-100 p-3 rounded-full">
+                <i class="bi bi-info-circle-fill text-2xl text-cyan-600"></i>
+            </div>
+        </div>
+        {{-- STATISTIK KATEGORI BARU --}}
+        <div class="mt-4 pt-2 border-t border-gray-100 flex flex-wrap gap-2 text-xs">
+            @php $colorIndex = 0; $colors = ['yellow', 'green', 'indigo']; @endphp
+            @forelse($infoPublikCategories as $category => $total)
+                @php $color = $colors[$colorIndex % count($colors)]; $colorIndex++; @endphp
+                <span class="px-2 py-1 rounded-full bg-{{ $color }}-100 text-{{ $color }}-800 font-semibold">{{ $category }}: {{ $total }}</span>
+            @empty
+                <span class="text-gray-400">Belum ada kategori.</span>
+            @endforelse
+        </div>
+    </div>
+
+    <!-- Kartu Total Permohonan -->
     <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-red-500">
         <div class="flex items-center justify-between">
             <div>
@@ -15,7 +38,6 @@
                 <i class="bi bi-file-earmark-check-fill text-2xl text-red-600"></i>
             </div>
         </div>
-        {{-- STATISTIK STATUS BARU --}}
         <div class="mt-4 pt-2 border-t border-gray-100 flex flex-wrap gap-2 text-xs">
             <span class="px-2 py-1 rounded-full bg-yellow-100 text-yellow-800 font-semibold">Menunggu: {{ $permohonanStatus['Menunggu Diproses'] ?? 0 }}</span>
             <span class="px-2 py-1 rounded-full bg-blue-100 text-blue-800 font-semibold">Diproses: {{ $permohonanStatus['Diproses'] ?? 0 }}</span>
@@ -24,7 +46,7 @@
         </div>
     </div>
 
-    <!-- Kartu Total Keberatan (DENGAN STATISTIK DETAIL) -->
+    <!-- Kartu Total Keberatan -->
     <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-gray-500">
         <div class="flex items-center justify-between">
             <div>
@@ -35,25 +57,11 @@
                 <i class="bi bi-file-earmark-excel-fill text-2xl text-gray-600"></i>
             </div>
         </div>
-        {{-- STATISTIK STATUS BARU --}}
         <div class="mt-4 pt-2 border-t border-gray-100 flex flex-wrap gap-2 text-xs">
             <span class="px-2 py-1 rounded-full bg-yellow-100 text-yellow-800 font-semibold">Menunggu: {{ $keberatanStatus['Menunggu Diproses'] ?? 0 }}</span>
             <span class="px-2 py-1 rounded-full bg-blue-100 text-blue-800 font-semibold">Diproses: {{ $keberatanStatus['Diproses'] ?? 0 }}</span>
             <span class="px-2 py-1 rounded-full bg-green-100 text-green-800 font-semibold">Selesai: {{ $keberatanStatus['Selesai'] ?? 0 }}</span>
             <span class="px-2 py-1 rounded-full bg-red-100 text-red-800 font-semibold">Ditolak: {{ $keberatanStatus['Ditolak'] ?? 0 }}</span>
-        </div>
-    </div>
-
-    <!-- Kartu Total Informasi Publik -->
-    <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-cyan-500">
-        <div class="flex items-center justify-between">
-            <div>
-                <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Total Informasi Publik</p>
-                <p class="text-3xl font-extrabold text-gray-900">{{ $totalInformasiPublik ?? 0 }}</p>
-            </div>
-            <div class="bg-cyan-100 p-3 rounded-full">
-                <i class="bi bi-info-circle-fill text-2xl text-cyan-600"></i>
-            </div>
         </div>
     </div>
 </div>
@@ -72,7 +80,6 @@
                 <a href="{{ route('admin.permohonan.show', $permohonan->id) }}" class="block p-3 rounded-md hover:bg-gray-50 transition">
                     <div class="flex justify-between items-start">
                         <div>
-                            {{-- PERBAIKAN DI SINI --}}
                             <p class="font-semibold text-sm text-gray-800">{{ $permohonan->user->name ?? '[N/A]' }}</p>
                             <p class="text-xs text-gray-500 mt-1">No. Reg: {{ $permohonan->nomor_registrasi }}</p>
                         </div>
@@ -96,7 +103,6 @@
                 <a href="{{ route('admin.keberatan.show', $keberatan->id) }}" class="block p-3 rounded-md hover:bg-gray-50 transition">
                     <div class="flex justify-between items-start">
                         <div>
-                            {{-- PERBAIKAN DI SINI --}}
                             <p class="font-semibold text-sm text-gray-800">{{ $keberatan->user->name ?? '[N/A]' }}</p>
                             <p class="text-xs text-gray-500 mt-1">No. Reg Permohonan: {{ $keberatan->nomor_registrasi_permohonan }}</p>
                         </div>
