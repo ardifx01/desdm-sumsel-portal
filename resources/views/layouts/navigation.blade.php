@@ -33,6 +33,10 @@
                                 <x-dropdown-link :href="route('admin.settings.edit')">
                                     {{ __('Pengaturan Global Web') }}
                                 </x-dropdown-link>
+                                <div class="border-t border-gray-200"></div>
+                                <x-dropdown-link :href="route('admin.static-pages.index')">
+                                    {{ __('Halaman Statis') }}
+                                </x-dropdown-link>
                             </x-slot>
                         </x-dropdown>
                     </div>
@@ -216,6 +220,7 @@
                 <div class="px-4 py-2 text-xs text-gray-400">Pengaturan</div>
                 <x-responsive-nav-link :href="route('admin.users.index')">{{ __('Manajemen Pengguna') }}</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.settings.edit')">{{ __('Pengaturan Global Web') }}</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.static-pages.index')">{{ __('Halaman Statis') }}</x-responsive-nav-link>
             @endif
         </div>
 

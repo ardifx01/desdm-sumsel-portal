@@ -7,6 +7,7 @@ use App\Models\Seksi;
 use App\Models\Bidang;
 use App\Models\Pejabat;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class SeksiController extends Controller // Nama kelas diubah menjadi SeksiController
 {
@@ -15,6 +16,7 @@ class SeksiController extends Controller // Nama kelas diubah menjadi SeksiContr
      */
     public function index(Bidang $bidang)
     {
+        Gate::authorize('manage-organisasi');
         $seksis = $bidang->seksis()->with('kepala')->latest()->paginate(10);
         return view('admin.bidang.seksi.index', compact('bidang', 'seksis'));
     }
@@ -24,6 +26,7 @@ class SeksiController extends Controller // Nama kelas diubah menjadi SeksiContr
      */
     public function create(Bidang $bidang)
     {
+        Gate::authorize('manage-organisasi');
         $pejabats = Pejabat::all();
         return view('admin.bidang.seksi.create', compact('bidang', 'pejabats'));
     }
@@ -33,6 +36,7 @@ class SeksiController extends Controller // Nama kelas diubah menjadi SeksiContr
      */
     public function store(Request $request, Bidang $bidang)
     {
+        Gate::authorize('manage-organisasi');
         $request->validate([
             'nama_seksi' => 'required|string|max:255',
             'tugas' => 'nullable|string',
@@ -51,6 +55,7 @@ class SeksiController extends Controller // Nama kelas diubah menjadi SeksiContr
      */
     public function edit(Bidang $bidang, Seksi $seksi)
     {
+        Gate::authorize('manage-organisasi');
         $pejabats = Pejabat::all();
         return view('admin.bidang.seksi.edit', compact('bidang', 'seksi', 'pejabats'));
     }
@@ -60,6 +65,7 @@ class SeksiController extends Controller // Nama kelas diubah menjadi SeksiContr
      */
     public function update(Request $request, Bidang $bidang, Seksi $seksi)
     {
+        Gate::authorize('manage-organisasi');
         $request->validate([
             'nama_seksi' => 'required|string|max:255',
             'tugas' => 'nullable|string',
@@ -78,6 +84,7 @@ class SeksiController extends Controller // Nama kelas diubah menjadi SeksiContr
      */
     public function destroy(Bidang $bidang, Seksi $seksi)
     {
+        Gate::authorize('manage-organisasi');
         $namaSeksi = $seksi->nama_seksi;
         $seksi->delete();
 

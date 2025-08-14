@@ -7,22 +7,26 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Gate;
 
 class PejabatController extends Controller
 {
     public function index()
     {
+        Gate::authorize('manage-organisasi');
         $pejabat = Pejabat::orderBy('urutan', 'asc')->orderBy('nama', 'asc')->paginate(10);
         return view('admin.pejabat.index', compact('pejabat'));
     }
 
     public function create()
     {
+        Gate::authorize('manage-organisasi');
         return view('admin.pejabat.create');
     }
 
     public function store(Request $request)
     {
+        Gate::authorize('manage-organisasi');
         $request->validate([
             'nama' => 'required|string|max:255',
             'jabatan' => 'required|string|max:255',
@@ -55,11 +59,13 @@ class PejabatController extends Controller
 
     public function edit(Pejabat $pejabat)
     {
+        Gate::authorize('manage-organisasi');
         return view('admin.pejabat.edit', compact('pejabat'));
     }
 
     public function update(Request $request, Pejabat $pejabat)
     {
+        Gate::authorize('manage-organisasi');
         $request->validate([
             'nama' => 'required|string|max:255',
             'jabatan' => 'required|string|max:255',
@@ -93,6 +99,7 @@ class PejabatController extends Controller
 
     public function destroy(Pejabat $pejabat)
     {
+        Gate::authorize('manage-organisasi');
         try {
             $pejabat->clearMediaCollection('foto_pejabat');
             $deleteResult = $pejabat->delete();
@@ -110,6 +117,7 @@ class PejabatController extends Controller
     }
 
     private function getPhpUploadErrorMessage($errorCode) {
+        
         switch ($errorCode) {
             case UPLOAD_ERR_INI_SIZE: return "Ukuran file melebihi batas upload_max_filesize di php.ini.";
             case UPLOAD_ERR_FORM_SIZE: return "Ukuran file melebihi batas MAX_FILE_SIZE di formulir HTML.";

@@ -8,15 +8,15 @@ use App\Models\Pejabat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Gate;
 
 class BidangController extends Controller // Nama kelas diubah menjadi BidangController
 {
-    /**
-     * Tampilkan daftar semua Bidang (Bidang, UPTD, Cabang Dinas).
-     */
     public function index()
     {
-        $bidangs = Bidang::with('kepala')->latest()->paginate(10);
+        Gate::authorize('manage-organisasi');
+        // PERBAIKAN: Tambahkan withCount untuk efisiensi
+        $bidangs = Bidang::with('kepala')->withCount('seksis')->latest()->paginate(10);
         return view('admin.bidang.index', compact('bidangs'));
     }
 
@@ -25,6 +25,7 @@ class BidangController extends Controller // Nama kelas diubah menjadi BidangCon
      */
     public function create()
     {
+        Gate::authorize('manage-organisasi');
         $pejabats = Pejabat::all();
         return view('admin.bidang.create', compact('pejabats'));
     }
@@ -34,6 +35,7 @@ class BidangController extends Controller // Nama kelas diubah menjadi BidangCon
      */
     public function store(Request $request)
     {
+        Gate::authorize('manage-organisasi');
         $request->validate([
             'nama' => 'required|string|max:255|unique:bidangs,nama',
             'tipe' => 'required|in:bidang,UPTD,cabang_dinas',
@@ -66,6 +68,7 @@ class BidangController extends Controller // Nama kelas diubah menjadi BidangCon
      */
     public function edit(Bidang $bidang)
     {
+        Gate::authorize('manage-organisasi');
         $pejabats = Pejabat::all();
         return view('admin.bidang.edit', compact('bidang', 'pejabats'));
     }
@@ -75,6 +78,7 @@ class BidangController extends Controller // Nama kelas diubah menjadi BidangCon
      */
     public function update(Request $request, Bidang $bidang)
     {
+        Gate::authorize('manage-organisasi');
         $request->validate([
             'nama' => 'required|string|max:255|unique:bidangs,nama,' . $bidang->id,
             'tipe' => 'required|in:bidang,UPTD,cabang_dinas',
@@ -106,6 +110,7 @@ class BidangController extends Controller // Nama kelas diubah menjadi BidangCon
      */
     public function destroy(Bidang $bidang)
     {
+        Gate::authorize('manage-organisasi');
         $namaBidang = $bidang->nama;
         $bidang->delete();
 
