@@ -17,6 +17,7 @@ class DokumenCategoryController extends Controller
     public function index()
     {
         Gate::authorize('viewAny', DokumenCategory::class);
+        // Tambahkan withCount untuk menghitung jumlah dokumen secara efisien
         $categories = DokumenCategory::withCount('dokumen')->orderBy('nama')->paginate(10);
         return view('admin.dokumen-categories.index', compact('categories'));
     }

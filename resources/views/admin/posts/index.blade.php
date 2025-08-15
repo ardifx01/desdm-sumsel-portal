@@ -68,8 +68,16 @@
                                     <td class="px-6 py-4">
                                         <div class="flex items-center">
                                             <div class="flex-shrink-0 h-12 w-20">
-                                                @if($post->hasMedia('featured_image'))
-                                                    <img class="h-12 w-20 rounded-md object-cover" src="{{ $post->getFirstMediaUrl('featured_image', 'thumb') }}" alt="">
+                                                {{-- PERBAIKAN DI SINI: Logika Pengecekan Gambar Berlapis --}}
+                                                @php
+                                                    $media = $post->getFirstMedia('featured_image');
+                                                    $imageExists = $media && Storage::disk($media->disk)->exists($media->getPath('thumb'));
+                                                    $fallbackImageExists = $post->featured_image_url && Storage::disk('public')->exists($post->featured_image_url);
+                                                @endphp
+                                                @if($imageExists)
+                                                    <img class="h-12 w-20 rounded-md object-cover" src="{{ $media->getUrl('thumb') }}" alt="">
+                                                @elseif($fallbackImageExists)
+                                                    <img class="h-12 w-20 rounded-md object-cover" src="{{ asset('storage/' . $post->featured_image_url) }}" alt="">
                                                 @else
                                                     <div class="h-12 w-20 rounded-md bg-gray-100 flex items-center justify-center">
                                                         <i class="bi bi-image-alt text-2xl text-gray-400"></i>
@@ -85,7 +93,6 @@
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        {{-- KOLOM KATEGORI DIKEMBALIKAN DI SINI --}}
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ 'badge-category-' . Str::slug($post->category->name) }}">
                                             {{ $post->category->name }}
                                         </span>

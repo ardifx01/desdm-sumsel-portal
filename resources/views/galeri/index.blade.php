@@ -4,15 +4,14 @@
 
 @section('content')
 <style>
-    /* CSS tambahan untuk efek hover yang halus */
     .card-galeri {
         transition: all 0.3s ease;
-        border: 1px solid #e9ecef; /* Border awal yang halus */
+        border: 1px solid #e9ecef;
     }
     .card-galeri:hover {
         transform: translateY(-5px);
         box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-        border-color: #0d6efd; /* Border biru saat hover */
+        border-color: #0d6efd;
     }
     .card-galeri .card-img-overlay {
         background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
@@ -51,7 +50,8 @@
         <div class="col-md-6 col-lg-4 mb-4">
             <a href="{{ route('galeri.album', $album->slug) }}" class="text-decoration-none">
                 <div class="card card-galeri h-100 shadow-sm">
-                    @if($album->thumbnail)
+                    {{-- PERBAIKAN DI SINI --}}
+                    @if($album->thumbnail && Storage::disk('public')->exists($album->thumbnail))
                         <img src="{{ asset('storage/' . $album->thumbnail) }}" class="card-img" alt="{{ $album->nama }}" style="height: 250px; object-fit: cover;">
                     @else
                         <div class="d-flex align-items-center justify-content-center bg-light" style="height: 250px;">
@@ -83,6 +83,7 @@
             <a href="{{ route('galeri.video', $video->slug) }}" class="text-decoration-none">
                 <div class="card card-galeri h-100 shadow-sm">
                     <div class="position-relative">
+                        {{-- PERBAIKAN DI SINI --}}
                         @if($video->thumbnail)
                             <img src="{{ $video->thumbnail }}" class="card-img-top" alt="{{ $video->judul }}" style="height: 200px; object-fit: cover;">
                         @else

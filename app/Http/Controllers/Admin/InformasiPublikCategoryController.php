@@ -14,6 +14,7 @@ class InformasiPublikCategoryController extends Controller
     public function index()
     {
         Gate::authorize('viewAny', InformasiPublikCategory::class);
+        // Tambahkan withCount untuk menghitung jumlah item secara efisien
         $categories = InformasiPublikCategory::withCount('informasiPublik')->orderBy('nama')->paginate(10);
         return view('admin.informasi-publik-categories.index', compact('categories'));
     }

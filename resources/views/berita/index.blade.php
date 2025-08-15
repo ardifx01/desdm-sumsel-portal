@@ -36,39 +36,49 @@
         @forelse($posts as $post)
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card h-100 shadow-sm border-0 pejabat-card">
-                @if ($post->hasMedia('featured_image'))
-                    <img src="{{ $post->getFirstMediaUrl('featured_image', 'thumb') }}" 
-                        class="card-img-top" 
-                        alt="{{ $post->title }}"
-                        loading="lazy"
-                        style="width: 400px; object-fit: contain;">
-                @else
-                    @if($post->featured_image_url)
-                        <img src="{{ asset('storage/' . $post->featured_image_url) }}"
+                @php
+                    $media = $post->getFirstMedia('featured_image');
+                    // Cek apakah media ada DAN file fisiknya ada di storage
+                    $imageExists = $media && Storage::disk($media->disk)->exists($media->getPath('thumb'));
+                @endphp
+                <a href="{{ route('berita.show', $post->slug) }}">
+                    @if($imageExists)
+                        <img src="{{ $media->getUrl('thumb') }}" 
                             class="card-img-top" 
                             alt="{{ $post->title }}"
-                            loading="lazy" 
-                            style="width: 400px; object-fit: contain;">
+                            loading="lazy"
+                            style="height: 200px; object-fit: cover;">
                     @else
-                        <img src="https://placehold.co/400x200?text=No+Image" 
-                            class="card-img-top" 
-                            alt="No Image" 
-                            style="width: 400px; object-fit: contain;">
+                        {{-- Fallback ke featured_image_url jika ada dan file-nya ada --}}
+                        @if($post->featured_image_url && Storage::disk('public')->exists($post->featured_image_url))
+                            <img src="{{ asset('storage/' . $post->featured_image_url) }}"
+                                class="card-img-top" 
+                                alt="{{ $post->title }}"
+                                loading="lazy" 
+                                style="height: 200px; object-fit: cover;">
+                        @else
+                            {{-- Placeholder final jika tidak ada gambar sama sekali --}}
+                            <div class="d-flex align-items-center justify-content-center bg-light" style="height: 200px;">
+                                <span class="text-muted">No Image</span>
+                            </div>
+                        @endif
                     @endif
-                @endif
-                <div class="card-body">
-                            {{-- LOKASI UNTUK BADGE KATEGORI --}}
-                            <span class="badge {{ 'badge-category-' . Str::slug($post->category->name) }}">
-                                {{ $post->category->name }}
-                            </span>                    
-                    <!-- <span class="badge bg-primary mb-2">{{ $post->category->name ?? 'Tanpa Kategori' }}</span> -->
-                    <h5 class="card-title">{{ Str::limit($post->title, 60) }}</h5>
-                    <p class="card-text text-muted small">
-                        <i class="bi bi-calendar"></i> {{ $post->created_at ? $post->created_at->translatedFormat('d M Y') : '-' }} |
-                        <i class="bi bi-person"></i> {{ $post->author->name ?? 'Admin' }}
-                    </p>
-                    <p class="card-text">{{ Str::limit(strip_tags($post->excerpt ?: $post->content_html), 100) }}</p>
-                    <a href="{{ route('berita.show', $post->slug) }}" class="btn btn-sm btn-primary">Baca Selengkapnya</a>
+                </a>
+                <div class="card-body d-flex flex-column">
+                    <div>
+                        <span class="badge {{ 'badge-category-' . Str::slug($post->category->name) }} mb-2">
+                            {{ $post->category->name }}
+                        </span>                    
+                        <h5 class="card-title">{{ Str::limit($post->title, 60) }}</h5>
+                        <p class="card-text text-muted small">
+                            <i class="bi bi-calendar"></i> {{ $post->created_at ? $post->created_at->translatedFormat('d M Y') : '-' }} |
+                            <i class="bi bi-person"></i> {{ $post->author->name ?? 'Admin' }}
+                        </p>
+                        <p class="card-text">{{ Str::limit(strip_tags($post->excerpt ?: $post->content_html), 100) }}</p>
+                    </div>
+                    <div class="mt-auto">
+                        <a href="{{ route('berita.show', $post->slug) }}" class="btn btn-sm btn-primary">Baca Selengkapnya</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -80,11 +90,8 @@
         @endforelse
     </div>
 
-    <div class="mt-4">
+    <div class="mt-4 d-flex justify-content-center">
         {{ $posts->links('pagination::bootstrap-5') }}
     </div>
 </div>
-
-{{-- Pastikan Bootstrap Icons terinstal atau tambahkan CDN di layout utama --}}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 @endsection

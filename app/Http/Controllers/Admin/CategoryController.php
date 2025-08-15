@@ -16,7 +16,8 @@ class CategoryController extends Controller
     public function index()
     {
         Gate::authorize('viewAny', Category::class);
-        $categories = Category::ofTypePost()->orderBy('name')->paginate(10);
+        // Tambahkan withCount untuk menghitung jumlah post secara efisien
+        $categories = Category::ofTypePost()->withCount('posts')->orderBy('name')->paginate(10);
         return view('admin.categories.index', compact('categories'));
     }
 

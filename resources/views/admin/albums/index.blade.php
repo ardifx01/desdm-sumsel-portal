@@ -23,7 +23,8 @@
                 <div class="bg-white rounded-lg shadow-md overflow-hidden group">
                     <a href="{{ route('admin.albums.photos.index', $album) }}" class="block">
                         <div class="relative h-40 bg-gray-200">
-                            @if($album->thumbnail)
+                            {{-- PERBAIKAN DI SINI --}}
+                            @if($album->thumbnail && Storage::disk('public')->exists($album->thumbnail))
                                 <img src="{{ asset('storage/' . $album->thumbnail) }}" alt="{{ $album->nama }}" class="w-full h-full object-cover">
                             @else
                                 <div class="w-full h-full flex items-center justify-center">

@@ -30,7 +30,15 @@
                             @enderror
                             @if($photo->file_path)
                                 <p class="text-xs text-gray-500 mt-2">Foto saat ini:</p>
-                                <img src="{{ asset('storage/' . $photo->file_path) }}" alt="Current Photo" class="w-32 h-32 rounded-md object-cover">
+                                <!-- <img src="{{ asset('storage/' . $photo->file_path) }}" alt="Current Photo" class="w-32 h-32 rounded-md object-cover"> -->
+                                {{-- PERBAIKAN DI SINI --}}
+                                    @if($photo->file_path && Storage::disk('public')->exists($photo->file_path))
+                                        <img src="{{ asset('storage/' . $photo->file_path) }}" alt="{{ $photo->judul ?: $photo->file_name }}" class="w-32 h-32 rounded-md object-cover">
+                                    @else
+                                        <div class="w-32 rounded-md object-cover">
+                                            <i class="bi bi-image-alt text-5xl text-gray-400"></i>
+                                        </div>
+                                    @endif
                             @endif
                         </div>
 

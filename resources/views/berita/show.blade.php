@@ -12,9 +12,8 @@
         </ol>
     </nav>
     <div class="card shadow-sm border-0 mb-4">
-        <div class="card-body">
-            <h2 class="card-title mb-3">{{ $post->title }}</h2>
-            {{-- Tombol Berbagi Media Sosial --}}
+        <div class="card-body p-4 p-md-5">
+            <h1 class="card-title mb-3">{{ $post->title }}</h1>
             <div class="row align-items-center mb-4">
                 <div class="col-md-6 text-muted small">
                     <i class="bi bi-calendar"></i> Dipublikasi: {{ $post->created_at ? $post->created_at->translatedFormat('d F Y H:i') : '-' }} |
@@ -41,32 +40,34 @@
             </div>
             <hr>
 
-            @if ($post->hasMedia('featured_image'))
+            @php
+                $media = $post->getFirstMedia('featured_image');
+                $imageExists = $media && Storage::disk($media->disk)->exists($media->getPath());
+                $fallbackImageExists = $post->featured_image_url && Storage::disk('public')->exists($post->featured_image_url);
+            @endphp
+
+            @if ($imageExists)
                 <div class="text-center mb-4">
                     <picture>
                         <source
-                            srcset="{{ $post->getFirstMedia('featured_image')->getSrcset('webp-responsive') }}"
+                            srcset="{{ $media->getSrcset('webp-responsive') }}"
                             type="image/webp"
                         >
                         <img
-                            src="{{ $post->getFirstMediaUrl('featured_image', 'thumb') }}"
+                            src="{{ $media->getUrl() }}"
                             class="img-fluid rounded"
                             alt="{{ $post->title }}"
                             loading="lazy"
-                            style="width: auto; object-fit: contain;"
                         >
                     </picture>
                 </div>
-            @else
-                @if($post->featured_image_url)
-                    <div class="text-center mb-4">
-                        <img src="{{ asset('storage/' . $post->featured_image_url) }}" 
-                            class="img-fluid rounded" 
-                            alt="{{ $post->title }}" 
-                            loading="lazy" 
-                            style="width: auto; object-fit: contain;">
-                    </div>
-                @endif
+            @elseif($fallbackImageExists)
+                <div class="text-center mb-4">
+                    <img src="{{ asset('storage/' . $post->featured_image_url) }}" 
+                        class="img-fluid rounded" 
+                        alt="{{ $post->title }}" 
+                        loading="lazy">
+                </div>
             @endif
 
             <div class="post-content mb-4">
