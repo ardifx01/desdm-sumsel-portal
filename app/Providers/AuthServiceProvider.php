@@ -25,8 +25,15 @@ use App\Models\PermohonanInformasi;
 use App\Models\PengajuanKeberatan;
 use App\Policies\PermohonanInformasiPolicy;
 use App\Policies\PengajuanKeberatanPolicy;
-use App\Models\StaticPage; 
-use App\Policies\StaticPagePolicy; 
+use App\Models\StaticPage;
+use App\Policies\StaticPagePolicy;
+
+use App\Models\SasaranStrategis;
+use App\Models\Kinerja;
+use App\Models\IndikatorKinerja;
+use App\Policies\KinerjaPolicy;
+
+
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -49,6 +56,9 @@ class AuthServiceProvider extends ServiceProvider
         PermohonanInformasi::class => PermohonanInformasiPolicy::class,
         PengajuanKeberatan::class => PengajuanKeberatanPolicy::class,
         StaticPage::class => StaticPagePolicy::class,
+        SasaranStrategis::class => KinerjaPolicy::class,
+        IndikatorKinerja::class => KinerjaPolicy::class,
+        Kinerja::class => KinerjaPolicy::class,
     ];
 
     /**

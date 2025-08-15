@@ -11,7 +11,7 @@ use App\Http\Controllers\Api\InformasiPublikController;
 use App\Http\Controllers\Api\PejabatController; 
 use App\Http\Controllers\Api\BidangController; 
 use App\Http\Controllers\Api\PpidServiceController;
-
+use App\Http\Controllers\Api\KinerjaApiController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -51,7 +51,6 @@ Route::get('/pejabat', [PejabatController::class, 'index']);
 Route::get('/pejabat/{pejabat}', [PejabatController::class, 'show']);
 Route::get('/bidang', [BidangController::class, 'index']);
 Route::get('/bidang/{bidang:slug}', [BidangController::class, 'show']);
-
 
 
 // Rute yang Dilindungi (memerlukan token otentikasi yang valid)

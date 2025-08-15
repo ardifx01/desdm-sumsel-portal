@@ -39,6 +39,11 @@ use App\Http\Controllers\DashboardController; // Admin Dashboard
 use App\Http\Controllers\UserDashboardController; // User Dashboard
 use App\Http\Controllers\Admin\ActivityLogController;
 
+use App\Http\Controllers\Admin\SasaranStrategisController;
+use App\Http\Controllers\Admin\IndikatorKinerjaController;
+use App\Http\Controllers\Admin\KinerjaController;
+use App\Http\Controllers\KinerjaPublikController;
+
 use App\Http\Controllers\WelcomeController;
 // Controllers bawaan Laravel/Breeze
 use App\Http\Controllers\ProfileController;
@@ -54,7 +59,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
 
 // --- Rute MODUL PUBLIK ---
-
+Route::get('/kinerja', [KinerjaPublikController::class, 'index'])->name('kinerja.publik');
 // Modul Tentang Kami
 Route::prefix('tentang-kami')->name('tentang-kami.')->group(function () {
     Route::get('/', [TentangKamiController::class, 'index'])->name('index');
@@ -171,6 +176,8 @@ Route::prefix('halaman-statis')->name('static-pages.')->group(function () {
 
 // Tambahkan di bagian rute publik
 Route::get('/search', [SearchController::class, 'index'])->name('search');
+
+
 
 // --- Rute AUTENTIKASI BREEZE ---
 
@@ -312,6 +319,15 @@ Route::middleware('auth')->group(function () {
         Route::get('settings', [SettingController::class, 'edit'])->name('settings.edit');
         Route::post('settings', [SettingController::class, 'update'])->name('settings.update');
         Route::post('settings/reset-counter', [SettingController::class, 'resetCounter'])->name('settings.reset-counter');
+
+        // Rute untuk Sasaran Strategis
+        Route::resource('sasaran-strategis', SasaranStrategisController::class);
+        Route::resource('indikator-kinerja', IndikatorKinerjaController::class)->parameters([
+            'indikator-kinerja' => 'indikatorKinerja' // Menyesuaikan nama parameter
+        ]);
+        // Rute untuk Kinerja
+        Route::get('kinerja', [KinerjaController::class, 'index'])->name('kinerja.index');
+        Route::post('kinerja', [KinerjaController::class, 'storeOrUpdate'])->name('kinerja.storeOrUpdate');
     });
 });
 

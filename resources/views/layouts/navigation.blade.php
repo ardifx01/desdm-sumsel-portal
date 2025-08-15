@@ -145,6 +145,20 @@
                                 <x-dropdown-link :href="route('admin.bidang.index')">
                                     {{ __('Manajemen Bidang') }}
                                 </x-dropdown-link>
+                                {{-- TAUTAN BARU DI SINI --}}
+                                <div class="border-t border-gray-200"></div>
+                                <h6 class="dropdown-header px-4 py-2 text-xs text-gray-400">Kinerja</h6>
+                                <x-dropdown-link :href="route('admin.sasaran-strategis.index')">
+                                    {{ __('Sasaran Strategis') }}
+                                </x-dropdown-link>
+
+                                <x-dropdown-link :href="route('admin.indikator-kinerja.index')">
+                                    {{ __('Indikator Kinerja') }}
+                                </x-dropdown-link>
+
+                                <x-dropdown-link :href="route('admin.kinerja.index')">
+                                    {{ __('Capaian Kinerja') }}
+                                </x-dropdown-link>
                             </x-slot>
                         </x-dropdown>
                     </div>
@@ -262,6 +276,9 @@
                 <div class="px-4 py-2 text-xs text-gray-400">OPD</div>
                 <x-responsive-nav-link :href="route('admin.pejabat.index')">{{ __('Manajemen Pejabat') }}</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.bidang.index')">{{ __('Manajemen Bidang') }}</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.sasaran-strategis.index')">{{ __('Sasaran Strategis') }}</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.indikator-kinerja.index')">{{ __('Indikator Kinerja') }}</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.kinerja.index')">{{ __('Capaian Kinerja') }}</x-responsive-nav-link>
             @endif
         </div>
     </div>
