@@ -52,6 +52,8 @@ Route::get('/pejabat/{pejabat}', [PejabatController::class, 'show']);
 Route::get('/bidang', [BidangController::class, 'index']);
 Route::get('/bidang/{bidang:slug}', [BidangController::class, 'show']);
 
+// Rute Data Kinerja untuk Pihak Eksternal (BARU)
+Route::get('/kinerja', [KinerjaApiController::class, 'getData']);
 
 // Rute yang Dilindungi (memerlukan token otentikasi yang valid)
 Route::middleware('auth:sanctum')->group(function () {
