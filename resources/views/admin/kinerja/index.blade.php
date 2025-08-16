@@ -54,7 +54,7 @@
                         @forelse($sasaranStrategis as $sasaran)
                             <div class="mb-10">
                                 <h3 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">
-                                    {{ $sasaran->urutan }}. {{ $sasaran->sasaran }}
+                                    Sasaran Strategis {{ $sasaran->urutan }}: {{ $sasaran->sasaran }}
                                 </h3>
                                 <div class="overflow-x-auto">
                                     <table class="min-w-full text-sm">
@@ -80,13 +80,13 @@
                                                     <td class="px-4 py-2 font-medium">{{ $indikator->nama_indikator }}</td>
                                                     <td class="px-4 py-2">{{ $indikator->satuan }}</td>
                                                     <td class="px-2 py-1 border-l">
-                                                        <input type="text" name="kinerja[{{$indikator->id}}][target_tahunan]" value="{{ formatKinerjaNumber($kinerja->target_tahunan ?? 0) }}" class="w-32 border-gray-300 rounded-md shadow-sm text-sm text-center number-mask">
+                                                        <input type="text" name="kinerja[{{$indikator->id}}][target_tahunan]" value="{{ formatKinerjaNumber($kinerja->target_tahunan ?? 0) }}" class="w-32 border-gray-300 rounded-md shadow-sm text-sm text-right number-mask">
                                                     </td>
-                                                    <td class="px-2 py-1 border-l"><input type="text" name="kinerja[{{$indikator->id}}][realisasi_q1]" value="{{ formatKinerjaNumber($kinerja->realisasi_q1 ?? 0) }}" class="w-32 border-gray-300 rounded-md shadow-sm text-sm text-center number-mask"></td>
-                                                    <td class="px-2 py-1"><input type="text" name="kinerja[{{$indikator->id}}][realisasi_q2]" value="{{ formatKinerjaNumber($kinerja->realisasi_q2 ?? 0) }}" class="w-32 border-gray-300 rounded-md shadow-sm text-sm text-center number-mask"></td>
-                                                    <td class="px-2 py-1"><input type="text" name="kinerja[{{$indikator->id}}][realisasi_q3]" value="{{ formatKinerjaNumber($kinerja->realisasi_q3 ?? 0) }}" class="w-32 border-gray-300 rounded-md shadow-sm text-sm text-center number-mask"></td>
-                                                    <td class="px-2 py-1"><input type="text" name="kinerja[{{$indikator->id}}][realisasi_q4]" value="{{ formatKinerjaNumber($kinerja->realisasi_q4 ?? 0) }}" class="w-32 border-gray-300 rounded-md shadow-sm text-sm text-center number-mask"></td>
-                                                    <td class="px-4 py-2 border-l text-center font-semibold bg-gray-50">{{ formatKinerjaNumber($kinerja->total_realisasi ?? 0) }}</td>
+                                                    <td class="px-2 py-1 border-l"><input type="text" name="kinerja[{{$indikator->id}}][realisasi_q1]" value="{{ formatKinerjaNumber($kinerja->realisasi_q1 ?? 0) }}" class="w-32 border-gray-300 rounded-md shadow-sm text-sm text-right number-mask"></td>
+                                                    <td class="px-2 py-1"><input type="text" name="kinerja[{{$indikator->id}}][realisasi_q2]" value="{{ formatKinerjaNumber($kinerja->realisasi_q2 ?? 0) }}" class="w-32 border-gray-300 rounded-md shadow-sm text-sm text-right number-mask"></td>
+                                                    <td class="px-2 py-1"><input type="text" name="kinerja[{{$indikator->id}}][realisasi_q3]" value="{{ formatKinerjaNumber($kinerja->realisasi_q3 ?? 0) }}" class="w-32 border-gray-300 rounded-md shadow-sm text-sm text-right number-mask"></td>
+                                                    <td class="px-2 py-1"><input type="text" name="kinerja[{{$indikator->id}}][realisasi_q4]" value="{{ formatKinerjaNumber($kinerja->realisasi_q4 ?? 0) }}" class="w-32 border-gray-300 rounded-md shadow-sm text-sm text-right number-mask"></td>
+                                                    <td class="px-4 py-2 border-l text-right font-semibold bg-gray-50">{{ formatKinerjaNumber($kinerja->total_realisasi ?? 0) }}</td>
                                                     <td class="px-4 py-2 text-center font-bold {{ ($kinerja->persentase_capaian ?? 0) >= 100 ? 'text-green-600' : 'text-red-600' }} bg-gray-50">{{ number_format($kinerja->persentase_capaian ?? 0, 2, ',', '.') }}%</td>
                                                 </tr>
                                             @empty

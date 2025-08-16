@@ -24,7 +24,7 @@
                         @forelse ($sasaranStrategis as $sasaran)
                             <div>
                                 <h3 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">
-                                    {{ $sasaran->urutan }}. {{ $sasaran->sasaran }}
+                                    Sasaran Strategis {{ $sasaran->urutan }}: {{ $sasaran->sasaran }}
                                 </h3>
                                 @if($sasaran->indikatorKinerja->isEmpty())
                                     <p class="text-sm text-gray-500 italic">Belum ada indikator untuk sasaran ini.</p>
