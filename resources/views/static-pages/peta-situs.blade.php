@@ -27,11 +27,12 @@
 
                             <h4><i class="bi bi-info-circle-fill me-2 text-primary"></i>Tentang Kami</h4>
                             <ul>
-                                <li><a href="{{ url('/tentang-kami') }}">Tentang Kami Overview</a></li>
                                 <li><a href="{{ route('tentang-kami.visi-misi') }}">Visi, Misi & Tujuan</a></li>
                                 <li><a href="{{ route('tentang-kami.struktur-organisasi') }}">Struktur Organisasi Dinas</a></li>
                                 <li><a href="{{ route('tentang-kami.tugas-fungsi') }}">Tugas & Fungsi Dinas</a></li>
                                 <li><a href="{{ route('tentang-kami.profil-pimpinan') }}">Profil Pimpinan Dinas</a></li>
+                                <li><a href="{{ route('bidang-sektoral.index') }}">Daftar Bidang & Unit</a></li>
+                                <li><a href="{{ route('kinerja.publik') }}">Capaian Kinerja</a></li>
                             </ul>
 
                             <h4><i class="bi bi-journals me-2 text-primary"></i>Informasi Publik (PPID)</h4>
@@ -51,12 +52,6 @@
                             </ul>
                         </div>
                         <div class="col-md-6">
-                            <h4><i class="bi bi-buildings-fill me-2 text-primary"></i>Bidang & Data Sektoral</h4>
-                            <ul>
-                                <li><a href="{{ route('bidang-sektoral.index') }}">Daftar Bidang & Unit</a></li>
-                                <li><a href="{{ route('bidang-sektoral.data-statistik') }}">Data & Statistik Sektoral Umum</a></li>
-
-                            </ul>
 
                             <h4><i class="bi bi-file-earmark-ruled-fill me-2 text-primary"></i>Media Center</h4>
                             <ul>

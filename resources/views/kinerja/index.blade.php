@@ -12,7 +12,10 @@
     </nav>
     
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-5">
+        <div>
         <h2 class="mb-3 mb-md-0">Capaian Kinerja Dinas ESDM Provinsi Sumatera Selatan</h2>
+        <span>Berdasarkan Target yang telah ditetapkan pada Dokumen Renstra 2024-2026</span>
+        </div>
         <form action="{{ route('kinerja.publik') }}" method="GET" class="d-flex align-items-center">
             <label for="tahun" class="form-label me-2 mb-0">Tahun:</label>
             <select name="tahun" id="tahun" onchange="this.form.submit()" class="form-select" style="width: 120px;">
@@ -40,7 +43,7 @@
                 @if($filteredIndikators->isNotEmpty())
                 <div class="card shadow-sm">
                     <div class="card-header bg-white">
-                        <h3 class="mb-0">{{ $loop->iteration }}. {{ $sasaran->sasaran }}</h3>
+                        <h3 class="mb-0">Sasaran Strategis {{ $loop->iteration }}: {{ $sasaran->sasaran }}</h3>
                     </div>
                     <div class="card-body">
                         <div style="height: {{ $filteredIndikators->count() * 70 }}px;">
@@ -82,10 +85,10 @@
                 ctx.save();
                 ctx.beginPath();
                 ctx.lineWidth = 2;
-                ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)'; // merah untuk target 100%
+                ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
                 ctx.setLineDash([6, 6]);
                 
-                const xPos = x.getPixelForValue(100); // Garis target selalu di 100%
+                const xPos = x.getPixelForValue(100);
                 ctx.moveTo(xPos, top);
                 ctx.lineTo(xPos, bottom);
                 ctx.stroke();
@@ -107,9 +110,10 @@
                 })->map(function($indikator) {
                     $kinerja = $indikator->kinerja->first();
                     return [
-                        'label' => $indikator->nama_indikator . ' (' . $indikator->satuan . ')',
+                        'label' => $indikator->nama_indikator,
                         'target' => (float)($kinerja->target_tahunan ?? 0),
                         'realisasi' => (float)($kinerja->total_realisasi ?? 0),
+                        'satuan' => $indikator->satuan,
                         'capaian' => (float)number_format($kinerja->persentase_capaian ?? 0, 2, '.', ''),
                     ];
                 })->values();
@@ -118,14 +122,18 @@
             @if($chartData->isNotEmpty())
                 const ctxSasaran{{$sasaran->id}} = document.getElementById('chart-sasaran-{{ $sasaran->id }}');
                 if (ctxSasaran{{$sasaran->id}}) {
+                    const chartData = @json($chartData);
+                    const labels = chartData.map(item => `${item.label} (${item.satuan})`);
+                    const capaianData = chartData.map(item => item.capaian);
+
                     new Chart(ctxSasaran{{$sasaran->id}}, {
                         type: 'bar',
                         data: {
-                            labels: @json($chartData->pluck('label')),
+                            labels: labels,
                             datasets: [
                                 {
                                     label: 'Capaian',
-                                    data: @json($chartData->pluck('capaian')),
+                                    data: capaianData,
                                     backgroundColor: (context) => {
                                         const capaian = context.raw;
                                         return capaian >= 100 ? 'rgba(25, 135, 84, 0.7)' : 'rgba(13, 110, 253, 0.7)';
@@ -147,17 +155,36 @@
                                 title: { display: false },
                                 tooltip: {
                                     callbacks: {
-                                        // Tooltip sekarang akan menampilkan semua info
+                                        title: function(context) {
+                                            const index = context[0].dataIndex;
+                                            return chartData[index].label;
+                                        },
                                         label: function(context) {
                                             const index = context.dataIndex;
-                                            const target = @json($chartData->pluck('target'))[index];
-                                            const realisasi = @json($chartData->pluck('realisasi'))[index];
-                                            const capaian = context.raw;
+                                            const itemData = chartData[index];
                                             
+                                            let target, realisasi;
+                                            
+                                            if (itemData.satuan === 'Rp') {
+                                                target = `Rp ${formatNumber(itemData.target)}`;
+                                                realisasi = `Rp ${formatNumber(itemData.realisasi)}`;
+                                            } else if (itemData.satuan === 'Rp Milyar') {
+                                                target = `Rp ${formatNumber(itemData.target)} Milyar`;
+                                                realisasi = `Rp ${formatNumber(itemData.realisasi)} Milyar`;
+                                            } else if (itemData.satuan === '%') {
+                                                target = `${formatNumber(itemData.target)}%`;
+                                                realisasi = `${formatNumber(itemData.realisasi)}%`;
+                                            } else {
+                                                target = `${formatNumber(itemData.target)} ${itemData.satuan}`;
+                                                realisasi = `${formatNumber(itemData.realisasi)} ${itemData.satuan}`;
+                                            }
+
+                                            const capaian = itemData.capaian.toLocaleString('id-ID') + '%';
+
                                             return [
-                                                `Target: ${formatNumber(target)}`,
-                                                `Realisasi: ${formatNumber(realisasi)}`,
-                                                `Capaian: ${capaian.toLocaleString('id-ID')}%`
+                                                `Target: ${target}`,
+                                                `Realisasi: ${realisasi}`,
+                                                `Capaian: ${capaian}`
                                             ];
                                         }
                                     }
@@ -165,7 +192,12 @@
                                 datalabels: {
                                     anchor: 'end',
                                     align: 'end',
-                                    formatter: (value) => `${value.toLocaleString('id-ID')}%`,
+                                    formatter: (value, context) => {
+                                        if (value > 100) {
+                                            return null;
+                                        }
+                                        return null;
+                                    },
                                     font: { weight: 'bold' }
                                 }
                             },
@@ -173,10 +205,9 @@
                                 x: {
                                     beginAtZero: true,
                                     display: false,
-                                    // Skala maksimum sedikit di atas nilai capaian tertinggi atau 100
-                                    suggestedMax: Math.max(...(@json($chartData->pluck('capaian'))), 100) * 1.1,
+                                    suggestedMax: Math.max(...capaianData, 100) * 1.1,
                                     ticks: {
-                                        callback: (value) => value + '%' // Tambahkan simbol %
+                                        callback: (value) => value + '%'
                                     }
                                 }
                             }

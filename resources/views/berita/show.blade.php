@@ -40,32 +40,29 @@
             </div>
             <hr>
 
-            @php
-                $media = $post->getFirstMedia('featured_image');
-                $imageExists = $media && Storage::disk($media->disk)->exists($media->getPath());
-                $fallbackImageExists = $post->featured_image_url && Storage::disk('public')->exists($post->featured_image_url);
-            @endphp
-
-            @if ($imageExists)
+            @if($post->hasMedia('featured_image'))
                 <div class="text-center mb-4">
                     <picture>
+                        {{-- Menggunakan srcset dari Spatie Media Library untuk gambar WebP responsive --}}
                         <source
-                            srcset="{{ $media->getSrcset('webp-responsive') }}"
+                            srcset="{{ $post->getFirstMedia('featured_image')->getSrcset('webp-responsive') }}"
                             type="image/webp"
                         >
+                        {{-- Menggunakan URL default sebagai fallback --}}
                         <img
-                            src="{{ $media->getUrl() }}"
+                            src="{{ $post->getFirstMediaUrl('featured_image') }}"
                             class="img-fluid rounded"
                             alt="{{ $post->title }}"
                             loading="lazy"
                         >
                     </picture>
                 </div>
-            @elseif($fallbackImageExists)
+            @elseif($post->featured_image_url && Storage::disk('public')->exists($post->featured_image_url))
                 <div class="text-center mb-4">
-                    <img src="{{ asset('storage/' . $post->featured_image_url) }}" 
-                        class="img-fluid rounded" 
-                        alt="{{ $post->title }}" 
+                    {{-- Fallback ke featured_image_url jika ada dan file-nya ada --}}
+                    <img src="{{ asset('storage/' . $post->featured_image_url) }}"
+                        class="img-fluid rounded"
+                        alt="{{ $post->title }}"
                         loading="lazy">
                 </div>
             @endif

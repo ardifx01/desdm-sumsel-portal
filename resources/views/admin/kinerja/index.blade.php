@@ -120,19 +120,16 @@
     {{-- SCRIPT UNTUK MASKING INPUT --}}
     @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/cleave.js@1.6.0/dist/cleave.min.js"></script>
-    <script>
+<script>
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.number-mask').forEach(function(input) {
-                // Cek apakah nilai awal adalah bilangan bulat
-                const isInteger = !input.value.includes(',');
-
+                // PERBAIKAN DI SINI: Selalu izinkan 2 desimal untuk input
                 new Cleave(input, {
                     numeral: true,
                     numeralThousandsGroupStyle: 'thousand',
                     delimiter: '.',
                     numeralDecimalMark: ',',
-                    // Tampilkan 0 desimal jika bilangan bulat, 2 jika bukan
-                    numeralDecimalScale: isInteger ? 0 : 2 
+                    numeralDecimalScale: 2 // <-- Selalu set ke 2
                 });
             });
         });

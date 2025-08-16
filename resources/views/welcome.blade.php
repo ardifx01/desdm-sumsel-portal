@@ -177,9 +177,9 @@
         <div class="card h-100 border-0 shadow-sm text-center p-4 pejabat-card">
             <div class="card-body">
                 <i class="fas fa-chart-line fa-3x text-primary mb-3"></i>
-                <h5 class="card-title fw-bold">Data Statistik</h5>
-                <p class="card-text text-muted">Analisis data dan statistik terkini sektor ESDM.</p>
-                <a href="{{ route('kinerja.publik') }}" class="btn btn-link">Lihat Statistik <i class="fas fa-arrow-right"></i></a>
+                <h5 class="card-title fw-bold">Capaian Kinerja</h5>
+                <p class="card-text text-muted">Analisis data dan statistik terkini Capaian Kinerja Dinas ESDM.</p>
+                <a href="{{ route('kinerja.publik') }}" class="btn btn-link">Lihat Detail <i class="fas fa-arrow-right"></i></a>
             </div>
         </div>
     </div>

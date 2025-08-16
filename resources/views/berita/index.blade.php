@@ -36,32 +36,26 @@
         @forelse($posts as $post)
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card h-100 shadow-sm border-0 pejabat-card">
-                @php
-                    $media = $post->getFirstMedia('featured_image');
-                    // Cek apakah media ada DAN file fisiknya ada di storage
-                    $imageExists = $media && Storage::disk($media->disk)->exists($media->getPath('thumb'));
-                @endphp
                 <a href="{{ route('berita.show', $post->slug) }}">
-                    @if($imageExists)
-                        <img src="{{ $media->getUrl('thumb') }}" 
-                            class="card-img-top" 
+                    @if($post->hasMedia('featured_image'))
+                        {{-- Tampilkan gambar dari Spatie Media Library jika ada --}}
+                        <img src="{{ $post->getFirstMediaUrl('featured_image', 'thumb') }}"
+                            class="card-img-top"
+                            alt="{{ $post->title }}"
+                            loading="lazy"
+                            style="height: 200px; object-fit: cover;">
+                    @elseif($post->featured_image_url && Storage::disk('public')->exists($post->featured_image_url))
+                        {{-- Fallback ke featured_image_url jika ada dan file fisiknya ada --}}
+                        <img src="{{ asset('storage/' . $post->featured_image_url) }}"
+                            class="card-img-top"
                             alt="{{ $post->title }}"
                             loading="lazy"
                             style="height: 200px; object-fit: cover;">
                     @else
-                        {{-- Fallback ke featured_image_url jika ada dan file-nya ada --}}
-                        @if($post->featured_image_url && Storage::disk('public')->exists($post->featured_image_url))
-                            <img src="{{ asset('storage/' . $post->featured_image_url) }}"
-                                class="card-img-top" 
-                                alt="{{ $post->title }}"
-                                loading="lazy" 
-                                style="height: 200px; object-fit: cover;">
-                        @else
-                            {{-- Placeholder final jika tidak ada gambar sama sekali --}}
-                            <div class="d-flex align-items-center justify-content-center bg-light" style="height: 200px;">
-                                <span class="text-muted">No Image</span>
-                            </div>
-                        @endif
+                        {{-- Placeholder jika tidak ada gambar sama sekali --}}
+                        <div class="d-flex align-items-center justify-content-center bg-light" style="height: 200px;">
+                            <span class="text-muted">No Image</span>
+                        </div>
                     @endif
                 </a>
                 <div class="card-body d-flex flex-column">
