@@ -77,38 +77,4 @@
         </div>
     </div>
 
-    <script>
-        function fileUploadComponent() {
-            return {
-                dragging: false,
-                files: [],
-                addFiles(fileList) {
-                    // Ubah FileList menjadi array dan tambahkan ke files
-                    Array.from(fileList).forEach(file => {
-                        if (file.type.startsWith('image/')) {
-                            file.preview = URL.createObjectURL(file);
-                            this.files.push(file);
-                        }
-                    });
-                    this.updateFileInput();
-                },
-                dropFiles(event) {
-                    this.dragging = false;
-                    this.addFiles(event.dataTransfer.files);
-                },
-                removeFile(index) {
-                    URL.revokeObjectURL(this.files[index].preview);
-                    this.files.splice(index, 1);
-                    this.updateFileInput();
-                },
-                updateFileInput() {
-                    // Buat DataTransfer baru untuk menampung file yang valid
-                    const dataTransfer = new DataTransfer();
-                    this.files.forEach(file => dataTransfer.items.add(file));
-                    // Set file input dengan file yang baru
-                    this.$refs.fileInput.files = dataTransfer.files;
-                }
-            }
-        }
-    </script>
 </x-app-layout>

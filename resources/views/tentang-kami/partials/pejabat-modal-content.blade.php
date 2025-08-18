@@ -10,7 +10,7 @@
                 $imageExists = $media && file_exists($media->getPath());
             @endphp
             @if($imageExists)
-                <img src="{{ $media->getUrl('thumb') }}" alt="Foto {{ $pejabat->nama }}" class="img-fluid rounded-start" width="auto" loading="lazy">
+                <img src="{{ $media->getUrl('preview') }}" alt="Foto {{ $pejabat->nama }}" class="img-fluid rounded-start" width="auto" loading="lazy">
             @else
                 <img src="https://placehold.co/400x400/E5E7EB/6B7280?text=No+Photo" alt="No Photo" class="img-fluid rounded-start" width="auto" loading="lazy">
             @endif

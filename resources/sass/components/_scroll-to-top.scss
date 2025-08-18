@@ -1,0 +1,22 @@
+#scroll-to-top {
+    display: none; // Sembunyikan tombol secara default
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 99; // Pastikan tombol berada di atas elemen lain
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 15px 20px;
+    font-size: 16px;
+    transition: background-color 0.3s, opacity 0.3s;
+    
+    // Gaya untuk ikon panah
+    .fas {
+        margin-right: 8px;
+    }
+
+    &:hover {
+        background-color: #f0f0f0; // Warna hover
+    }
+}

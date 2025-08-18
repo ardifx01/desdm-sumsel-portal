@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
+use App\Models\Traits\HasColoredBadge;
+use App\Models\Traits\HasFrontendBadge;
 
 class InformasiPublikCategory extends Model
 {
-    use HasFactory, LogsActivity;
+    use HasFactory, LogsActivity, HasColoredBadge, HasFrontendBadge;
 
     protected $table = 'informasi_publik_categories';
 

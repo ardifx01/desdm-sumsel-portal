@@ -3,91 +3,12 @@
 @section('title', 'Beranda')
 
 @section('content')
-<style>
-    .masthead {
-        /* Menggunakan gambar latar belakang dengan efek overlay gelap */
-        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ asset('storage/images/hero-desdm-sumsel.png') }}') no-repeat center center;
-        background-size: cover;
-        background-position: center;
-        color: white;
-        height: 80vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        overflow: hidden; /* Penting untuk animasi masuk */
-    }
-    .masthead h1, .masthead h2, .masthead p {
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.5); /* Bayangan teks lebih kuat */
-        color: white; /* Memastikan semua teks berwarna putih */
-    }
 
-    /* Definisi animasi untuk teks */
-    @keyframes fadeInSlideUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    /* Definisi animasi baru untuk tombol */
-    @keyframes buttonPopIn {
-        0% {
-            opacity: 0;
-            transform: scale(0.8);
-        }
-        100% {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
-
-    .masthead .animated-title {
-        animation: fadeInSlideUp 1s ease-in-out;
-    }
-    .masthead .animated-subtitle {
-        animation: fadeInSlideUp 1s ease-in-out 0.3s forwards;
-        opacity: 0;
-    }
-    .masthead .animated-text {
-        animation: fadeInSlideUp 1s ease-in-out 0.6s forwards;
-        opacity: 0;
-    }
-    
-    .masthead .animated-buttons .btn:nth-child(1) {
-        animation: buttonPopIn 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55) 0.9s forwards;
-        opacity: 0;
-    }
-    .masthead .animated-buttons .btn:nth-child(2) {
-        animation: buttonPopIn 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55) 1.2s forwards;
-        opacity: 0;
-    }
-
-    /* Mengubah warna tombol agar kontras dengan latar belakang gelap */
-    .masthead .btn-primary {
-        background-color: var(--bs-primary);
-        border-color: var(--bs-primary);
-        color: white;
-    }
-    .masthead .btn-outline-light {
-        border-color: white;
-        color: white;
-    }
-    .masthead .btn-outline-light:hover {
-        background-color: white;
-        color: var(--bs-primary);
-    }
-        /* Aturan baru untuk menghilangkan garis bawah pada tautan di section features */
-    #features .btn-link {
-        text-decoration: none;
-    }
-</style>
-
-<header class="masthead">
+{{-- CSS untuk gambar latar belakang tetap di sini sebagai inline style --}}
+@php
+    $heroImageUrl = asset('storage/images/hero-desdm-sumsel.png');
+@endphp
+<header class="masthead" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ $heroImageUrl }}') no-repeat center center; background-size: cover;">
     <div class="container">
         <h2 class="display-4 fw-light animated-title">Selamat Datang di Portal Resmi</h2>
         <h1 class="display-2 fw-bold mb-4 animated-subtitle">{{ config('app.name', 'DESDM Sumsel') }}</h1>
@@ -100,12 +21,10 @@
         </p>
         <div class="d-grid gap-2 d-sm-flex justify-content-sm-center animated-buttons">
             <a href="{{ url('/informasi-publik') }}" class="btn btn-primary btn-lg px-4 me-sm-3">Akses Informasi Publik</a>
-            {{-- <a href="{{ url('/tentang-kami') }}" class="btn btn-outline-light btn-lg px-4">Pelajari Lebih Lanjut</a> --}}
             <a href="{{ url('/') }}#tentang-kami" class="btn btn-outline-light btn-lg px-4">Pelajari Lebih Lanjut</a>
         </div>
     </div>
 </header>
-
 
 
 <section id="tentang-kami" class="py-5 bg-light">

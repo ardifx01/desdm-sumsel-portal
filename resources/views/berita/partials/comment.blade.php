@@ -1,51 +1,53 @@
-<div class="d-flex mb-3">
-    <div class="flex-shrink-0 me-3">
-        <img src="https://ui-avatars.com/api/?name={{ urlencode($comment->user->name ?? $comment->name) }}&color=FFFFFF&background=0D8ABC" class="rounded-circle" width="40" height="40" alt="Avatar">
-    </div>
-    <div class="flex-grow-1">
-        <h6 class="mt-0">
-            {{ $comment->user->name ?? $comment->name }}
-            @if($comment->email)
-                <small class="text-muted fw-normal">({{ $comment->email }})</small>
-            @endif
-        </h6>
-        <div class="p-3 bg-light rounded shadow-sm">
-            <p class="mb-0">{{ $comment->content }}</p>
+{{-- Tentukan kelas wrapper berdasarkan apakah ini balasan atau bukan --}}
+@php
+    $wrapperClass = ($depth > 0) ? 'comment-reply' : '';
+@endphp
+
+<div class="{{ $wrapperClass }}">
+    <div class="d-flex mb-3">
+        <div class="flex-shrink-0 me-3">
+            <img src="https://ui-avatars.com/api/?name={{ urlencode($comment->user->name ?? $comment->name) }}&background=0D8ABC&color=FFFFFF&rounded=true" width="50" height="50" alt="Avatar">
         </div>
-        <small class="text-muted mt-2 mb-2 d-block">
-            {{ $comment->created_at->diffForHumans() }}
-            <a href="#" class="reply-btn text-muted fw-bold ms-2" data-comment-id="{{ $comment->id }}">Balas</a>
-        </small>
-        
-        {{-- Form Balasan --}}
-        <div class="reply-form mt-3 ps-3 border-start" id="reply-form-{{ $comment->id }}" style="display:none;">
-            <form action="{{ route('comments.store') }}" method="POST">
-                @csrf
-                <input type="hidden" name="post_id" value="{{ $comment->post_id }}">
-                <input type="hidden" name="parent_id" value="{{ $comment->id }}">
-                
-                @if(!auth()->check())
-                <div class="mb-2">
-                    <label for="reply-name-{{ $comment->id }}" class="form-label">Nama Anda <span class="text-danger">*</span></label>
-                    <input type="text" name="name" id="reply-name-{{ $comment->id }}" class="form-control" required>
-                </div>
-                <div class="mb-2">
-                    <label for="reply-email-{{ $comment->id }}" class="form-label">Email <span class="text-danger">*</span></label>
-                    <input type="email" name="email" id="reply-email-{{ $comment->id }}" class="form-control" required>
-                </div>
-                @endif
-                
-                <div class="mb-2">
-                    <textarea name="content" class="form-control" rows="2" placeholder="Balas komentar ini..." required></textarea>
-                </div>
-                <button type="submit" class="btn btn-sm btn-primary">Kirim Balasan</button>
-            </form>
-        </div>
-        
-        {{-- Tampilkan Balasan Secara Rekursif --}}
-        @foreach($comment->replies as $reply)
-            <div class="mt-3"> @include('berita.partials.comment', ['comment' => $reply, 'depth' => $depth + 1])
+        <div class="flex-grow-1">
+            <h6 class="mt-0 fw-bold">
+                {{ $comment->user->name ?? $comment->name }}
+            </h6>
+            <div class="comment-content p-3 bg-light rounded shadow-sm mb-2">
+                {{-- PERBAIKAN PENTING: Gunakan e() untuk sanitasi output --}}
+                <p class="mb-0">{!! nl2br(e($comment->content)) !!}</p>
             </div>
-        @endforeach
+            <div class="comment-actions small text-muted d-block">
+                <span>{{ $comment->created_at->diffForHumans() }}</span>
+                <a href="#" class="reply-btn text-primary ms-2" data-comment-id="{{ $comment->id }}">
+                    <i class="bi bi-reply-fill"></i> Balas
+                </a>
+            </div>
+            
+            {{-- Form Balasan --}}
+            <div class="reply-form mt-3" id="reply-form-{{ $comment->id }}">
+                <form action="{{ route('comments.store') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="post_id" value="{{ $post->id }}">
+                    <input type="hidden" name="parent_id" value="{{ $comment->id }}">
+                    
+                    @guest
+                    <div class="row mb-2">
+                        <div class="col-md-6"><input type="text" name="name" class="form-control form-control-sm" placeholder="Nama Anda *" required></div>
+                        <div class="col-md-6"><input type="email" name="email" class="form-control form-control-sm" placeholder="Email Anda *" required></div>
+                    </div>
+                    @endguest
+                    
+                    <div class="mb-2">
+                        <textarea name="content" class="form-control form-control-sm" rows="3" placeholder="Tulis balasan Anda..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-sm btn-primary">Kirim Balasan</button>
+                </form>
+            </div>
+        </div>
     </div>
+
+    {{-- Tampilkan Balasan Secara Rekursif --}}
+    @foreach($comment->replies as $reply)
+        @include('berita.partials.comment', ['comment' => $reply, 'depth' => $depth + 1])
+    @endforeach
 </div>

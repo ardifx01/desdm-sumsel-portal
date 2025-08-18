@@ -32,7 +32,7 @@ class PejabatController extends Controller
             'jabatan' => 'required|string|max:255',
             'nip' => 'nullable|string|max:255|unique:pejabat,nip',
             'deskripsi_singkat' => 'nullable|string',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'foto' => 'nullable|image|mimes:webp,jpeg,png,jpg,gif,svg|max:2048',
             'urutan' => 'nullable|integer',
             'is_active' => 'required|boolean',
         ], [
@@ -71,7 +71,7 @@ class PejabatController extends Controller
             'jabatan' => 'required|string|max:255',
             'nip' => 'nullable|string|max:255|unique:pejabat,nip,' . $pejabat->id,
             'deskripsi_singkat' => 'nullable|string',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'foto' => 'nullable|image|mimes:webp,jpeg,png,jpg,gif,svg|max:2048',
             'urutan' => 'nullable|integer',
             'is_active' => 'required|boolean',
         ], [

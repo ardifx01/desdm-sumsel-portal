@@ -1,0 +1,76 @@
+// resources/sass/components/_masthead.scss
+
+.masthead {
+    color: white;
+    height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden; // Penting untuk animasi masuk
+}
+
+.masthead h1, .masthead h2, .masthead p {
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5); // Bayangan teks lebih kuat
+    color: white; // Memastikan semua teks berwarna putih
+}
+
+// Definisi animasi untuk teks
+@keyframes fadeInSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// Definisi animasi baru untuk tombol
+@keyframes buttonPopIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.masthead .animated-title {
+    animation: fadeInSlideUp 1s ease-in-out;
+}
+.masthead .animated-subtitle {
+    animation: fadeInSlideUp 1s ease-in-out 0.3s forwards;
+    opacity: 0;
+}
+.masthead .animated-text {
+    animation: fadeInSlideUp 1s ease-in-out 0.6s forwards;
+    opacity: 0;
+}
+
+.masthead .animated-buttons .btn:nth-child(1) {
+    animation: buttonPopIn 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55) 0.9s forwards;
+    opacity: 0;
+}
+.masthead .animated-buttons .btn:nth-child(2) {
+    animation: buttonPopIn 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55) 1.2s forwards;
+    opacity: 0;
+}
+
+// Mengubah warna tombol agar kontras dengan latar belakang gelap
+.masthead .btn-primary {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+    color: white;
+}
+.masthead .btn-outline-light {
+    border-color: white;
+    color: white;
+}
+.masthead .btn-outline-light:hover {
+    background-color: white;
+    color: var(--bs-primary);
+}

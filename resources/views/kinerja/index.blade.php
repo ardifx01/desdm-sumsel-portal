@@ -3,13 +3,21 @@
 @section('title', 'Capaian Kinerja')
 
 @section('content')
+{{-- Hero Section --}}
+<div class="page-hero py-4">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-2">
+                <li class="breadcrumb-item"><a href="{{ url('/') }}">Beranda</a></li>
+
+                <li class="breadcrumb-item active" aria-current="page">Capaian Kinerja</li>
+            </ol>
+        </nav>
+        <h1 class="display-5 fw-bold">Capaian Kinerja</h1>
+    </div>
+</div>
+
 <div class="container py-5">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ url('/') }}">Beranda</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Capaian Kinerja</li>
-        </ol>
-    </nav>
     
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-5">
         <div>

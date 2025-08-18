@@ -68,15 +68,9 @@
                                     <td class="px-6 py-4">
                                         <div class="flex items-center">
                                             <div class="flex-shrink-0 h-12 w-20">
-                                                {{-- Logika Pengecekan Gambar Berlapis --}}
-                                                @if($post->hasMedia('featured_image'))
-                                                    {{-- Jika ada gambar dari Spatie Media Library --}}
-                                                    <img class="h-12 w-20 rounded-md object-cover" src="{{ $post->getFirstMediaUrl('featured_image', 'thumb') }}" alt="">
-                                                @elseif($post->featured_image_url)
-                                                    {{-- Jika tidak ada gambar dari Spatie, gunakan gambar fallback dari kolom 'featured_image_url' --}}
-                                                    <img class="h-12 w-20 rounded-md object-cover" src="{{ asset('storage/' . $post->featured_image_url) }}" alt="">
+                                                @if($post->universal_thumb_url)
+                                                    <img class="h-12 w-20 rounded-md object-cover" src="{{ $post->universal_thumb_url }}" alt="">
                                                 @else
-                                                    {{-- Jika tidak ada keduanya, tampilkan placeholder --}}
                                                     <div class="h-12 w-20 rounded-md bg-gray-100 flex items-center justify-center">
                                                         <i class="bi bi-image-alt text-2xl text-gray-400"></i>
                                                     </div>
@@ -91,9 +85,12 @@
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ 'badge-category-' . Str::slug($post->category->name) }}">
-                                            {{ $post->category->name }}
-                                        </span>
+                                        @if ($post->category)
+                                            {{-- Hanya menggunakan accessor tunggal dari Trait --}}
+                                            <span class="{{ $post->category->badge_class }}">
+                                                {{ $post->category->name }}
+                                            </span>
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{ $post->author->name ?? 'N/A' }}

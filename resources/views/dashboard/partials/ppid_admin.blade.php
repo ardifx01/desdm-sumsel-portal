@@ -4,23 +4,27 @@
 {{-- Grid untuk Kartu Statistik --}}
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
     
-    <!-- Kartu Total Informasi Publik (DENGAN STATISTIK DETAIL) -->
+    <!-- Kartu Total Informasi Publik (BARU) -->
     <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-cyan-500">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Total Informasi Publik</p>
+                <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Informasi Publik</p>
                 <p class="text-3xl font-extrabold text-gray-900">{{ $totalInformasiPublik ?? 0 }}</p>
             </div>
             <div class="bg-cyan-100 p-3 rounded-full">
                 <i class="bi bi-info-circle-fill text-2xl text-cyan-600"></i>
             </div>
         </div>
-        {{-- STATISTIK KATEGORI BARU --}}
         <div class="mt-4 pt-2 border-t border-gray-100 flex flex-wrap gap-2 text-xs">
-            @php $colorIndex = 0; $colors = ['yellow', 'green', 'indigo']; @endphp
-            @forelse($infoPublikCategories as $category => $total)
-                @php $color = $colors[$colorIndex % count($colors)]; $colorIndex++; @endphp
-                <span class="px-2 py-1 rounded-full bg-{{ $color }}-100 text-{{ $color }}-800 font-semibold">{{ $category }}: {{ $total }}</span>
+            {{-- KODE DIPERBAIKI UNTUK INFORMASI PUBLIK: Menggunakan key-value pair dan mencari model kategori --}}
+            @forelse($infoPublikCategories as $categoryName => $total)
+                @php
+                    // Cari model InformasiPublikCategory berdasarkan nama untuk mendapatkan badge_class
+                    $category = \App\Models\InformasiPublikCategory::where('nama', $categoryName)->first();
+                    // Jika model ditemukan, gunakan badge_class. Jika tidak, gunakan default.
+                    $badgeClass = $category ? $category->badge_class : 'px-2 py-1 rounded-full bg-gray-100 text-gray-800 font-semibold';
+                @endphp
+                <span class="{{ $badgeClass }}">{{ $categoryName }}: {{ $total }}</span>
             @empty
                 <span class="text-gray-400">Belum ada kategori.</span>
             @endforelse

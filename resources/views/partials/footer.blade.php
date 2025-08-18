@@ -1,91 +1,32 @@
-{{-- Font Awesome untuk ikon sosial, pastikan sudah ada di file layout utama --}}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-<style>
-    /* ... (Gaya CSS untuk menu dan elemen lain di atas) ... */
-
-    /* Aturan CSS yang diperbarui untuk footer */
-    footer {
-        background-color: #212529; /* Mengatur ulang warna latar belakang yang sedikit lebih gelap */
-    }
-
-    /* Memperbaiki warna judul agar putih dan tebal */
-    footer h5 {
-        color: #ffffff !important; /* Mengubah warna menjadi putih murni, menggunakan !important untuk memastikan override */
-        font-weight: 700; /* Membuat judul lebih tebal */
-        margin-bottom: 1rem;
-    }
-
-    /* Mengatur ulang gaya tautan di dalam footer agar tidak terpengaruh gaya default */
-    footer .list-unstyled a,
-    footer .social-icons a {
-        color: #adb5bd; /* Warna teks abu-abu terang */
-        text-decoration: none; /* Menghilangkan garis bawah */
-        transition: color 0.3s ease;
-    }
-
-    footer .list-unstyled a:hover {
-        color: var(--bs-primary) !important; /* Warna saat dihover berubah ke warna tema */
-    }
-
-    footer .social-icons {
-        margin-top: 1rem;
-        display: flex;
-        gap: 1.5rem; /* Memberi jarak antar ikon */
-    }
-
-    footer .social-icons a {
-        font-size: 1.5rem; /* Ukuran ikon lebih besar */
-        color: #adb5bd; /* Warna ikon */
-        transition: color 0.3s ease, transform 0.3s ease;
-    }
-
-    footer .social-icons a:hover {
-        transform: translateY(-3px) scale(1.1); /* Efek melayang saat dihover */
-        color: var(--bs-primary) !important;
-    }
-
-    footer p {
-        color: #adb5bd;
-    }
-
-    footer hr {
-        border-color: rgba(255, 255, 255, 0.1); /* Garis pemisah yang lebih samar */
-    }
-
-    footer .text-muted {
-        color: #6c757d !important; /* Warna teks copyright yang lebih gelap */
-        font-size: 0.9rem;
-    }
-</style>
+{{-- Tag <link> dan <style> sudah dihapus sepenuhnya dari sini --}}
 
 <footer class="bg-dark text-white py-5 mt-auto">
     <div class="container">
         <div class="row">
-<div class="col-md-4 mb-4">
-    <h5>DESDM SUMSEL</h5>
-    <p>Dinas Energi dan Sumber Daya Mineral</br>
-        Provinsi Sumatera Selatan</p>
-    <table class="text-muted w-100">
-        <tbody>
-            <tr>
-                <td class="fw-bold w-20 align-top">Alamat</td>
-                <td class="pe-2 align-top"> : </td>
-                <td>{{ $settings['alamat_kantor'] ?? 'Alamat belum diatur' }}</td>
-            </tr>
-            <tr>
-                <td class="fw-bold w-20">Telp.</td>
-                <td class="pe-2"> : </td>
-                <td>{{ $settings['telp_kontak'] ?? 'Telp belum diatur' }}</td>
-            </tr>
-            <tr>
-                <td class="fw-bold w-20">E-Mail</td>
-                <td class="pe-2"> : </td>
-                <td>{{ $settings['email_kontak'] ?? 'Email belum diatur' }}</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+            <div class="col-md-4 mb-4">
+                <h5>DESDM SUMSEL</h5>
+                <p>Dinas Energi dan Sumber Daya Mineral<br>
+                    Provinsi Sumatera Selatan</p>
+                <table class="text-muted w-100">
+                    <tbody>
+                        <tr>
+                            <td class="fw-bold w-20 align-top">Alamat</td>
+                            <td class="pe-2 align-top"> : </td>
+                            <td>{{ $settings['alamat_kantor'] ?? 'Alamat belum diatur' }}</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold w-20">Telp.</td>
+                            <td class="pe-2"> : </td>
+                            <td>{{ $settings['telp_kontak'] ?? 'Telp belum diatur' }}</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold w-20">E-Mail</td>
+                            <td class="pe-2"> : </td>
+                            <td>{{ $settings['email_kontak'] ?? 'Email belum diatur' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             <div class="col-md-4 mb-4">
                 <h5>Tautan Cepat</h5>
                 <ul class="list-unstyled">
@@ -107,10 +48,10 @@
                 </ul>
                 <h5 class="mt-4">Ikuti Kami</h5>
                 <div class="social-icons">
-                    <a href="{{ $settings['facebook_url'] ?? 'Url Facebook belum diatur' }}" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                    <a href="{{ $settings['twitter_url'] ?? 'Url Twitter belum diatur' }}" target="_blank"><i class="fab fa-twitter"></i></a>
-                    <a href="{{ $settings['instagram_url'] ?? 'Url Instagram belum diatur' }}" target="_blank"><i class="fab fa-instagram"></i></a>
-                    <a href="{{ $settings['youtube_url'] ?? 'Url Youtube belum diatur' }}" target="_blank"><i class="fab fa-youtube"></i></a>
+                    <a href="{{ $settings['facebook_url'] ?? '#' }}" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                    <a href="{{ $settings['twitter_url'] ?? '#' }}" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="{{ $settings['instagram_url'] ?? '#' }}" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="{{ $settings['youtube_url'] ?? '#' }}" target="_blank"><i class="fab fa-youtube"></i></a>
                 </div>
             </div>
         </div>

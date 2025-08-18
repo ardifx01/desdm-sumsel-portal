@@ -4,8 +4,8 @@
 {{-- Grid untuk Kartu Statistik & Aktivitas --}}
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-    <!-- Kartu Total Berita (Kolom Utama) -->
-    <div class="lg:col-span-1 bg-white p-6 rounded-lg shadow-lg border-l-4 border-blue-500">
+    <!-- Kartu Total Berita -->
+    <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-blue-500">
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Total Berita</p>
@@ -15,17 +15,20 @@
                 <i class="bi bi-newspaper text-2xl text-blue-600"></i>
             </div>
         </div>
-        <div class="mt-4 pt-2 border-t border-gray-100">
-            <h5 class="text-xs font-bold text-gray-500 uppercase mb-2">Rincian per Kategori</h5>
-            <div class="flex flex-wrap gap-2 text-xs">
-                @php $colorIndex = 0; $colors = ['green', 'gray', 'yellow', 'red', 'blue', 'pink', 'orange']; @endphp
-                @forelse($postCategories as $category => $total)
-                    @php $color = $colors[$colorIndex % count($colors)]; $colorIndex++; @endphp
-                    <span class="px-2 py-1 rounded-full bg-{{ $color }}-100 text-{{ $color }}-800 font-semibold">{{ $category }}: {{ $total }}</span>
-                @empty
-                    <span class="text-gray-400">Belum ada kategori.</span>
-                @endforelse
-            </div>
+        <div class="mt-4 pt-2 border-t border-gray-100 flex flex-wrap gap-2 text-xs">
+            {{-- KODE DIPERBAIKI: Menggunakan key-value pair dan mencari model kategori --}}
+            @forelse(
+                $postCategories as $categoryName => $total)
+                @php
+                    // Cari model Category berdasarkan nama untuk mendapatkan badge_class
+                    $category = \App\Models\Category::where('name', $categoryName)->first();
+                    // Jika model ditemukan, gunakan badge_class. Jika tidak, gunakan default.
+                    $badgeClass = $category ? $category->badge_class : 'px-2 py-1 rounded-full bg-gray-100 text-gray-800 font-semibold';
+                @endphp
+                <span class="{{ $badgeClass }}">{{ $categoryName }}: {{ $total }}</span>
+            @empty
+                <span class="text-gray-400">Belum ada kategori.</span>
+            @endforelse
         </div>
     </div>
 

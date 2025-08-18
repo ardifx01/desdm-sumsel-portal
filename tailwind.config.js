@@ -9,6 +9,13 @@ export default {
         './resources/views/**/*.blade.php',
     ],
 
+    safelist: [
+        {
+            // Regex ini mencakup SEMUA warna baru kita
+            pattern: /^(bg|text)-(red|orange|amber|lime|green|teal|cyan|blue|indigo|purple|fuchsia|rose)-(100|800)$/,
+        },
+    ],
+
     theme: {
         extend: {
             fontFamily: {

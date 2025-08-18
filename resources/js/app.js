@@ -8,7 +8,8 @@ window.Chart = Chart; // Membuat Chart.js tersedia secara global
 console.log('Aplikasi JavaScript utama dimuat!');
 
 import './bootstrap';
-
+import './pejabat-modal.js';
+import './comment-system.js';
 // Fungsi untuk mengontrol tombol "Kembali ke atas" dan animasi wiggle
 document.addEventListener('DOMContentLoaded', function() {
     const scrollToTopButton = document.getElementById('scroll-to-top');

@@ -1,9 +1,12 @@
 import './bootstrap';
 import Alpine from 'alpinejs';
-
 window.Alpine = Alpine;
 
 Alpine.start();
+
+import './admin/bidang-form.js';
+import './admin/photo-upload.js';
+import './admin/static-pages.js';
 
 // --- INISIALISASI TINYMCE ---
 // Pastikan DOM sudah siap sebelum menginisialisasi TinyMCE
@@ -49,4 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // }
         });
     }
+
+
+    
 });

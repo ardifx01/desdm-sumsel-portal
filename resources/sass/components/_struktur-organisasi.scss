@@ -1,0 +1,35 @@
+// resources/sass/components/_struktur-organisasi.scss
+
+.child-card-container {
+    padding-left: 20px; // Jarak untuk garis vertikal
+}
+
+.child-card-item {
+    padding-left: 20px; // Jarak untuk garis horizontal
+}
+
+.child-card-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 10px; // Posisi garis vertikal
+    width: 2px;
+    background-color: #aeb3b8; // Warna garis
+    z-index: 1;
+}
+
+.child-card-item::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -10px; // Posisi garis horizontal
+    width: 20px;
+    height: 2px;
+    background-color: #aeb3b8; // Warna garis
+    z-index: 2;
+}
+
+.child-card-item:last-child::before {
+    height: 2px;
+}

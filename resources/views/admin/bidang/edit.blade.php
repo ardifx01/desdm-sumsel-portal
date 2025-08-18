@@ -110,35 +110,4 @@
         </div>
     </div>
 
-    {{-- Script untuk menampilkan/menyembunyikan field berdasarkan tipe --}}
-    {{-- Tidak perlu @push('scripts') karena admin_app.js sudah dimuat dan menginisialisasi .tinymce-editor --}}
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const tipeSelect = document.getElementById('tipe');
-            const wilayahKerjaField = document.getElementById('wilayah_kerja_field');
-            const alamatField = document.getElementById('alamat_field');
-            const mapField = document.getElementById('map_field');
-
-            function toggleFields() {
-                const selectedType = tipeSelect.value;
-                if (selectedType === 'cabang_dinas') {
-                    wilayahKerjaField.style.display = 'block';
-                    alamatField.style.display = 'block';
-                    mapField.style.display = 'block';
-                } else if (selectedType === 'UPTD') {
-                    wilayahKerjaField.style.display = 'none';
-                    alamatField.style.display = 'block';
-                    mapField.style.display = 'block';
-                }
-                else { // Bidang
-                    wilayahKerjaField.style.display = 'none';
-                    alamatField.style.display = 'none';
-                    mapField.style.display = 'none';
-                }
-            }
-
-            tipeSelect.addEventListener('change', toggleFields);
-            toggleFields(); // Panggil saat halaman dimuat untuk initial state
-        });
-    </script>
 </x-app-layout>

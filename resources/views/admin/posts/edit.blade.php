@@ -60,17 +60,25 @@
                         </div>
               
                         <div class="mb-4">
-                            <label for="featured_image" class="block text-sm font-medium text-gray-700">Gambar Unggulan (Featured Image) <small>(Opsional, kosongkan jika tidak ingin mengubah, hanya gambar: JPG, PNG, GIF, SVG, Max 2MB)</small></label>
+                            <label for="featured_image" class="block text-sm font-medium text-gray-700">Gambar Unggulan (Featured Image)</label>
+                            <p class="text-xs text-gray-500 mb-2">Opsional, kosongkan jika tidak ingin mengubah. Format: JPG, PNG, GIF, SVG, WebP. Maks 2MB.</p>
+                            
                             <input type="file" name="featured_image" id="featured_image" 
                                 class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                                accept="image/jpeg,image/png,image/gif,image/svg+xml"> 
+                                accept="image/webp,image/jpeg,image/png,image/gif,image/svg+xml"> 
+                            
                             @error('featured_image')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
-                            @if($post->hasMedia('featured_image'))
-                                <p class="text-xs text-gray-500 mt-2">Gambar saat ini: <img src="{{ $post->getFirstMediaUrl('featured_image', 'thumb') }}" alt="Current Featured Image" class="w-32 h-auto rounded-md mt-1"></p>
+
+                            @if($post->universal_thumb_url)
+                                <div class="mt-4">
+                                    <p class="text-sm font-medium text-gray-700 mb-1">Gambar Saat Ini:</p>
+                                    <img src="{{ $post->universal_thumb_url }}" alt="Current Featured Image" class="w-48 h-auto rounded-md shadow-sm">
+                                </div>
                             @endif
                         </div>
+
                         <div class="mb-4">
                             <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
                             <select name="status" id="status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>

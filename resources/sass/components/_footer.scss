@@ -1,0 +1,55 @@
+// resources/sass/components/_footer.scss
+
+// Aturan CSS yang diperbarui untuk footer
+footer {
+    background-color: #212529; // Mengatur ulang warna latar belakang yang sedikit lebih gelap
+}
+
+// Memperbaiki warna judul agar putih dan tebal
+footer h5 {
+    color: #ffffff !important; // Mengubah warna menjadi putih murni, menggunakan !important untuk memastikan override
+    font-weight: 700; // Membuat judul lebih tebal
+    margin-bottom: 1rem;
+}
+
+// Mengatur ulang gaya tautan di dalam footer agar tidak terpengaruh gaya default
+footer .list-unstyled a,
+footer .social-icons a {
+    color: #adb5bd; // Warna teks abu-abu terang
+    text-decoration: none; // Menghilangkan garis bawah
+    transition: color 0.3s ease;
+}
+
+footer .list-unstyled a:hover {
+    color: var(--bs-primary) !important; // Warna saat dihover berubah ke warna tema
+}
+
+footer .social-icons {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1.5rem; // Memberi jarak antar ikon
+}
+
+footer .social-icons a {
+    font-size: 1.5rem; // Ukuran ikon lebih besar
+    color: #adb5bd; // Warna ikon
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+footer .social-icons a:hover {
+    transform: translateY(-3px) scale(1.1); // Efek melayang saat dihover
+    color: var(--bs-primary) !important;
+}
+
+footer p {
+    color: #adb5bd;
+}
+
+footer hr {
+    border-color: rgba(255, 255, 255, 0.1); // Garis pemisah yang lebih samar
+}
+
+footer .text-muted {
+    color: #6c757d !important; // Warna teks copyright yang lebih gelap
+    font-size: 0.9rem;
+}

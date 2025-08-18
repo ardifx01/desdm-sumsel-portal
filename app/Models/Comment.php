@@ -48,19 +48,38 @@ class Comment extends Model
         return $this->belongsTo(Comment::class, 'parent_id');
     }
 
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()
-            ->logOnly(['status'])
-            ->logOnlyDirty()
-            ->dontSubmitEmptyLogs()
-            ->setDescriptionForEvent(function(string $eventName) {
-                if ($eventName === 'updated') {
+public function getActivitylogOptions(): LogOptions
+{
+    return LogOptions::defaults()
+        ->logOnly(['status'])
+        ->logOnlyDirty()
+        ->dontSubmitEmptyLogs()
+        ->setDescriptionForEvent(function(string $eventName) {
+            
+            // Logika untuk event 'updated'
+            if ($eventName === 'updated') {
+                // PERBAIKAN KUNCI: Cek apakah 'status' benar-benar salah satu atribut yang berubah.
+                if (array_key_exists('status', $this->getChanges())) {
                     $oldStatus = $this->getOriginal('status');
                     $newStatus = $this->getChanges()['status'];
-                    return "Status Komentar #{$this->id} diubah dari '{$oldStatus}' menjadi '{$newStatus}'";
+                    return "Status Komentar #{$this->id} diubah dari \"{$oldStatus}\" menjadi \"{$newStatus}\"";
                 }
-                return "Komentar #{$this->id} telah di-{$eventName}";
-            });
-    }
+                
+                // Fallback untuk update lain (seperti verifikasi email)
+                return "Komentar #{$this->id} telah diperbarui (non-status change)";
+            }
+
+            // Logika untuk event lain
+            if ($eventName === 'created') {
+                return "Komentar baru #{$this->id} telah dibuat oleh \"{$this->name}\"";
+            }
+
+            if ($eventName === 'deleted') {
+                return "Komentar #{$this->id} telah dihapus";
+            }
+
+            // Fallback umum
+            return "Komentar #{$this->id} telah di-{$eventName}";
+        });
+}
 }

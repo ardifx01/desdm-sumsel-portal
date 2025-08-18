@@ -3,89 +3,95 @@
 @section('title', 'Daftar Informasi Publik (DIP)')
 
 @section('content')
-<div class="container py-5">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ url('/') }}">Beranda</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Informasi Publik (PPID)</li>
-        </ol>
-    </nav>
-    <h2 class="mb-4 text-center">Daftar Informasi Publik (DIP) Dinas ESDM Provinsi Sumatera Selatan</h2>
 
-    <div class="row mb-4">
-        <div class="col-md-8 offset-md-2">
-            <form action="{{ route('informasi-publik.index') }}" method="GET" class="input-group">
-                <input type="text" name="q" class="form-control" placeholder="Cari informasi publik..." value="{{ request('q') }}">
-                <select name="kategori" class="form-select">
-                    <option value="all">Semua Kategori</option>
-                    @foreach($categories as $cat)
-                        <option value="{{ $cat->slug }}" {{ request('kategori') == $cat->slug ? 'selected' : '' }}>
-                            {{ $cat->nama }}
-                        </option>
-                    @endforeach
-                </select>
-                <button class="btn btn-primary" type="submit">Cari / Filter</button>
-                @if(request('q') || request('kategori') != 'all')
-                    <a href="{{ route('informasi-publik.index') }}" class="btn btn-outline-secondary">Reset</a>
-                @endif
-            </form>
+{{-- Hero Section --}}
+<div class="page-hero py-4">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-2">
+                <li class="breadcrumb-item"><a href="{{ url('/') }}">Beranda</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Informasi Publik</li>
+            </ol>
+        </nav>
+        <h1 class="display-5 fw-bold">Daftar Informasi Publik (DIP)</h1>
+        <p class="lead text-muted">Akses informasi yang wajib disediakan dan diumumkan secara berkala oleh Dinas ESDM Sumsel.</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    {{-- Form Pencarian yang Ditingkatkan --}}
+    <div class="row mb-5">
+        <div class="col-md-10 mx-auto">
+            <div class="card border-0 shadow-sm p-2">
+                <form action="{{ route('informasi-publik.index') }}" method="GET" class="d-flex gap-2">
+                    <input type="text" name="q" class="form-control form-control-lg border-0" placeholder="Ketik kata kunci informasi..." value="{{ request('q') }}">
+                    <select name="kategori" class="form-select form-select-lg border-0" style="width: auto;">
+                        <option value="all">Semua Kategori</option>
+                        @foreach($categories as $cat)
+                            <option value="{{ $cat->slug }}" {{ request('kategori') == $cat->slug ? 'selected' : '' }}>
+                                {{ $cat->nama }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <button class="btn btn-primary btn-lg" type="submit"><i class="bi bi-search"></i></button>
+                    @if(request('q') || request('kategori') != 'all')
+                        <a href="{{ route('informasi-publik.index') }}" class="btn btn-light btn-lg">Reset</a>
+                    @endif
+                </form>
+            </div>
         </div>
     </div>
 
     <div class="row">
         @forelse($informasiPublik as $info)
         <div class="col-md-6 col-lg-4 mb-4">
-            <div class="card h-100 shadow-sm border-0">
-                @if($info->thumbnail)
-                    <img src="{{ asset('storage/thumbnails/' . $info->thumbnail) }}" class="card-img-top" alt="{{ $info->judul }}" style="height: 180px; object-fit: cover;">
-                @else
-                    <img src="https://placehold.co/400x180?text=No+Thumbnail" class="card-img-top" alt="No Thumbnail" style="height: 180px; object-fit: cover;">
-                @endif
-                <div class="card-body">
-
-                    @if($info->category)
-                        @php
-                            $colors = ['primary', 'secondary', 'success', 'danger', 'warning', 'info'];
-                            $colorIndex = ($info->category->id ?? 0) % count($colors);
-                            $badgeClass = 'badge-' . $colors[$colorIndex];
-                        @endphp
-                        <span class="badge {{ $badgeClass }}">
+            <div class="card h-100 shadow-sm border-0 info-card"> {{-- Menggunakan kelas info-card baru --}}
+                <a href="{{ route('informasi-publik.show', $info->slug) }}" class="text-decoration-none">
+                    <div class="card-img-top-wrapper">
+                        @if($info->thumbnail && Storage::disk('public')->exists('thumbnails/' . $info->thumbnail))
+                            <img src="{{ asset('storage/thumbnails/' . $info->thumbnail) }}" class="card-img-top" alt="{{ $info->judul }}" loading="lazy" style="height: 100%; width: 100%; object-fit: cover;">
+                        @else
+                            <div class="d-flex align-items-center justify-content-center h-100 bg-light">
+                                <i class="bi bi-card-text fs-1 text-muted"></i>
+                            </div>
+                        @endif
+                    </div>
+                </a>
+                <div class="card-body d-flex flex-column">
+                    <div>
+                        @if($info->category)
+                        <span class="badge {{ $info->category->frontend_badge_class }} mb-2">
                             {{ $info->category->nama }}
                         </span>
-                    @else
-                        <span class="badge badge-secondary">Tanpa Kategori</span>
-                    @endif
-
-                    <h5 class="card-title">{{ Str::limit($info->judul, 60) }}</h5>
-                    <p class="card-text text-muted small">
-                        <i class="bi bi-calendar"></i> {{ $info->tanggal_publikasi ? $info->tanggal_publikasi->translatedFormat('d M Y') : '-' }} |
-                        <i class="bi bi-eye"></i> {{ $info->hits }} Dilihat
-                    </p>
-                    <p class="card-text">{{ Str::limit(strip_tags($info->konten), 100) }}</p>
-                    <a href="{{ route('informasi-publik.show', $info->slug) }}" class="btn btn-sm btn-primary">Baca Selengkapnya</a>
-                    @if($info->file_path)
-                        <a href="{{ asset('storage/' . $info->file_path) }}" target="_blank" class="btn btn-sm btn-outline-success ms-2">
-                            <i class="bi bi-download"></i> Unduh File
-                        </a>
-                    @endif
+                        @endif
+                        <h5 class="card-title fw-bold">
+                            <a href="{{ route('informasi-publik.show', $info->slug) }}" class="card-title">{{ Str::limit($info->judul, 60) }}</a>
+                        </h5>
+                        <p class="card-text text-muted small mb-2">
+                            <i class="bi bi-calendar3"></i> {{ $info->updated_at ? $info->updated_at->translatedFormat('d M Y') : '-' }} &nbsp;
+                            <i class="bi bi-eye-fill"></i> {{ $info->hits }} Dilihat
+                        </p>
+                    </div>
+                    <div class="mt-auto pt-2">
+                        <a href="{{ route('informasi-publik.show', $info->slug) }}" class="btn btn-sm btn-outline-primary">Lihat Detail <i class="bi bi-arrow-right"></i></a>
+                    </div>
                 </div>
             </div>
         </div>
         @empty
         <div class="col-12 text-center py-5">
-            <p class="lead text-muted">Tidak ada informasi publik yang ditemukan.</p>
-            <p>Coba sesuaikan pencarian atau filter Anda.</p>
+            <i class="bi bi-journal-x fs-1 text-muted"></i>
+            <h4 class="mt-3">Informasi Tidak Ditemukan</h4>
+            <p class="text-muted">Maaf, tidak ada informasi publik yang cocok dengan kriteria pencarian Anda.</p>
+            <a href="{{ route('informasi-publik.index') }}" class="btn btn-primary">Kembali ke Semua Informasi</a>
         </div>
         @endforelse
     </div>
 
-    <div class="mt-4">
-        {{ $informasiPublik->links('pagination::bootstrap-5') }} {{-- Menggunakan pagination Bootstrap --}}
+    @if ($informasiPublik->hasPages())
+    <div class="mt-4 d-flex justify-content-center">
+        {{ $informasiPublik->links('pagination::bootstrap-5') }}
     </div>
+    @endif
 </div>
-
-{{-- Font Awesome untuk ikon unduh, jika belum diinstal di layout --}}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-{{-- Bootstrap Icons juga bisa digunakan jika prefer --}}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 @endsection

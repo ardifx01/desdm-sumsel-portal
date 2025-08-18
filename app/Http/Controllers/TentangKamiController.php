@@ -57,19 +57,20 @@ class TentangKamiController extends Controller
         return view('tentang-kami.tugas-fungsi');
     }
 
-    public function profilPimpinan()
-    {
-        $pejabat = Pejabat::where(function (Builder $query) {
-            $query->where('jabatan', 'like', 'Kepala Dinas%')
-                  ->orWhere('jabatan', 'like', 'Sekretaris%')
-                  ->orWhere('jabatan', 'like', 'Kepala Bidang%')
-                  ->orWhere('jabatan', 'like', 'Kepala UPTD%')
-                  ->orWhere('jabatan', 'like', 'Kepala Cabang Dinas%');
-        })
-        ->get();
+public function profilPimpinan()
+{
+    $pejabat = Pejabat::where(function (Builder $query) {
+        $query->where('jabatan', 'like', 'Kepala Dinas%')
+              ->orWhere('jabatan', 'like', 'Sekretaris%')
+              ->orWhere('jabatan', 'like', 'Kepala Bidang%')
+              ->orWhere('jabatan', 'like', 'Kepala UPTD%')
+              ->orWhere('jabatan', 'like', 'Kepala Cabang Dinas%');
+    })
+    ->orderBy('urutan', 'asc') // <-- TAMBAHKAN DI SINI
+    ->get();
 
-        return view('tentang-kami.profil-pimpinan.index', compact('pejabat'));
-    }
+    return view('tentang-kami.profil-pimpinan.index', compact('pejabat'));
+}
 
     public function detailPimpinan($id)
     {

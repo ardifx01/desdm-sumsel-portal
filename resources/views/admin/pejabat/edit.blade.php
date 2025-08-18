@@ -43,7 +43,7 @@
                         </div>
                         <div class="mb-4">
                             <label for="foto" class="block text-sm font-medium text-gray-700">Foto Pejabat <small>(Opsional, JPG, PNG, GIF, SVG, Max 2MB, kosongkan jika tidak mengubah)</small></label>
-                            <input type="file" name="foto" id="foto" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" accept="image/jpeg,image/png,image/gif,image/svg+xml">
+                            <input type="file" name="foto" id="foto" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" accept="image/jpeg,image/png,image/gif,image/svg+xml,image/webp">
                             @error('foto')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror

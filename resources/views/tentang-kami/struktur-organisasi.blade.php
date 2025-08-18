@@ -1,14 +1,20 @@
 @extends('layouts.public_app')
 
 @section('content')
-<div class="container py-5">
-    <div class="text-center mb-5">
+{{-- Hero Section --}}
+<div class="page-hero py-4">
+    <div class="container">
         <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
+            <ol class="breadcrumb mb-2">
                 <li class="breadcrumb-item"><a href="{{ url('/') }}">Beranda</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Struktur Organisasi</li>
             </ol>
         </nav>
+        <h1 class="display-5 fw-bold">Struktur Organisasi</h1>
+    </div>
+</div>
+<div class="container py-5">
+    <div class="text-center mb-5">
         <h1>Struktur Organisasi</h1>
         <h3>Dinas Energi dan Sumber Daya Mineral Provinsi Sumatera Selatan</h3>
         <h6 class="text-center mb-4"><i>Sesuai Peraturan Gubernur Sumatera Selatan Nomor 79 Tahun 2016 </br>
@@ -379,97 +385,10 @@
 <div class="modal fade" id="pejabatModal" tabindex="-1" aria-labelledby="pejabatModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
-            <div class="modal-body p-0">
-                <div class="pejabat-loading text-center py-5">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                </div>
-            </div>
+            {{-- Konten akan diisi oleh JavaScript --}}
         </div>
     </div>
 </div>
-
-@push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var pejabatModal = document.getElementById('pejabatModal');
-        pejabatModal.addEventListener('show.bs.modal', function (event) {
-            var button = event.relatedTarget;
-            var pejabatId = button.getAttribute('data-pejabat-id');
-            
-            var modalContent = pejabatModal.querySelector('.modal-content');
-            modalContent.innerHTML = `
-                <div class="modal-body text-center p-5">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                </div>
-            `;
-
-            fetch(`{{ route('pejabat.showModal', ['pejabat' => ':pejabatId']) }}`.replace(':pejabatId', pejabatId))
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.text();
-                })
-                .then(html => {
-                    pejabatModal.querySelector('.modal-content').innerHTML = html;
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    modalContent.innerHTML = `
-                        <div class="modal-header">
-                            <h5 class="modal-title">Error</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body text-center">
-                            <p>Terjadi kesalahan saat memuat data profil.</p>
-                        </div>
-                    `;
-                });
-        });
-    });
-</script>
-@endpush
-
-<style>
-.child-card-container {
-    padding-left: 20px; /* Jarak untuk garis vertikal */
-}
-
-.child-card-item {
-    padding-left: 20px; /* Jarak untuk garis horizontal */
-}
-
-.child-card-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 10px; /* Posisi garis vertikal */
-    width: 2px;
-    background-color: #aeb3b8; /* Warna garis */
-    z-index: 1;
-}
-
-.child-card-item::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: -10px; /* Posisi garis horizontal */
-    width: 20px;
-    height: 2px;
-    background-color: #aeb3b8; /* Warna garis */
-    z-index: 2;
-}
-
-.child-card-item:last-child::before {
-    height: 2px;
-}
-
-</style>
 
 
 @endsection
