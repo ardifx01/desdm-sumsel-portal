@@ -64,7 +64,7 @@
                 </div>
 
                 {{-- Form Update Password --}}
-                <div class="card shadow-sm">
+                <div class="card shadow-sm mb-4">
                     <div class="card-header bg-white">
                         <h5 class="mb-0"><i class="bi bi-key-fill me-2 text-primary"></i>Ubah Kata Sandi</h5>
                     </div>

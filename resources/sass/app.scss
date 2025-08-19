@@ -206,53 +206,314 @@ a {
     }
 }
 
-// === GAYA "INTERACTIVE INFORMATION HUB" UNTUK PROFIL PPID (REVISI FINAL) ===
-.ppid-sidebar-nav {
+// === GAYA "GLASSMORPHISM & FLUID" UNTUK PROFIL PPID (REVISI SUPER KEREN) ===
+.ppid-sidebar-nav-wrapper {
     position: sticky;
     top: 2rem;
-    
+}
+
+.ppid-sidebar-nav {
+    background: rgba(255, 255, 255, 0.6); // Warna dasar kaca
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 1rem; // Sudut lebih bulat
+    padding: 1rem;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+
     .nav-link {
-        font-weight: 500;
-        color: #6c757d;
-        padding: 0.75rem 1.25rem; // Padding lebih seimbang
-        border-left: 3px solid #e9ecef; // Border default yang lebih halus
-        transition: all 0.2s ease;
+        font-weight: 600;
+        color: #495057; // Warna teks lebih gelap agar terbaca
+        padding: 0.75rem 1.25rem;
+        border-radius: 0.5rem; // Rounded di setiap item
+        transition: all 0.3s ease;
 
         i {
             margin-right: 0.75rem;
             font-size: 1.2rem;
-            vertical-align: middle;
+            vertical-align: text-bottom;
         }
 
-        &:hover {
-            color: var(--bs-dark);
-            background-color: #f8f9fa;
-        }
-
-        &.active {
-            color: var(--bs-primary);
-            font-weight: 700;
-            border-left-color: var(--bs-primary);
-            background-color: var(--bs-primary-bg-subtle); // Latar belakang highlight
+        &.active, &:hover {
+            color: white;
+            background-color: var(--bs-primary);
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
         }
     }
 }
 
-.content-section {
+.ppid-content-section {
+    padding-top: 2rem;
+    border-top: 1px solid #e9ecef;
+
+    &:first-child {
+        padding-top: 0;
+        border-top: none;
+    }
+
     h2.section-title {
+        font-size: 2.5rem;
         font-weight: 700;
-        padding-bottom: 0.75rem;
-        border-bottom: 3px solid var(--bs-primary);
-        display: inline-block; // Agar border hanya selebar teks
+        position: relative;
+        padding-bottom: 1rem;
+
+        &::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background-color: var(--bs-primary);
+            border-radius: 2px;
+        }
     }
     
-    // Efek animasi "reveal on scroll" (tidak berubah)
+    // Efek animasi "reveal on scroll"
     opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
 
     &.is-visible {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+// === HALAMAN CAPAIAN KINERJA ===
+.filter-card {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+}
+
+.chart-card {
+    // Menggunakan gaya yang sama dengan content-card
+    border: none;
+    border-radius: 0.75rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+    overflow: hidden;
+
+    .card-header {
+        background-color: white;
+        padding: 1.25rem;
+        border-bottom: 1px solid #e9ecef;
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--bs-dark);
+            margin-bottom: 0;
+        }
+    }
+}
+
+// === HALAMAN ALUR PROSEDUR PPID (REVISI FINAL) ===
+.flowchart-container {
+    position: relative;
+    // Garis vertikal di tengah
+    &::before {
+        content: '';
+        position: absolute;
+        top: 1.5rem;
+        bottom: 1.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 3px;
+        background-color: #e9ecef;
+        border-radius: 2px;
+    }
+}
+
+.flowchart-step {
+    // Container untuk setiap langkah
+    position: relative; // Konteks untuk positioning nomor
+    margin-bottom: 2rem;
+    width: 50%;
+
+    .step-number {
+        // Lingkaran nomor
+        position: absolute; // Kunci perbaikan: keluar dari alur layout
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 2;
+        
+        font-size: 1.5rem;
+        font-weight: 700;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background-color: var(--bs-primary);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow: 0 0 0 6px white;
+    }
+
+    .step-content {
+        // Kotak teks
+        border: 1px solid #dee2e6;
+        border-radius: 0.5rem;
+        background-color: white;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        width: 100%; // Selalu penuhi setengah lebar yang tersedia
+    }
+
+    // Aturan untuk langkah di KIRI
+    &:nth-child(odd) {
+        padding-right: 48px; // Beri ruang selebar lingkaran + jarak
+        .step-number {
+            right: -24px; // Posisikan di tengah garis, di sisi kanan
+        }
+    }
+
+    // Aturan untuk langkah di KANAN
+    &:nth-child(even) {
+        margin-left: 50%;
+        padding-left: 48px; // Beri ruang selebar lingkaran + jarak
+        .step-number {
+            left: -24px; // Posisikan di tengah garis, di sisi kiri
+        }
+    }
+}
+
+// === HALAMAN KONFIRMASI SUKSES PPID ===
+.success-page-wrapper {
+    background-color: #f8f9fa;
+    min-height: 80vh; // Memastikan konten memenuhi layar
+    display: flex;
+    align-items: center;
+}
+
+.success-card {
+    border: none;
+    border-top: 5px solid var(--bs-success);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    border-radius: 1rem;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.success-icon {
+    width: 80px;
+    height: 80px;
+    background-color: var(--bs-success-bg-subtle);
+    color: var(--bs-success);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    animation: pulse 2s infinite cubic-bezier(0.66, 0, 0, 1);
+}
+
+// === HALAMAN KONTAK PPID ===
+.contact-item {
+    display: flex;
+    align-items: flex-start; // Rata atas
+    gap: 1.5rem;
+
+    .contact-icon {
+        font-size: 2rem;
+        color: var(--bs-primary);
+    }
+
+    .contact-info {
+        h5 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        p {
+            margin-bottom: 0;
+            color: #6c757d;
+        }
+        a {
+            color: #212529;
+            text-decoration: none;
+            &:hover {
+                color: var(--bs-primary);
+            }
+        }
+    }
+}
+
+// === HALAMAN LAYANAN & PENGADUAN (REVISI FINAL) ===
+.service-card {
+    border: none;
+    border-radius: 0.75rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    .card-body-content {
+        display: flex;
+        flex-direction: column;
+        height: 100%; // Kunci agar .mt-auto bekerja
+    }
+
+    .card-icon, .card-logo {
+        margin-bottom: 1.5rem;
+        transition: transform 0.3s ease;
+        height: 64px; // Beri tinggi tetap agar sejajar
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .card-icon {
+        font-size: 4rem;
+    }
+
+    .card-logo {
+        object-fit: contain; // Pastikan logo tidak terdistorsi
+    }
+
+    .card-title {
+        font-weight: 700;
+    }
+    
+    .card-text {
+        flex-grow: 1; // Mendorong div tombol ke bawah
+    }
+
+    .btn {
+        border-radius: 50rem;
+        padding: 0.5rem 1.5rem;
+        font-weight: 600;
+    }
+
+    &:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+
+        .card-icon, .card-logo {
+            transform: scale(1.1);
+        }
+    }
+    
+    // Warna aksen unik
+    &.card-primary { border-bottom: 5px solid var(--bs-primary); .card-icon { color: var(--bs-primary); } }
+    &.card-success { border-bottom: 5px solid var(--bs-success); .card-icon { color: var(--bs-success); } }
+    &.card-info { border-bottom: 5px solid var(--bs-info); .card-icon { color: var(--bs-info); } }
+    &.card-warning { border-bottom: 5px solid var(--bs-warning); .card-icon { color: var(--bs-warning); } }
+    &.card-danger { border-bottom: 5px solid var(--bs-danger); }
+}
+
+// === HALAMAN DAFTAR LAYANAN ===
+.service-list-card {
+    border-left: 4px solid var(--bs-primary);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.1) !important;
+        border-left-color: var(--bs-warning);
     }
 }

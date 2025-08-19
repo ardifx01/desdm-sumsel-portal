@@ -3,20 +3,33 @@
 @section('title', 'Pesan Terkirim')
 
 @section('content')
-<div class="container py-5 text-center">
-    <div class="card shadow-sm mb-4">
-        <div class="card-body py-5">
-            <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
-            <h2 class="mt-4 mb-3 text-success">Pesan Berhasil Dikirim!</h2>
-            @if(session('success'))
-                <p class="lead">{{ session('success') }}</p>
-            @else
-                <p class="lead">Terima kasih, pesan Anda telah berhasil kami terima.</p>
-            @endif
-            <p>Kami akan meninjau pesan Anda dan akan menghubungi kembali jika diperlukan.</p>
-            <hr class="my-4">
-            <a href="{{ route('kontak.index') }}" class="btn btn-primary me-2">Kembali ke Halaman Kontak</a>
-            <a href="{{ url('/') }}" class="btn btn-outline-secondary">Kembali ke Beranda</a>
+<div class="success-page-wrapper">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card success-card">
+                    <div class="card-body text-center p-5">
+                        <div class="mb-4">
+                            <div class="success-icon">
+                                <i class="bi bi-envelope-check-fill"></i>
+                            </div>
+                        </div>
+                        <h1 class="display-6 fw-bold mb-3">Pesan Berhasil Terkirim!</h1>
+                        <p class="lead text-muted">
+                            @if(session('success'))
+                                {{ session('success') }}
+                            @else
+                                Terima kasih, pesan Anda telah berhasil kami terima.
+                            @endif
+                        </p>
+                        
+                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mt-5">
+                            <a href="{{ route('kontak.index') }}" class="btn btn-primary btn-lg px-4 gap-3">Kirim Pesan Lain</a>
+                            <a href="{{ url('/') }}" class="btn btn-outline-secondary btn-lg px-4">Kembali ke Beranda</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

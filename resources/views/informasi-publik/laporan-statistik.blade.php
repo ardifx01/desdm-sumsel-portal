@@ -3,15 +3,21 @@
 @section('title', 'Laporan & Statistik PPID')
 
 @section('content')
+{{-- Hero Section --}}
+<div class="page-hero py-4">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-2">
+                <li class="breadcrumb-item"><a href="{{ url('/') }}">Beranda</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('informasi-publik.index') }}">Informasi Publik (PPID)</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Laporan & Statistik</li>
+            </ol>
+        </nav>
+        <h1 class="display-5 fw-bold">Laporan & Statistik</h1>
+        <p class="lead text-muted">Laporan Statistik Pelayanan Informasi Publik.</p>
+    </div>
+</div>
 <div class="container py-5">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ url('/') }}">Beranda</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('informasi-publik.index') }}">Informasi Publik (PPID)</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Laporan & Statistik</li>
-        </ol>
-    </nav>
-    <h2 class="mb-4 text-center">Laporan Statistik Pelayanan Informasi Publik</h2>
 
     {{-- Statistik Ringkasan --}}
     <div class="row mb-5">
