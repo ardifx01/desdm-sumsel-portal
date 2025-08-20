@@ -24,21 +24,32 @@
 <div class="container py-5">
     <div class="row g-4">
         @forelse($album->photos as $photo)
-            @if($photo->file_path && Storage::disk('public')->exists($photo->file_path))
-                <div class="col-md-4 col-lg-3">
-                    <a href="{{ asset('storage/' . $photo->file_path) }}"
+            <div class="col-md-4 col-lg-3">
+                @php
+                    // Memanggil accessor 'display_image_url' yang sudah kita buat
+                    $imageUrl = $photo->display_image_url;
+                @endphp
+                
+                {{-- Cek apakah URL ada (bukan null) --}}
+                @if($imageUrl)
+                    <a href="{{ $imageUrl }}"
                        class="glightbox photo-item"
                        data-gallery="gallery-album"
                        data-title="{{ $photo->judul ?: Str::limit($photo->file_name, 25) }}"
                        data-description="{{ $photo->deskripsi }}">
                         
-                        <img src="{{ asset('storage/' . $photo->file_path) }}" 
+                        <img src="{{ $imageUrl }}" 
                              class="img-fluid" 
                              alt="{{ $photo->judul ?: $photo->file_name }}"
                              style="height: 250px; width: 100%; object-fit: cover;">
                     </a>
-                </div>
-            @endif
+                @else
+                    {{-- Tampilkan placeholder jika accessor mengembalikan null --}}
+                    <div class="photo-item d-flex align-items-center justify-content-center bg-light" style="height: 250px;">
+                        <i class="bi bi-image-alt fs-1 text-muted"></i>
+                    </div>
+                @endif
+            </div>
         @empty
             <div class="col-12 text-center py-5">
                 <p class="text-muted fs-4">Album ini belum memiliki foto.</p>

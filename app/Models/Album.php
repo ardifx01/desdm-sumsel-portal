@@ -18,19 +18,39 @@ class Album extends Model
         return $this->hasMany(Photo::class);
     }
 
+    protected function thumbnailUrl(): Attribute
+        {
+            return Attribute::make(
+                get: function () {
+                    // PERBAIKAN KUNCI: Cek apakah symlink ada.
+                    if (! file_exists(public_path('storage'))) {
+                        return null;
+                    }
+
+                    $thumbnailPath = $this->attributes['thumbnail'] ?? null;
+                    if ($thumbnailPath && Storage::disk('public')->exists($thumbnailPath)) {
+                        return asset('storage/' . $thumbnailPath);
+                    }
+                    
+                    return null;
+                }
+            );
+        }    
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly(['nama', 'deskripsi', 'is_active'])
+            // Tambahkan thumbnail ke logOnly
+            ->logOnly(['nama', 'deskripsi', 'is_active', 'thumbnail'])
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs()
-            ->setDescriptionForEvent(function(string $eventName) {
-                $subjectName = $this->nama ?? 'tanpa nama';
-                if ($eventName === 'updated') {
-                    $changedFields = implode(', ', array_keys($this->getChanges()));
-                    return "Album Foto \"{$subjectName}\" telah diperbarui (kolom: {$changedFields})";
-                }
-                return "Album Foto \"{$subjectName}\" telah di-{$eventName}";
-            });
-    }
+                ->setDescriptionForEvent(function(string $eventName) {
+                    $subjectName = $this->nama ?? 'tanpa nama';
+                    if ($eventName === 'updated') {
+                        $changedFields = implode(', ', array_keys($this->getChanges()));
+                        return "Album Foto \"{$subjectName}\" telah diperbarui (kolom: {$changedFields})";
+                    }
+                    return "Album Foto \"{$subjectName}\" telah di-{$eventName}";
+                });
+    }    
+    
 }

@@ -28,12 +28,12 @@
             <div class="col-md-6 col-lg-4">
                 <a href="{{ route('galeri.album', $album->slug) }}" class="gallery-card">
                     <div class="card-img-wrapper">
-                        @if($album->thumbnail && Storage::disk('public')->exists($album->thumbnail))
-                            <img src="{{ asset('storage/' . $album->thumbnail) }}" class="card-img" alt="{{ $album->nama }}">
+                    {{-- PERBAIKAN: Menggunakan accessor 'thumbnail_url' yang sudah anti-gagal --}}
+                        @if($album->thumbnail_url)
+                            <img src="{{ $album->thumbnail_url }}" class="card-img" alt="{{ $album->nama }}">
                         @else
                             <div class="placeholder-icon"><i class="bi bi-images"></i></div>
                         @endif
-
                         <div class="card-body-overlay">
                             <h5 class="card-title">{{ $album->nama }}</h5>
                             <p class="card-text small">{{ $album->photos->count() }} Foto</p>

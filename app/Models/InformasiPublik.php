@@ -38,10 +38,30 @@ class InformasiPublik extends Model
         return $this->belongsTo(InformasiPublikCategory::class, 'category_id');
     }
 
+    protected function thumbnailUrl(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                // PERBAIKAN KUNCI: Cek apakah symlink ada.
+                if (! file_exists(public_path('storage'))) {
+                    return null;
+                }
+
+                $thumbnailPath = $this->attributes['thumbnail'] ?? null;
+                if ($thumbnailPath && Storage::disk('public')->exists('thumbnails/' . $thumbnailPath)) {
+                    return asset('storage/thumbnails/' . $thumbnailPath);
+                }
+                
+                return null;
+            }
+        );
+    }
+        
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly(['judul', 'category_id', 'is_active'])
+            // Tambahkan thumbnail dan file_path
+            ->logOnly(['judul', 'category_id', 'is_active', 'thumbnail', 'file_path'])
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs()
             ->setDescriptionForEvent(function(string $eventName) {

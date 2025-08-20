@@ -5,15 +5,11 @@
 <div class="modal-body">
     <div class="row g-0">
         <div class="col-md-4 d-flex justify-content-center align-items-center p-3" style="min-height: 250px;">
-            @php
-                $media = $pejabat->getFirstMedia('foto_pejabat');
-                $imageExists = $media && file_exists($media->getPath());
-            @endphp
-            @if($imageExists)
-                <img src="{{ $media->getUrl('preview') }}" alt="Foto {{ $pejabat->nama }}" class="img-fluid rounded-start" width="auto" loading="lazy">
-            @else
-                <img src="https://placehold.co/400x400/E5E7EB/6B7280?text=No+Photo" alt="No Photo" class="img-fluid rounded-start" width="auto" loading="lazy">
-            @endif
+{{-- PERBAIKAN: Menggunakan accessor 'foto_url' yang sudah anti-gagal --}}
+            <img src="{{ $pejabat->foto_url }}" 
+                 alt="Foto {{ $pejabat->nama }}" 
+                 class="img-fluid rounded shadow-sm mb-3 mb-md-0" 
+                 loading="lazy">
         </div>
         <div class="col-md-8">
             <div class="card-body h-100 d-flex flex-column justify-content-center">

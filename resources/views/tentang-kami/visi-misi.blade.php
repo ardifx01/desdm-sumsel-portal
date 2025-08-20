@@ -24,9 +24,17 @@
                 
                 {{-- Card Visi Utama dengan Gaya "Floating Image" --}}
                 <div class="card vision-card-showcase">
-                    {{-- Gambar ditempatkan di luar card-body --}}
-                    <img src="{{ asset('storage/images/visi-misi.webp') }}" alt="Visi Pembangunan Sumatera Selatan" class="vision-image mx-auto d-block">
-                    
+                    @php
+                    $imagePath = 'storage/images/visi-misi.webp';
+                    $placeholderUrl = 'https://placehold.co/1920x1080/E5E7EB/6B7280?text=Visi+Pembangunan';
+                    @endphp
+
+                    {{-- Cek jika file fisik ada SETELAH symlink dibuat --}}
+                    @if(file_exists(public_path($imagePath)))
+                        <img src="{{ asset($imagePath) }}" alt="Visi Pembangunan Sumatera Selatan" class="vision-image mx-auto d-block">
+                    @else
+                        <img src="{{ $placeholderUrl }}" alt="Placeholder Visi Pembangunan" class="vision-image mx-auto d-block">
+                    @endif                    
                     <div class="card-body p-5">
                         <p class="lead text-muted">Visi Pembangunan Provinsi Sumatera Selatan Tahun 2025-2030</p>
                         <blockquote class="display-5 vision-text my-3">

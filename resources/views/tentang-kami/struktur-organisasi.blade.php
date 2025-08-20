@@ -25,19 +25,8 @@
     <div class="row justify-content-center mb-3">
         <div class="col-md-4 text-center">
             <div class="card p-3 shadow-sm">
-                @php
-                    $media = $kepalaDinas->getFirstMedia('foto_pejabat');
-                    $imageExists = $media && file_exists($media->getPath());
-                @endphp
-
-                @if($imageExists)
-                    <picture>
-                        <source srcset="{{ $media->getSrcset('webp-responsive') }}" type="image/webp">
-                        <img src="{{ $media->getUrl('thumb') }}" alt="Foto {{ $kepalaDinas->nama }}" class="img-fluid rounded-circle mx-auto d-block mb-3" style="width: 150px; height: 150px; object-fit: cover;" loading="lazy">
-                    </picture>
-                @else
-                    <img src="https://placehold.co/150x150/E5E7EB/6B7280?text=No+Photo" alt="No Photo" class="img-fluid rounded-circle mx-auto d-block mb-3" style="width: 150px; height: 150px; object-fit: cover;" loading="lazy">
-                @endif
+                <img src="{{ $kepalaDinas->foto_url }}" alt="{{ $kepalaDinas->foto_alt_text }}" 
+                class="img-fluid rounded-circle mx-auto d-block mb-3" style="width: 150px; height: 150px; object-fit: cover;" loading="lazy">
 
                 <h5>
                     <a href="#" class="link-pejabat"
@@ -71,15 +60,8 @@
                             <div class="card p-2 h-100 shadow-sm w-100 mb-2">
                                 <div class="d-flex align-items-center">
                                     <div class="flex-shrink-0 me-2">
-                                        @php
-                                            $mediaKepala = $bidang->kepala->getFirstMedia('foto_pejabat');
-                                            $imageKepalaExists = $mediaKepala && file_exists($mediaKepala->getPath());
-                                        @endphp
-                                        @if($imageKepalaExists)
-                                            <img src="{{ $mediaKepala->getUrl('thumb') }}" alt="Foto {{ $bidang->kepala->nama }}" class="img-fluid rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
-                                        @else
-                                            <img src="https://placehold.co/50x50/E5E7EB/6B7280?text=NP" alt="No Photo" class="img-fluid rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
-                                        @endif
+                                        <img src="{{ $bidang->kepala->foto_url }}" alt="{{ $bidang->kepala->foto_alt_text }}" 
+                                        class="img-fluid rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
                                     </div>
                                     <div class="flex-grow-1 overflow-hidden">
                                         <small class="fw-bold d-block text-nowrap overflow-hidden text-truncate" title="{{ $bidang->kepala->nama }}">
@@ -110,15 +92,8 @@
                                             @if($seksi->kepala)
                                             <div class="d-flex align-items-center">
                                                 <div class="flex-shrink-0 me-2">
-                                                    @php
-                                                        $mediaSeksi = $seksi->kepala->getFirstMedia('foto_pejabat');
-                                                        $imageSeksiExists = $mediaSeksi && file_exists($mediaSeksi->getPath());
-                                                    @endphp
-                                                    @if ($imageSeksiExists)
-                                                        <img src="{{ $mediaSeksi->getUrl('thumb') }}" alt="Foto {{ $seksi->kepala->nama }}" class="img-fluid rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
-                                                    @else
-                                                        <img src="https://placehold.co/50x50/E5E7EB/6B7280?text=NP" alt="No Photo" class="img-fluid rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
-                                                    @endif
+                                                    <img src="{{ $seksi->kepala->foto_url }}" alt="{{ $seksi->kepala->foto_alt_text }}" class="img-fluid rounded-circle" 
+                                                    style="width: 40px; height: 40px; object-fit: cover;">
                                                 </div>
                                                 <div class="flex-grow-1 overflow-hidden">
                                                     <small class="fw-bold d-block text-nowrap overflow-hidden text-truncate" title="{{ $seksi->kepala->nama }}">
@@ -181,15 +156,7 @@
                             <div class="card p-1 h-100 shadow-sm w-100"> {{-- Small card style --}}
                                 <div class="d-flex align-items-center">
                                     <div class="flex-shrink-0 me-2">
-                                        @php
-                                            $mediaKepala = $uptd->kepala->getFirstMedia('foto_pejabat');
-                                            $imageKepalaExists = $mediaKepala && file_exists($mediaKepala->getPath());
-                                        @endphp
-                                        @if($imageKepalaExists)
-                                            <img src="{{ $mediaKepala->getUrl('thumb') }}" alt="Foto {{ $uptd->kepala->nama }}" class="img-fluid rounded-circle" style="width: 30px; height: 30px; object-fit: cover;">
-                                        @else
-                                            <img src="https://placehold.co/30x30/E5E7EB/6B7280?text=NP" alt="No Photo" class="img-fluid rounded-circle" style="width: 30px; height: 30px; object-fit: cover;">
-                                        @endif
+                                        <img src="{{ $uptd->kepala->foto_url }}" alt="{{ $uptd->kepala->foto_alt_text }}" class="img-fluid rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
                                     </div>
                                     <div class="flex-grow-1 overflow-hidden">
                                         <small class="fw-bold d-block text-nowrap overflow-hidden text-truncate" title="{{ $uptd->kepala->nama }}">
@@ -224,15 +191,8 @@
                                     @if($seksi->kepala)
                                     <div class="d-flex align-items-center">
                                         <div class="flex-shrink-0 me-2">
-                                            @php
-                                                $mediaSeksi = $seksi->kepala->getFirstMedia('foto_pejabat');
-                                                $imageSeksiExists = $mediaSeksi && file_exists($mediaSeksi->getPath());
-                                            @endphp
-                                            @if ($imageSeksiExists)
-                                                <img src="{{ $mediaSeksi->getUrl('thumb') }}" alt="Foto {{ $seksi->kepala->nama }}" class="img-fluid rounded-circle" style="width: 30px; height: 30px; object-fit: cover;">
-                                            @else
-                                                <img src="https://placehold.co/30x30/E5E7EB/6B7280?text=NP" alt="No Photo" class="img-fluid rounded-circle" style="width: 30px; height: 30px; object-fit: cover;">
-                                            @endif
+                                            <img src="{{ $seksi->kepala->foto_url }}" alt="{{ $seksi->kepala->foto_alt_text }}" class="img-fluid rounded-circle" 
+                                                    style="width: 40px; height: 40px; object-fit: cover;">
                                         </div>
                                         <div class="flex-grow-1 overflow-hidden">
                                             <small class="fw-bold d-block text-nowrap overflow-hidden text-truncate" title="{{ $seksi->kepala->nama }}">
@@ -288,15 +248,8 @@
                         <div class="card p-2 h-100 shadow-sm w-100 mb-2">
                             <div class="d-flex align-items-center">
                                 <div class="flex-shrink-0 me-2">
-                                    @php
-                                        $mediaKepala = $cabang->kepala->getFirstMedia('foto_pejabat');
-                                        $imageKepalaExists = $mediaKepala && file_exists($mediaKepala->getPath());
-                                    @endphp
-                                    @if($imageKepalaExists)
-                                        <img src="{{ $mediaKepala->getUrl('thumb') }}" alt="Foto {{ $cabang->kepala->nama }}" class="img-fluid rounded-circle" style="width: 30px; height: 30px; object-fit: cover;">
-                                    @else
-                                        <img src="https://placehold.co/30x30/E5E7EB/6B7280?text=NP" alt="No Photo" class="img-fluid rounded-circle" style="width: 30px; height: 30px; object-fit: cover;">
-                                    @endif
+                                    <img src="{{ $cabang->kepala->foto_url }}" alt="{{ $cabang->kepala->foto_alt_text }}" class="img-fluid rounded-circle" 
+                                                    style="width: 40px; height: 40px; object-fit: cover;">
                                 </div>
                                 <div class="flex-grow-1 overflow-hidden">
                                     <small class="fw-bold d-block text-nowrap overflow-hidden text-truncate" title="{{ $cabang->kepala->nama }}">
@@ -333,15 +286,8 @@
                                         @if($seksi->kepala)
                                         <div class="d-flex align-items-center">
                                             <div class="flex-shrink-0 me-2">
-                                                @php
-                                                    $mediaSeksi = $seksi->kepala->getFirstMedia('foto_pejabat');
-                                                    $imageSeksiExists = $mediaSeksi && file_exists($mediaSeksi->getPath());
-                                                @endphp
-                                                @if ($imageSeksiExists)
-                                                    <img src="{{ $mediaSeksi->getUrl('thumb') }}" alt="Foto {{ $seksi->kepala->nama }}" class="img-fluid rounded-circle" style="width: 30px; height: 30px; object-fit: cover;">
-                                                @else
-                                                    <img src="https://placehold.co/30x30/E5E7EB/6B7280?text=NP" alt="No Photo" class="img-fluid rounded-circle" style="width: 30px; height: 30px; object-fit: cover;">
-                                                @endif
+                                                <img src="{{ $seksi->kepala->foto_url }}" alt="{{ $seksi->kepala->foto_alt_text }}" class="img-fluid rounded-circle" 
+                                                    style="width: 40px; height: 40px; object-fit: cover;">
                                             </div>
                                             <div class="flex-grow-1 overflow-hidden">
                                                 <small class="fw-bold d-block text-nowrap overflow-hidden text-truncate" title="{{ $seksi->kepala->nama }}">

@@ -21,7 +21,8 @@ class Photo extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly(['judul', 'deskripsi', 'is_active'])
+            // Tambahkan file_path
+            ->logOnly(['judul', 'deskripsi', 'is_active', 'file_path'])
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs()
             ->setDescriptionForEvent(function(string $eventName) {

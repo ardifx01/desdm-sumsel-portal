@@ -25,8 +25,15 @@
 
                 {{-- Card 1: Tugas Pokok dengan Gaya Floating Image --}}
                 <div class="card vision-card-showcase">
-                    <img src="{{ asset('storage/images/tugas-pokok-bg.webp') }}" alt="Ilustrasi Tugas Pokok" class="vision-image mx-auto d-block">
-                    
+                    @php
+                        $imagePath = 'storage/images/tugas-pokok-bg.webp';
+                        $placeholderUrl = 'https://placehold.co/1920x1080/E5E7EB/6B7280?text=Tugas+Pokok';
+                    @endphp
+                    @if(file_exists(public_path($imagePath)))
+                        <img src="{{ asset($imagePath) }}" alt="Ilustrasi Tugas Pokok" class="vision-image mx-auto d-block">
+                    @else
+                        <img src="{{ $placeholderUrl }}" alt="Placeholder Tugas Pokok" class="vision-image mx-auto d-block">
+                    @endif                    
                     <div class="card-body p-5">
                         <h2 class="display-6 vision-text my-3"><i class="bi bi-bullseye me-2"></i>Tugas Pokok</h2>
                         <p class="lead text-muted mx-auto" style="max-width: 800px;">
@@ -40,7 +47,6 @@
                 
                 {{-- Card 2: Fungsi dengan Gaya Floating Image --}}
                 <div class="card vision-card-showcase">
-                    <img src="{{ asset('storage/images/fungsi-bg.webp') }}" alt="Ilustrasi Fungsi Operasional" class="vision-image mx-auto d-block">
                     
                     <div class="card-body p-5">
                         <h2 class="display-6 vision-text my-3"><i class="bi bi-gear-wide-connected me-2"></i>Fungsi</h2>

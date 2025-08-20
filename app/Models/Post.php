@@ -62,46 +62,59 @@ class Post extends Model implements HasMedia
         $this->addMediaConversion('webp')->format('webp')->nonQueued();
     }
 
-    // --- ACCESSOR YANG MENDUKUNG GAMBAR LAMA & BARU ---
+    // --- ACCESSOR YANG DIPERBAIKI DENGAN LOGIKA ANTI-GAGAL ---
 
-    // Untuk thumbnail (Halaman daftar berita /berita dan dasbor admin)
     protected function universalThumbUrl(): Attribute
     {
         return Attribute::make(
             get: function () {
+                // PERBAIKAN KUNCI: Cek apakah symlink ada. Jika tidak, langsung fallback.
+                if (! file_exists(public_path('storage'))) {
+                    return 'https://placehold.co/400x250/E5E7EB/6B7280?text=No+Symlink';
+                }
+
                 // Prioritas 1: Gambar BARU dari Spatie Media Library
                 if ($this->hasMedia('featured_image')) {
-                    return $this->getFirstMediaUrl('featured_image', 'thumb');
+                    $media = $this->getFirstMedia('featured_image');
+                    if ($media && file_exists($media->getPath('thumb'))) {
+                        return $media->getUrl('thumb');
+                    }
                 }
 
                 // Prioritas 2: Gambar LAMA dari kolom featured_image_url
-                if ($this->featured_image_url && Storage::disk('public')->exists($this->featured_image_url)) {
-                    return asset('storage/' . $this->featured_image_url);
+                $legacyImageUrl = $this->attributes['featured_image_url'] ?? null;
+                if ($legacyImageUrl && Storage::disk('public')->exists($legacyImageUrl)) {
+                    return asset('storage/' . $legacyImageUrl);
                 }
 
-                // Fallback jika tidak ada sama sekali
+                // Fallback jika tidak ada data sama sekali
                 return 'https://placehold.co/400x250/E5E7EB/6B7280?text=No+Image';
             }
         );
     }
     
-    // Untuk gambar besar (Halaman detail berita /berita/{slug})
     protected function universalPreviewUrl(): Attribute
     {
         return Attribute::make(
             get: function () {
-                // Prioritas 1: Gambar BARU dari Spatie Media Library
-                if ($this->hasMedia('featured_image')) {
-                    return $this->getFirstMediaUrl('featured_image', 'preview');
+                // PERBAIKAN KUNCI: Cek apakah symlink ada.
+                if (! file_exists(public_path('storage'))) {
+                    return null; // Di halaman detail, kita tidak tampilkan apa-apa jika symlink rusak
                 }
 
-                // Prioritas 2: Gambar LAMA dari kolom featured_image_url
-                if ($this->featured_image_url && Storage::disk('public')->exists($this->featured_image_url)) {
-                    return asset('storage/' . $this->featured_image_url);
+                if ($this->hasMedia('featured_image')) {
+                    $media = $this->getFirstMedia('featured_image');
+                    if ($media && file_exists($media->getPath('preview'))) {
+                        return $media->getUrl('preview');
+                    }
                 }
                 
-                // Tidak perlu placeholder di halaman detail
-                return null; 
+                $legacyImageUrl = $this->attributes['featured_image_url'] ?? null;
+                if ($legacyImageUrl && Storage::disk('public')->exists($legacyImageUrl)) {
+                    return asset('storage/' . $legacyImageUrl);
+                }
+                
+                return null;
             }
         );
     }
@@ -114,14 +127,19 @@ class Post extends Model implements HasMedia
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly(['title', 'category_id', 'status'])
+            // Tambahkan featured_image_url ke logOnly
+            ->logOnly(['title', 'category_id', 'status', 'featured_image_url'])
+            ->logAll() // Menangkap perubahan media
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs()
             ->setDescriptionForEvent(function(string $eventName) {
                 $title = $this->title ?? 'tanpa judul';
                 if ($eventName === 'updated') {
                     $changes = $this->getChanges();
-                    // Hapus updated_at dari daftar perubahan
+                    // Deskripsi kustom jika gambar diubah
+                    if (isset($changes['media']) || isset($changes['featured_image_url'])) {
+                        return "Gambar unggulan untuk Berita \"{$title}\" telah diperbarui";
+                    }
                     unset($changes['updated_at']);
                     $changedFields = implode(', ', array_keys($changes));
                     return "Berita \"{$title}\" telah diperbarui (kolom: {$changedFields})";

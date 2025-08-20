@@ -62,12 +62,18 @@ class Pejabat extends Model implements HasMedia
     {
         return LogOptions::defaults()
             ->logOnly(['nama', 'jabatan', 'nip', 'urutan', 'is_active'])
+            ->logAll() // <-- Gunakan logAll() untuk menangkap perubahan media
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs()
             ->setDescriptionForEvent(function(string $eventName) {
                 $subjectName = $this->nama ?? 'tanpa nama';
                 if ($eventName === 'updated') {
-                    $changedFields = implode(', ', array_keys($this->getChanges()));
+                    $changes = $this->getChanges();
+                    // Deskripsi kustom jika foto berubah
+                    if (isset($changes['media'])) {
+                        return "Foto untuk Pejabat \"{$subjectName}\" telah diperbarui";
+                    }
+                    $changedFields = implode(', ', array_keys($changes));
                     return "Data Pejabat \"{$subjectName}\" telah diperbarui (kolom: {$changedFields})";
                 }
                 return "Data Pejabat \"{$subjectName}\" telah di-{$eventName}";
@@ -81,15 +87,19 @@ class Pejabat extends Model implements HasMedia
     {
         return Attribute::make(
             get: function () {
+                // PERBAIKAN KUNCI: Cek apakah symlink ada.
+                if (! file_exists(public_path('storage'))) {
+                    return 'https://placehold.co/400x500/E5E7EB/6B7280?text=No+Symlink';
+                }
+
                 $media = $this->getFirstMedia('foto_pejabat');
 
-                // PERBAIKAN: Gunakan 'preview' untuk kualitas lebih tinggi
                 if ($media && file_exists($media->getPath('preview'))) {
                     return $media->getUrl('preview');
                 }
                 
-                // Fallback tetap sama
-                return 'https://placehold.co/400x400/E5E7EB/6B7280?text=No+Photo';
+                // Fallback jika tidak ada data sama sekali
+                return 'https://placehold.co/400x500/E5E7EB/6B7280?text=No+Photo';
             },
         );
     }
