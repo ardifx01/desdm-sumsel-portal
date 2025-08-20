@@ -25,12 +25,15 @@
     <div class="row g-4">
         @forelse($album->photos as $photo)
             <div class="col-md-4 col-lg-3">
+                
                 @php
-                    // Memanggil accessor 'display_image_url' yang sudah kita buat
-                    $imageUrl = $photo->display_image_url;
+                    $imageUrl = null;
+                    // Cek apakah symlink ada dan file fisik ada
+                    if (file_exists(public_path('storage')) && $photo->file_path && Storage::disk('public')->exists($photo->file_path)) {
+                        $imageUrl = asset('storage/' . $photo->file_path);
+                    }
                 @endphp
                 
-                {{-- Cek apakah URL ada (bukan null) --}}
                 @if($imageUrl)
                     <a href="{{ $imageUrl }}"
                        class="glightbox photo-item"
@@ -44,11 +47,12 @@
                              style="height: 250px; width: 100%; object-fit: cover;">
                     </a>
                 @else
-                    {{-- Tampilkan placeholder jika accessor mengembalikan null --}}
+                    {{-- Tampilkan placeholder jika file tidak ada atau symlink rusak --}}
                     <div class="photo-item d-flex align-items-center justify-content-center bg-light" style="height: 250px;">
                         <i class="bi bi-image-alt fs-1 text-muted"></i>
                     </div>
                 @endif
+                
             </div>
         @empty
             <div class="col-12 text-center py-5">

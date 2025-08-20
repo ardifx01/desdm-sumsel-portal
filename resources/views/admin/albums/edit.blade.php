@@ -38,9 +38,11 @@
                             @error('thumbnail')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
-                            @if($album->thumbnail)
-                                <p class="text-xs text-gray-500 mt-2">Thumbnail saat ini:</p>
-                                <img src="{{ asset('storage/' . $album->thumbnail) }}" alt="Current Thumbnail" class="w-20 h-20 rounded-md object-cover">
+                            @if($album->admin_thumb_url)
+                                <div class="mt-4">
+                                    <p class="text-sm font-medium text-gray-700 mb-2">Thumbnail saat ini:</p>
+                                    <img src="{{ $album->admin_thumb_url }}" alt="Current Thumbnail" class="w-48 h-auto rounded-md shadow-sm">
+                                </div>
                             @endif
                         </div>
 

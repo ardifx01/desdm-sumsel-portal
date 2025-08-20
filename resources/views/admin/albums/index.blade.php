@@ -24,8 +24,8 @@
                     <a href="{{ route('admin.albums.photos.index', $album) }}" class="block">
                         <div class="relative h-40 bg-gray-200">
                             {{-- PERBAIKAN DI SINI --}}
-                            @if($album->thumbnail && Storage::disk('public')->exists($album->thumbnail))
-                                <img src="{{ asset('storage/' . $album->thumbnail) }}" alt="{{ $album->nama }}" class="w-full h-full object-cover">
+                            @if($album->admin_thumb_url)
+                                <img src="{{ $album->admin_thumb_url }}" alt="{{ $album->nama }}" style="object-fit: cover;">
                             @else
                                 <div class="w-full h-full flex items-center justify-center">
                                     <i class="bi bi-images text-4xl text-gray-400"></i>

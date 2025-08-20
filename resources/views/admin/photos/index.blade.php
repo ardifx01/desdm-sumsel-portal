@@ -38,14 +38,17 @@
                             @foreach ($photos as $photo)
                             <div class="relative group bg-white rounded-lg overflow-hidden border border-gray-200 shadow-sm">
                                 <div class="h-48 bg-gray-100">
-                                    {{-- PERBAIKAN DI SINI --}}
-                                    @if($photo->file_path && Storage::disk('public')->exists($photo->file_path))
-                                        <img src="{{ asset('storage/' . $photo->file_path) }}" alt="{{ $photo->judul ?: $photo->file_name }}" class="w-full h-full object-cover">
+
+                                    @if($photo->admin_thumb_url)
+                                        <img src="{{ $photo->admin_thumb_url }}" 
+                                            class="card-img-top" 
+                                            alt="{{ $photo->judul }}" 
+                                            style="height: 200px; width: 100%; object-fit: cover;">
                                     @else
-                                        <div class="w-full h-full flex items-center justify-center">
-                                            <i class="bi bi-image-alt text-5xl text-gray-400"></i>
+                                        <div class="card-img-top d-flex align-items-center justify-content-center bg-secondary-subtle text-secondary" style="height: 200px;">
+                                            <i class="bi bi-image-alt" style="font-size: 3rem;"></i>
                                         </div>
-                                    @endif
+                                    @endif                                  
                                 </div>
                                 <div class="p-3">
                                     <p class="text-sm font-medium text-gray-800 truncate" title="{{ $photo->judul ?: $photo->file_name }}">
