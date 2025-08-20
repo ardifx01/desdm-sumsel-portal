@@ -102,3 +102,35 @@
 .nav-link.dropdown-toggle::after {
     display: none;
 }
+
+// === PERBAIKAN UNTUK MENU HAMBURGER RESPONSIVE ===
+
+// Targetkan navbar saat berada di breakpoint 'xl' ke bawah
+@include media-breakpoint-down(xl) {
+    .navbar-collapse {
+        // Beri jarak atas agar tidak menempel dengan logo
+        margin-top: 1rem;
+        
+        // Latar belakang semi-transparan untuk menu yang terbuka
+        background-color: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        padding: 1rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    .navbar-nav .nav-link {
+        padding: 0.75rem 0; // Padding vertikal lebih besar
+        
+        // Hapus efek garis bawah di mode mobile
+        &::after {
+            display: none;
+        }
+    }
+
+    // Pastikan form pencarian dan menu user juga vertikal
+    .navbar-nav {
+        align-items: flex-start !important; // Rata kiri
+    }
+}

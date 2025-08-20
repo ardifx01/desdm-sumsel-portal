@@ -3,12 +3,28 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
-                <!-- Logo -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <img src="{{ asset('storage/images/logo-desdm.png') }}" alt="Logo DESDM Sumsel" style="height: 50px; margin-right: 15px;">
-                    </a>
-                </div>
+{{-- Logo --}}
+<div class="shrink-0 flex items-center">
+    <a href="{{ route('dashboard') }}">
+        
+        @php
+            // Variabel $settings sudah tersedia global via View Composer
+            $logoPath = $settings['app_logo'] ?? null;
+            $logoExists = $logoPath && file_exists(public_path('storage/' . $logoPath));
+        @endphp
+
+        @if($logoExists)
+            {{-- Jika logo ada, tampilkan gambar --}}
+            <img src="{{ asset('storage/' . $logoPath) }}" alt="Logo DESDM Sumsel" style="height: 40px;">
+        @else
+            {{-- Jika tidak ada, tampilkan teks --}}
+            <span class="font-semibold text-xl text-gray-800 leading-tight">
+                DESDM SUMSEL
+            </span>
+        @endif
+
+    </a>
+</div>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
