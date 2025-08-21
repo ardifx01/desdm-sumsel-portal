@@ -35,10 +35,6 @@
                             <li><hr class="dropdown-divider"></li>
                             <li><h6 class="dropdown-header dropdown-header-custom">Profil PPID</h6></li>
                             <li><a class="dropdown-item dropdown-item-custom" href="{{ route('informasi-publik.profil-ppid.index') }}">Profil PPID Overview</a></li>
-                            <li><a class="dropdown-item dropdown-item-custom" href="{{ route('informasi-publik.profil-ppid.visi-misi-maklumat') }}">Visi, Misi & Maklumat</a></li>
-                            <li><a class="dropdown-item dropdown-item-custom" href="{{ route('informasi-publik.profil-ppid.struktur-organisasi') }}">Struktur Organisasi PPID</a></li>
-                            <li><a class="dropdown-item dropdown-item-custom" href="{{ route('informasi-publik.profil-ppid.tugas-fungsi') }}">Tugas & Fungsi PPID</a></li>
-                            <li><a class="dropdown-item dropdown-item-custom" href="{{ route('informasi-publik.profil-ppid.dasar-hukum') }}">Dasar Hukum PPID</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><h6 class="dropdown-header dropdown-header-custom">Layanan Informasi</h6></li>
                             <li><a class="dropdown-item dropdown-item-custom" href="{{ route('informasi-publik.permohonan.prosedur') }}">Alur Permohonan Informasi</a></li>
@@ -64,17 +60,7 @@
                     </li>
 
                     {{-- Dropdown Layanan --}}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle header-menu-link" href="#" data-bs-toggle="dropdown">Layanan</a>
-                        <ul class="dropdown-menu dropdown-menu-custom">
-                            <li><a class="dropdown-item dropdown-item-custom" href="{{ route('layanan-pengaduan.index') }}">Layanan Overview</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item dropdown-item-custom" href="{{ route('layanan-pengaduan.pengaduan') }}">Pengaduan Masyarakat</a></li>
-                            <li><a class="dropdown-item dropdown-item-custom" href="{{ route('layanan-pengaduan.faq-umum') }}">FAQ Umum</a></li>
-                            <li><a class="dropdown-item dropdown-item-custom" href="{{ route('layanan-pengaduan.daftar-layanan') }}">Daftar Layanan Umum</a></li>
-                            <li><a class="dropdown-item dropdown-item-custom" href="{{ route('layanan-pengaduan.cek-status') }}">Cek Status Layanan</a></li>
-                        </ul>
-                    </li>
+                    <li class="nav-item"><a class="nav-link header-menu-link" href="{{ url('/#services') }}">Layanan</a></li>
                     
                     <li class="nav-item"><a class="nav-link header-menu-link" href="{{ route('kontak.index') }}">Kontak</a></li>
 

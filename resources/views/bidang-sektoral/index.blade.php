@@ -1,6 +1,6 @@
 @extends('layouts.public_app')
 
-@section('title', 'Bidang & Data Sektoral')
+@section('title', 'Profil Bidang, UPTD & Cabang Dinas Regional')
 
 @section('content')
 {{-- Hero Section --}}

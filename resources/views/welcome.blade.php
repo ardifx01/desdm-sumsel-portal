@@ -62,8 +62,8 @@
         <div class="card h-100 border-0 shadow-sm text-center p-4 pejabat-card">
             <div class="card-body">
                 <i class="fas fa-crown fa-3x text-primary mb-3"></i>
-                <h5 class="card-title fw-bold">Profil Pimpinan</h5>
-                <p class="card-text text-muted">Kenali para pemimpin dan pejabat di lingkungan dinas kami.</p>
+                <h5 class="card-title fw-bold">Profil Pejabat</h5>
+                <p class="card-text text-muted">Kenali para pejabat struktural di lingkungan dinas kami.</p>
                 <a href="{{ url('/tentang-kami/profil-pimpinan') }}" class="btn btn-link">Lihat Detail <i class="fas fa-arrow-right"></i></a>
             </div>
         </div>
@@ -168,33 +168,65 @@
 
 <section id="services" class="py-5 bg-light">
     <div class="container text-center">
-        <h2 class="fw-bold mb-4">Layanan Kami</h2>
-        <div class="row">
-            <div class="col-md-4 mb-4">
-                <div class="card h-100 border-0 shadow-sm p-4 pejabat-card">
-                    <i class="fas fa-file-alt fa-4x text-primary mb-3"></i>
-                    <h5 class="fw-bold">Pengajuan Izin</h5>
-                    <p class="text-muted">Proses pengajuan dan pengelolaan perizinan di bidang ESDM.</p>
-                    <a href="{{ url('/layanan/perizinan') }}" class="btn btn-outline-primary mt-auto">Detail Layanan</a>
+        <h2 class="fw-bold mb-5">Pusat Layanan & Pengaduan</h2>
+        
+        <div class="row g-4 justify-content-center">
+            {{-- Kartu 1: Pengaduan Masyarakat --}}
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 service-card card-danger">
+                    <div class="card-body-content">
+                        <img src="https://www.lapor.go.id/themes/lapor/assets/images/logo.png" alt="Logo SP4N-LAPOR!" class="card-logo">
+                        <h5 class="card-title">Pengaduan Masyarakat</h5>
+                        <p class="card-text text-muted small">Gunakan kanal pengaduan resmi pemerintah melalui SP4N-LAPOR!.</p>
+                        <div class="mt-auto">
+                            <a href="https://www.lapor.go.id/" target="_blank" class="btn btn-danger">Ajukan di LAPOR!</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4 mb-4">
-                <div class="card h-100 border-0 shadow-sm p-4 pejabat-card">
-                    <i class="fas fa-bullhorn fa-4x text-primary mb-3"></i>
-                    <h5 class="fw-bold">Pelayanan Publik</h5>
-                    <p class="text-muted">Informasi dan pelayanan untuk kebutuhan masyarakat umum.</p>
-                    <a href="{{ url('/layanan/publik') }}" class="btn btn-outline-primary mt-auto">Detail Layanan</a>
+
+            {{-- Kartu 2: Pertanyaan Umum (FAQ) --}}
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 service-card card-success">
+                    <div class="card-body-content">
+                        <i class="bi bi-question-circle-fill card-icon"></i>
+                        <h5 class="card-title">Pertanyaan Umum (FAQ)</h5>
+                        <p class="card-text text-muted small">Temukan jawaban atas pertanyaan yang sering diajukan.</p>
+                        <div class="mt-auto">
+                            <a href="{{ route('layanan-pengaduan.faq-umum') }}" class="btn btn-success">Lihat FAQ</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4 mb-4">
-                <div class="card h-100 border-0 shadow-sm p-4 pejabat-card">
-                    <i class="fas fa-headset fa-4x text-primary mb-3"></i>
-                    <h5 class="fw-bold">Pusat Bantuan</h5>
-                    <p class="text-muted">Dapatkan bantuan dan jawaban atas pertanyaan umum Anda.</p>
-                    <a href="{{ url('/kontak') }}" class="btn btn-outline-primary mt-auto">Hubungi Kami</a>
+
+        {{-- Kartu 3: Daftar Layanan Umum --}}
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 service-card card-info">
+                <div class="card-body-content">
+                    <i class="bi bi-tools card-icon"></i>
+                    <h5 class="card-title">Daftar Layanan Umum</h5>
+                    <p class="card-text text-muted small">Informasi mengenai berbagai layanan non-perizinan kami.</p>
+                    <div class="mt-auto">
+                        <a href="{{ route('layanan-pengaduan.daftar-layanan') }}" class="btn btn-info">Lihat Daftar</a>
+                    </div>
                 </div>
             </div>
         </div>
+
+        {{-- Kartu 4: Cek Status Layanan --}}
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 service-card card-warning">
+                <div class="card-body-content">
+                    <i class="bi bi-search card-icon"></i>
+                    <h5 class="card-title">Cek Status Layanan</h5>
+                    <p class="card-text text-muted small">Lacak status permohonan atau pengaduan Anda.</p>
+                    <div class="mt-auto">
+                        <a href="{{ route('login') }}" class="btn btn-warning">Cek Status</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </section>
 
@@ -209,4 +241,7 @@
         </div>
     </div>
 </section>
+
+
+
 @endsection

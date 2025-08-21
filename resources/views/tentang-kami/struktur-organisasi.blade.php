@@ -1,5 +1,5 @@
 @extends('layouts.public_app')
-
+@section('title', 'Struktur Organisasi')
 @section('content')
 {{-- Hero Section --}}
 <div class="page-hero py-4">
