@@ -14,10 +14,11 @@ use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Image\Enums\Fit;
+use App\Models\Traits\CleansHtml;
 
 class Post extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia, LogsActivity;
+    use HasFactory, InteractsWithMedia, LogsActivity, CleansHtml;
 
     protected $table = 'posts';
 
@@ -36,6 +37,16 @@ class Post extends Model implements HasMedia
         'featured_image_url',
     ];
 
+    /**
+     * Daftar atribut yang berisi input HTML dan perlu dibersihkan.
+     *
+     * @var array
+     */
+    protected $htmlFieldsToClean = [
+        'content_html',
+        'excerpt', // Sebaiknya excerpt juga dibersihkan
+    ];
+    
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');

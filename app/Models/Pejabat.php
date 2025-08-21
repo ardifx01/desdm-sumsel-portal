@@ -15,9 +15,11 @@ use Spatie\Activitylog\LogOptions;
 
 use Spatie\Image\Enums\Fit;
 
+use App\Models\Traits\CleansHtml;
+
 class Pejabat extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia, LogsActivity;
+    use HasFactory, InteractsWithMedia, LogsActivity, CleansHtml;
 
     protected $table = 'pejabat';
 
@@ -33,7 +35,16 @@ class Pejabat extends Model implements HasMedia
     protected $casts = [
         'is_active' => 'boolean',
     ];
-    
+
+    /**
+     * Daftar atribut yang berisi input HTML dan perlu dibersihkan.
+     *
+     * @var array
+     */
+    protected $htmlFieldsToClean = [
+        'deskripsi_singkat',
+    ];
+
     public function registerMediaConversions(?Media $media = null): void
     {
         $this

@@ -39,10 +39,6 @@
                             <ul>
                                 <li><a href="{{ route('informasi-publik.index') }}">Daftar Informasi Publik (DIP)</a></li>
                                 <li><a href="{{ route('informasi-publik.profil-ppid.index') }}">Profil PPID Overview</a></li>
-                                <li><a href="{{ route('informasi-publik.profil-ppid.visi-misi-maklumat') }}">Visi, Misi & Maklumat PPID</a></li>
-                                <li><a href="{{ route('informasi-publik.profil-ppid.struktur-organisasi') }}">Struktur Organisasi PPID</a></li>
-                                <li><a href="{{ route('informasi-publik.profil-ppid.tugas-fungsi') }}">Tugas & Fungsi PPID</a></li>
-                                <li><a href="{{ route('informasi-publik.profil-ppid.dasar-hukum') }}">Dasar Hukum PPID</a></li>
                                 <li><a href="{{ route('informasi-publik.permohonan.prosedur') }}">Alur Permohonan Informasi</a></li>
                                 <li><a href="{{ route('informasi-publik.permohonan.form') }}">Formulir Permohonan Informasi</a></li>
                                 <li><a href="{{ route('informasi-publik.keberatan.prosedur') }}">Alur Pengajuan Keberatan</a></li>
@@ -62,7 +58,6 @@
 
                             <h4><i class="bi bi-headset me-2 text-primary"></i>Layanan & Pengaduan</h4>
                             <ul>
-                                <li><a href="{{ route('layanan-pengaduan.index') }}">Layanan & Pengaduan Overview</a></li>
                                 <li><a href="{{ route('layanan-pengaduan.pengaduan') }}">Pengaduan Masyarakat</a></li>
                                 <li><a href="{{ route('layanan-pengaduan.faq-umum') }}">FAQ Umum</a></li>
                                 <li><a href="{{ route('layanan-pengaduan.daftar-layanan') }}">Daftar Layanan Umum</a></li>

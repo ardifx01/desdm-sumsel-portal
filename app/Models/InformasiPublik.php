@@ -6,10 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Facades\Storage; 
+use App\Models\Traits\CleansHtml;
 
 class InformasiPublik extends Model
 {
-    use HasFactory, LogsActivity;
+    use HasFactory, LogsActivity, CleansHtml;
 
     protected $table = 'informasi_publik';
 
@@ -30,6 +33,15 @@ class InformasiPublik extends Model
     protected $casts = [
         'tanggal_publikasi' => 'datetime',
         'is_active' => 'boolean',
+    ];
+
+    /**
+     * Daftar atribut yang berisi input HTML dan perlu dibersihkan.
+     *
+     * @var array
+     */
+    protected $htmlFieldsToClean = [
+        'konten',
     ];
 
     // Definisi relasi: Setiap informasi publik termasuk dalam satu kategori

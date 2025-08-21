@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str; // Tambahkan ini untuk helper string
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
+use App\Models\Traits\CleansHtml;
 
 class Bidang extends Model
 {
-    use HasFactory, LogsActivity;
+    use HasFactory, LogsActivity, CleansHtml;
 
     // Nama tabel yang terkait dengan model ini (Laravel secara otomatis mengasumsikan 'bidangs')
     protected $table = 'bidangs';
@@ -32,6 +33,17 @@ class Bidang extends Model
     // Casting atribut ke tipe data tertentu
     protected $casts = [
         'is_active' => 'boolean',
+    ];
+
+        /**
+     * Daftar atribut yang berisi input HTML dan perlu dibersihkan.
+     *
+     * @var array
+     */
+    protected $htmlFieldsToClean = [
+        'tupoksi',
+        'map',
+        'grafik_kinerja',
     ];
 
     // Relasi: Satu Bidang memiliki banyak Seksi

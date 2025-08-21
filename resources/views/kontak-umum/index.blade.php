@@ -114,5 +114,9 @@
             </div>
         </div>
     </div>
+    <div class="text-center mt-4">
+        <button onclick="history.back()" class="btn btn-secondary btn-lg">Kembali</button>
+        <a href="{{ url('/') }}" class="btn btn-primary btn-lg">Kembali ke Beranda</a>
+    </div>      
 </div>
 @endsection

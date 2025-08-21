@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
+use App\Models\Traits\CleansHtml;
 
 class Seksi extends Model
 {
-    use HasFactory, LogsActivity;
+    use HasFactory, LogsActivity, CleansHtml;
 
     // Nama tabel yang terkait dengan model ini (Laravel secara otomatis mengasumsikan 'seksis')
     protected $table = 'seksis';
@@ -27,6 +28,15 @@ class Seksi extends Model
     // Casting atribut ke tipe data tertentu
     protected $casts = [
         'is_active' => 'boolean',
+    ];
+
+        /**
+     * Daftar atribut yang berisi input HTML dan perlu dibersihkan.
+     *
+     * @var array
+     */
+    protected $htmlFieldsToClean = [
+        'tugas',
     ];
 
     // Relasi: Satu Seksi adalah milik satu Bidang

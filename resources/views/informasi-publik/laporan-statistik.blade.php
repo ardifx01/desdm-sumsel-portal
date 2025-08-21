@@ -149,7 +149,8 @@
     </div>
 
     <div class="text-center mt-4">
-        <a href="{{ route('informasi-publik.index') }}" class="btn btn-secondary me-2">Kembali ke Informasi Publik</a>
+        <button onclick="history.back()" class="btn btn-secondary btn-lg">Kembali</button>
+        <a href="{{ url('/') }}" class="btn btn-primary btn-lg">Kembali ke Beranda</a>
     </div>
 </div>
 
