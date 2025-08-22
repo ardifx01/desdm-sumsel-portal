@@ -9,6 +9,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate; // <-- Tambahkan fasad Gate
+use Illuminate\Support\Facades\Cache;
 
 class PostController extends Controller
 {
@@ -19,7 +20,7 @@ class PostController extends Controller
 
         $categories = Category::ofTypePost()->orderBy('name')->get();
         
-        $query = Post::with('category', 'author');
+        $query = Post::with(['category', 'author', 'media', 'comments']);
 
         if (Auth::user()->role === 'editor') {
             $query->where('author_id', Auth::id());
@@ -79,7 +80,7 @@ class PostController extends Controller
             $post->addMediaFromRequest('featured_image')->toMediaCollection('featured_image');
         }
 
-        return redirect()->route('admin.posts.index')->with('success', 'Berita berhasil ditambahkan!');
+        return redirect()->route('admin.posts.index')->with('success', 'Berita "' . Str::limit($post->title, 50) . '" berhasil ditambahkan!');
     }
 
     public function edit(Post $post)
@@ -120,7 +121,8 @@ class PostController extends Controller
             $post->addMediaFromRequest('featured_image')->toMediaCollection('featured_image');
         }
 
-        return redirect()->route('admin.posts.index')->with('success', 'Berita berhasil diperbarui!');
+        Cache::forget('post:' . $post->slug);
+        return redirect()->route('admin.posts.index')->with('success', 'Berita "' . Str::limit($post->title, 50) . '" berhasil diperbarui!');
     }
     
     public function destroy(Post $post)
@@ -129,7 +131,8 @@ class PostController extends Controller
         Gate::authorize('delete', $post);
 
         $post->clearMediaCollection('featured_image');
+        Cache::forget('post:' . $post->slug);
         $post->delete();
-        return redirect()->route('admin.posts.index')->with('success', 'Berita berhasil dihapus!');
+        return redirect()->route('admin.posts.index')->with('success', 'Berita "' . Str::limit($post->title, 50) . '" berhasil dihapus!');
     }
 }

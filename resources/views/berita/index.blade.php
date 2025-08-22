@@ -40,55 +40,30 @@
         </div>
     </div>
 
-    <div class="row">
+    {{-- Container baru untuk menampung semua kartu berita --}}
+    <div class="row" id="post-container">
         @forelse($posts as $post)
-        <div class="col-md-6 col-lg-4 mb-4">
-            <div class="card h-100 shadow-sm border-0 berita-card">
-                <a href="{{ route('berita.show', $post->slug) }}" class="text-decoration-none">
-                    <div class="card-img-top-wrapper">
-                        <img src="{{ $post->universal_thumb_url }}" class="card-img-top" alt="{{ $post->title }}" loading="lazy" style="height: 100%; width: 100%; object-fit: cover;">
-                    </div>
-                </a>
-                <div class="card-body d-flex flex-column">
-                    <div>
-                        @if($post->category)
-                        <span class="badge {{ $post->category->frontend_badge_class }} mb-2">
-                            {{ $post->category->name }}
-                        </span>
-                        @endif
-                        <h5 class="card-title fw-bold">
-                            <a href="{{ route('berita.show', $post->slug) }}" class="card-title">{{ Str::limit($post->title, 60) }}</a>
-                        </h5>
-                        <p class="card-text text-muted small mb-2">
-                            <i class="bi bi-calendar3"></i> {{ $post->created_at ? $post->created_at->translatedFormat('d M Y') : '-' }} &nbsp;
-                            <i class="bi bi-person-fill"></i> {{ $post->author->name ?? 'Admin' }}
-                        </p>
-                        <p class="card-text small">{{ Str::limit(strip_tags($post->excerpt ?: $post->content_html), 100) }}</p>
-                    </div>
-                    <div class="mt-auto pt-2">
-                        <a href="{{ route('berita.show', $post->slug) }}" class="btn btn-sm btn-outline-primary">Baca Selengkapnya <i class="bi bi-arrow-right"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
+            {{-- Panggil partial untuk setiap post --}}
+            @include('berita.partials.post-card', ['post' => $post])
         @empty
-        <div class="col-12 text-center py-5">
-            <i class="bi bi-journal-x fs-1 text-muted"></i>
-            <h4 class="mt-3">Berita Tidak Ditemukan</h4>
-            <p class="text-muted">Maaf, tidak ada berita yang cocok dengan kriteria pencarian Anda.</p>
-            <a href="{{ route('berita.index') }}" class="btn btn-primary">Kembali ke Semua Berita</a>
-        </div>
+            <div class="col-12 text-center py-5">
+                <i class="bi bi-journal-x fs-1 text-muted"></i>
+                <h4 class="mt-3">Berita Tidak Ditemukan</h4>
+                <p class="text-muted">Maaf, tidak ada berita yang cocok dengan kriteria pencarian Anda.</p>
+                <a href="{{ route('berita.index') }}" class="btn btn-primary">Kembali ke Semua Berita</a>
+            </div>
         @endforelse
     </div>
 
-    @if ($posts->hasPages())
-    <div class="mt-4 d-flex justify-content-center">
-        {{ $posts->links('pagination::bootstrap-5') }}
+    {{-- Tombol "Muat Lebih Banyak" akan muncul di sini --}}
+    <div class="text-center mt-4" id="load-more-container">
+        @if ($posts->nextPageUrl())
+            <a href="{{ $posts->nextPageUrl() }}" id="load-more-btn" class="btn btn-primary btn-lg">
+                <span class="spinner-border spinner-border-sm d-none me-2" role="status" aria-hidden="true"></span>
+                Muat Lebih Banyak
+            </a>
+        @endif
     </div>
-    @endif
-    <div class="text-center mt-4">
-        <button onclick="history.back()" class="btn btn-secondary btn-lg">Kembali</button>
-        <a href="{{ url('/') }}" class="btn btn-primary btn-lg">Kembali ke Beranda</a>
-    </div>      
+
 </div>
 @endsection

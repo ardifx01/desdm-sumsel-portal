@@ -10,6 +10,7 @@ console.log('Aplikasi JavaScript utama dimuat!');
 import './bootstrap';
 import './pejabat-modal.js';
 import './comment-system.js';
+import './load-more.js';
 // Fungsi untuk mengontrol tombol "Kembali ke atas" dan animasi wiggle
 document.addEventListener('DOMContentLoaded', function() {
     const scrollToTopButton = document.getElementById('scroll-to-top');

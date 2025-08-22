@@ -12,7 +12,12 @@ use Spatie\Activitylog\LogOptions;
 class Category extends Model
 {
     use HasFactory, LogsActivity, HasColoredBadge, HasFrontendBadge;
-
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['badge_class'];
     protected $table = 'categories';
     public $timestamps = false;
     protected $fillable = ['name', 'slug', 'type'];
