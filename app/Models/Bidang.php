@@ -8,10 +8,11 @@ use Illuminate\Support\Str; // Tambahkan ini untuk helper string
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 use App\Models\Traits\CleansHtml;
+use Laravel\Scout\Searchable;
 
 class Bidang extends Model
 {
-    use HasFactory, LogsActivity, CleansHtml;
+    use HasFactory, LogsActivity, CleansHtml, Searchable;
 
     // Nama tabel yang terkait dengan model ini (Laravel secara otomatis mengasumsikan 'bidangs')
     protected $table = 'bidangs';
@@ -30,6 +31,10 @@ class Bidang extends Model
         'is_active',
     ];
 
+public function toSearchableArray(): array {
+    return ['nama' => $this->nama, 'tupoksi' => strip_tags($this->tupoksi ?? '')];
+}
+    
     // Casting atribut ke tipe data tertentu
     protected $casts = [
         'is_active' => 'boolean',

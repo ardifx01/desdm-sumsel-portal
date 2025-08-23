@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 use App\Models\Traits\CleansHtml;
+use Laravel\Scout\Searchable;
 
 class Seksi extends Model
 {
-    use HasFactory, LogsActivity, CleansHtml;
+    use HasFactory, LogsActivity, CleansHtml, Searchable;
 
     // Nama tabel yang terkait dengan model ini (Laravel secara otomatis mengasumsikan 'seksis')
     protected $table = 'seksis';
@@ -30,6 +31,10 @@ class Seksi extends Model
         'is_active' => 'boolean',
     ];
 
+    public function toSearchableArray(): array {
+        return ['nama_seksi' => $this->nama_seksi, 'tugas' => strip_tags($this->tugas ?? '')];
+    }
+    
         /**
      * Daftar atribut yang berisi input HTML dan perlu dibersihkan.
      *

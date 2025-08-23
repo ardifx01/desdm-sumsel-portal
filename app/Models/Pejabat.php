@@ -16,10 +16,11 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\Image\Enums\Fit;
 
 use App\Models\Traits\CleansHtml;
+use Laravel\Scout\Searchable;
 
 class Pejabat extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia, LogsActivity, CleansHtml;
+    use HasFactory, InteractsWithMedia, LogsActivity, CleansHtml, Searchable;
 
     protected $table = 'pejabat';
 
@@ -35,6 +36,10 @@ class Pejabat extends Model implements HasMedia
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
+    public function toSearchableArray(): array {
+        return ['nama' => $this->nama, 'nip' => $this->nip, 'jabatan' => $this->jabatan, 'deskripsi_singkat' => strip_tags($this->deskripsi_singkat ?? '')];
+    }
 
     /**
      * Daftar atribut yang berisi input HTML dan perlu dibersihkan.

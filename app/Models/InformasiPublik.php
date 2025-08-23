@@ -9,10 +9,11 @@ use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Storage; 
 use App\Models\Traits\CleansHtml;
+use Laravel\Scout\Searchable;
 
 class InformasiPublik extends Model
 {
-    use HasFactory, LogsActivity, CleansHtml;
+    use HasFactory, LogsActivity, CleansHtml, Searchable;
 
     protected $table = 'informasi_publik';
 
@@ -35,6 +36,10 @@ class InformasiPublik extends Model
         'is_active' => 'boolean',
     ];
 
+    public function toSearchableArray(): array {
+        return ['judul' => $this->judul, 'konten' => strip_tags($this->konten ?? '')];
+    }
+    
     /**
      * Daftar atribut yang berisi input HTML dan perlu dibersihkan.
      *

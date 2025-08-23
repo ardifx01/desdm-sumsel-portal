@@ -15,7 +15,7 @@ class BeritaController extends Controller
         $query = Post::with(['category', 'author'])->published();
         $title = 'Berita Terbaru';
 
-        // Filter kategori (logika Anda yang sudah ada)
+        // Filter berdasarkan kategori (logika asli Anda)
         if ($request->has('kategori') && $request->kategori != 'all') {
             $category = Category::ofTypePost()->where('slug', $request->kategori)->first();
             if ($category) {
@@ -24,7 +24,7 @@ class BeritaController extends Controller
             }
         }
 
-        // Pencarian (logika Anda yang sudah ada)
+        // Pencarian (logika asli Anda)
         if ($request->has('q') && $request->q) {
             $search = $request->q;
             $query->where(function ($q) use ($search) {
@@ -35,32 +35,23 @@ class BeritaController extends Controller
             $title = 'Hasil Pencarian: "' . $search . '"';
         }
 
-        // Ambil data dengan paginasi (9 item per halaman)
-        $posts = $query->latest()->paginate(9)->withQueryString();
+        // Ambil data dengan paginasi
+        $posts = $query->latest()->paginate(9)->withQueryString(); // <-- PERBAIKAN DI SINI
 
-        // ==========================================================
-        //         LOGIKA BARU UNTUK MENANGANI AJAX REQUEST
-        // ==========================================================
+        // Logika untuk menangani AJAX "Load More"
         if ($request->ajax()) {
-            // Jika ini adalah permintaan dari tombol "Muat Lebih Banyak"
-            
             $html = '';
-            // Render setiap post menggunakan partial view
             foreach ($posts as $post) {
                 $html .= view('berita.partials.post-card', ['post' => $post])->render();
             }
 
-            // Kembalikan response dalam format JSON
             return response()->json([
                 'html' => $html,
-                'next_page_url' => $posts->nextPageUrl(), // Kirim URL halaman berikutnya
+                'next_page_url' => $posts->nextPageUrl(),
             ]);
         }
-        // ==========================================================
-        //                     AKHIR LOGIKA AJAX
-        // ==========================================================
 
-        // Jika ini adalah permintaan biasa (pertama kali buka halaman)
+        // Untuk permintaan biasa, tampilkan view seperti biasa
         return view('berita.index', compact('posts', 'categories', 'title'));
     }
 

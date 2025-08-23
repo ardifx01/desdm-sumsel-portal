@@ -15,10 +15,11 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Image\Enums\Fit;
 use App\Models\Traits\CleansHtml;
+use Laravel\Scout\Searchable;
 
 class Post extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia, LogsActivity, CleansHtml;
+    use HasFactory, InteractsWithMedia, LogsActivity, CleansHtml, Searchable;
 
     protected $table = 'posts';
 
@@ -46,7 +47,21 @@ class Post extends Model implements HasMedia
         'content_html',
         'excerpt', // Sebaiknya excerpt juga dibersihkan
     ];
-    
+
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array
+     */
+    public function toSearchableArray(): array
+    {
+        return [
+            'title' => $this->title ?? '', // Tambahkan null coalescing untuk keamanan
+            'excerpt' => $this->excerpt ?? '',
+            'content_html' => strip_tags($this->content_html ?? ''), // Berikan string kosong jika null
+        ];
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');

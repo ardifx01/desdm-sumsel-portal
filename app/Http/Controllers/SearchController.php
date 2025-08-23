@@ -9,27 +9,27 @@ use App\Models\InformasiPublik;
 use App\Models\Bidang;
 use App\Models\Seksi;
 use App\Models\Pejabat;
+use Illuminate\Database\Eloquent\Collection;
 
 class SearchController extends Controller
 {
     /**
-     * Menangani permintaan pencarian global.
+     * Menangani permintaan pencarian global menggunakan Laravel Scout.
      */
     public function index(Request $request)
     {
-        $query = $request->input('query');
+        // Validasi input pencarian
+        $request->validate(['q' => 'nullable|string|min:3']);
+        $query = $request->input('q');
+        
         $results = collect();
 
+        // Lakukan pencarian hanya jika query valid
         if ($query) {
-            $normalizedQuery = strtolower($query);
 
             // Pencarian di Post (Berita)
-            $posts = Post::where('status', 'published')
-                         ->where(function ($q) use ($normalizedQuery) {
-                             $q->where('title', 'like', "%{$normalizedQuery}%")
-                               ->orWhere('content_html', 'like', "%{$normalizedQuery}%");
-                         })
-                         ->with('category')
+            $posts = Post::search($query)
+                         ->where('status', 'published') // Filter tambahan setelah pencarian
                          ->get()
                          ->map(function ($item) {
                              return [
@@ -42,12 +42,8 @@ class SearchController extends Controller
                          });
 
             // Pencarian di Dokumen
-            $dokumen = Dokumen::where('is_active', true)
-                             ->where(function ($q) use ($normalizedQuery) {
-                                 $q->where('judul', 'like', "%{$normalizedQuery}%")
-                                   ->orWhere('deskripsi', 'like', "%{$normalizedQuery}%");
-                             })
-                             ->with('category')
+            $dokumen = Dokumen::search($query)
+                             ->where('is_active', true)
                              ->get()
                              ->map(function ($item) {
                                  return [
@@ -60,12 +56,8 @@ class SearchController extends Controller
                              });
 
             // Pencarian di Informasi Publik
-            $informasiPublik = InformasiPublik::where('is_active', true)
-                                           ->where(function ($q) use ($normalizedQuery) {
-                                               $q->where('judul', 'like', "%{$normalizedQuery}%")
-                                                 ->orWhere('konten', 'like', "%{$normalizedQuery}%");
-                                           })
-                                           ->with('category')
+            $informasiPublik = InformasiPublik::search($query)
+                                           ->where('is_active', true)
                                            ->get()
                                            ->map(function ($item) {
                                                return [
@@ -78,11 +70,8 @@ class SearchController extends Controller
                                            });
 
             // Pencarian di Bidang
-            $bidangs = Bidang::where('is_active', true)
-                            ->where(function ($q) use ($normalizedQuery) {
-                                $q->where('nama', 'like', "%{$normalizedQuery}%")
-                                  ->orWhere('tupoksi', 'like', "%{$normalizedQuery}%");
-                            })
+            $bidangs = Bidang::search($query)
+                            ->where('is_active', true)
                             ->get()
                             ->map(function ($item) {
                                 return [
@@ -94,12 +83,8 @@ class SearchController extends Controller
                             });
 
             // Pencarian di Seksi
-            $seksis = Seksi::where('is_active', true)
-                          ->where(function ($q) use ($normalizedQuery) {
-                              $q->where('nama_seksi', 'like', "%{$normalizedQuery}%")
-                                ->orWhere('tugas', 'like', "%{$normalizedQuery}%");
-                          })
-                          ->with('bidang')
+            $seksis = Seksi::search($query)
+                          ->where('is_active', true)
                           ->get()
                           ->map(function ($item) {
                               return [
@@ -111,13 +96,8 @@ class SearchController extends Controller
                           });
 
             // Pencarian di Pejabat
-            $pejabats = Pejabat::where('is_active', true)
-                              ->where(function ($q) use ($normalizedQuery) {
-                                  $q->where('nama', 'like', "%{$normalizedQuery}%")
-                                    ->orWhere('nip', 'like', "%{$normalizedQuery}%")
-                                    ->orWhere('jabatan', 'like', "%{$normalizedQuery}%")
-                                    ->orWhere('deskripsi_singkat', 'like', "%{$normalizedQuery}%");
-                              })
+            $pejabats = Pejabat::search($query)
+                              ->where('is_active', true)
                               ->get()
                               ->map(function ($item) {
                                   return [
@@ -128,6 +108,7 @@ class SearchController extends Controller
                                   ];
                               });
 
+            // Menggabungkan semua hasil ke dalam satu koleksi untuk di-pass ke view
             $results->push(['label' => 'Berita', 'items' => $posts, 'route_name' => 'berita.show', 'has_category' => true]);
             $results->push(['label' => 'Publikasi & Dokumen', 'items' => $dokumen, 'route_name' => 'publikasi.show', 'has_category' => true]);
             $results->push(['label' => 'Informasi Publik', 'items' => $informasiPublik, 'route_name' => 'informasi-publik.show', 'has_category' => true]);

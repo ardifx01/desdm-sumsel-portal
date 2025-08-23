@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
+use Laravel\Scout\Searchable;
 
 class Dokumen extends Model
 {
-    use HasFactory, LogsActivity;
+    use HasFactory, LogsActivity, Searchable;
 
     protected $table = 'dokumen';
 
@@ -31,6 +32,10 @@ class Dokumen extends Model
         'is_active' => 'boolean',
     ];
 
+    public function toSearchableArray(): array {
+        return ['judul' => $this->judul, 'deskripsi' => strip_tags($this->deskripsi ?? '')];
+    }
+    
     // Definisi relasi: Setiap dokumen termasuk dalam satu kategori
     public function category()
     {
