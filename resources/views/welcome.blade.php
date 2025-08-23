@@ -109,11 +109,11 @@
 <section id="news-publications" class="py-5">
     <div class="container">
         <div class="row">
-            {{-- Kolom Berita Terkini --}}
+            {{-- Kolom Berita Terbaru --}}
             <div class="col-lg-6 mb-4">
                 <div class="card h-100 border-0 shadow-sm">
                     <div class="card-body p-4">
-                        <h5 class="card-title fw-bold text-primary">Berita Terkini</h5>
+                        <h5 class="card-title fw-bold text-primary">Berita Terbaru</h5>
                         <p class="card-text text-muted">Lihat berita dan pengumuman terbaru dari Dinas ESDM Sumsel.</p>
                         <div class="list-group list-group-flush mb-3">
                             @forelse($posts as $post)

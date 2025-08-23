@@ -32,9 +32,9 @@
                 <ul class="list-unstyled">
                     <li><a href="{{ route('informasi-publik.index') }}">Informasi Publik (PPID)</a></li>
                     <li><a href="{{ route('publikasi.index') }}">Publikasi & Dokumen</a></li>
-                    <li><a href="{{ route('berita.index') }}">Berita & Pengumuman</a></li>
+                    <li><a href="{{ route('berita.index') }}">Berita Terbaru</a></li>
                     <li><a href="{{ route('galeri.index') }}">Galeri</a></li>
-                    <li><a href="{{ route('layanan-pengaduan.index') }}">Layanan & Pengaduan</a></li>
+                    <li><a href="{{ url('/#services') }}">Layanan & Pengaduan</a></li>
                     <li><a href="{{ route('kontak.index') }}">Kontak Umum</a></li>
                 </ul>
             </div>
