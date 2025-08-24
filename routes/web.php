@@ -62,12 +62,12 @@ Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
 Route::get('/kinerja', [KinerjaPublikController::class, 'index'])->name('kinerja.publik');
 // Modul Tentang Kami
 Route::prefix('tentang-kami')->name('tentang-kami.')->group(function () {
-    Route::get('/', [TentangKamiController::class, 'index'])->name('index');
+    // Route::get('/', [TentangKamiController::class, 'index'])->name('index');
     Route::get('/visi-misi', [TentangKamiController::class, 'visiMisi'])->name('visi-misi');
     Route::get('/struktur-organisasi', [TentangKamiController::class, 'strukturOrganisasi'])->name('struktur-organisasi');
     Route::get('/tugas-fungsi', [TentangKamiController::class, 'tugasFungsi'])->name('tugas-fungsi');
-    Route::get('/profil-pimpinan', [TentangKamiController::class, 'profilPimpinan'])->name('profil-pimpinan');
-    Route::get('/profil-pimpinan/{id}', [TentangKamiController::class, 'detailPimpinan'])->name('detail-pimpinan');
+    Route::get('/profil-pejabat', [TentangKamiController::class, 'profilPejabat'])->name('profil-pejabat');
+    Route::get('/profil-pejabat/{id}', [TentangKamiController::class, 'detailPejabat'])->name('detail-pejabat');
 });
 
 // Rute Modal Pejabat

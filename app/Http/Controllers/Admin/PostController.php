@@ -18,7 +18,7 @@ class PostController extends Controller
         // Otorisasi menggunakan fasad Gate
         Gate::authorize('viewAny', Post::class);
 
-        $categories = Category::ofTypePost()->orderBy('name')->get();
+        $categories = Category::orderBy('name')->get();
         
         $query = Post::with(['category', 'author', 'media', 'comments']);
 
@@ -47,7 +47,7 @@ class PostController extends Controller
         // Otorisasi menggunakan fasad Gate
         Gate::authorize('create', Post::class);
 
-        $categories = Category::ofTypePost()->orderBy('name')->get();
+        $categories = Category::orderBy('name')->get();
         return view('admin.posts.create', compact('categories'));
     }
 
@@ -88,7 +88,7 @@ class PostController extends Controller
         // Otorisasi menggunakan fasad Gate
         Gate::authorize('update', $post);
 
-        $categories = Category::ofTypePost()->orderBy('name')->get();
+        $categories = Category::orderBy('name')->get();
         return view('admin.posts.edit', compact('post', 'categories'));
     }
 

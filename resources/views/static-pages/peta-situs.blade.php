@@ -36,7 +36,7 @@
                                 <li class="sitemap-item"><a href="{{ route('tentang-kami.visi-misi') }}" class="sitemap-link"><i class="bi bi-caret-right-fill"></i> Visi, Misi & Tujuan</a></li>
                                 <li class="sitemap-item"><a href="{{ route('tentang-kami.struktur-organisasi') }}" class="sitemap-link"><i class="bi bi-caret-right-fill"></i> Struktur Organisasi</a></li>
                                 <li class="sitemap-item"><a href="{{ route('tentang-kami.tugas-fungsi') }}" class="sitemap-link"><i class="bi bi-caret-right-fill"></i> Tugas & Fungsi</a></li>
-                                <li class="sitemap-item"><a href="{{ route('tentang-kami.profil-pimpinan') }}" class="sitemap-link"><i class="bi bi-caret-right-fill"></i> Profil Pimpinan</a></li>
+                                <li class="sitemap-item"><a href="{{ route('tentang-kami.profil-pejabat') }}" class="sitemap-link"><i class="bi bi-caret-right-fill"></i> Profil Pejabat</a></li>
                                 <li class="sitemap-item"><a href="{{ route('bidang-sektoral.index') }}" class="sitemap-link"><i class="bi bi-caret-right-fill"></i> Profil Bidang & Unit</a></li>
                                 <li class="sitemap-item"><a href="{{ route('kinerja.publik') }}" class="sitemap-link"><i class="bi bi-caret-right-fill"></i> Capaian Kinerja</a></li>
                             </ul>

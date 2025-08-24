@@ -33,16 +33,11 @@
             </div>
         </div>
         <div class="mt-4 pt-2 border-t border-gray-100 flex flex-wrap gap-2 text-xs">
-            {{-- KODE DIPERBAIKI: Menggunakan key-value pair dan mencari model kategori --}}
-            @forelse(
-                $postCategories as $categoryName => $total)
-                @php
-                    // Cari model Category berdasarkan nama untuk mendapatkan badge_class
-                    $category = \App\Models\Category::where('name', $categoryName)->first();
-                    // Jika model ditemukan, gunakan badge_class. Jika tidak, gunakan default.
-                    $badgeClass = $category ? $category->badge_class : 'px-2 py-1 rounded-full bg-gray-100 text-gray-800 font-semibold';
-                @endphp
-                <span class="{{ $badgeClass }}">{{ $categoryName }}: {{ $total }}</span>
+            @forelse($postCategories as $categoryName => $total)
+                @php $color = getUniqueBadgeColor($categoryName); @endphp
+                <span class="px-2 py-1 rounded-full bg-{{ $color }}-100 text-{{ $color }}-800 font-semibold">
+                    {{ $categoryName }}: {{ $total }}
+                </span>
             @empty
                 <span class="text-gray-400">Belum ada kategori.</span>
             @endforelse
@@ -61,15 +56,9 @@
             </div>
         </div>
         <div class="mt-4 pt-2 border-t border-gray-100 flex flex-wrap gap-2 text-xs">
-            {{-- KODE DIPERBAIKI UNTUK DOKUMEN: Menggunakan key-value pair dan mencari model kategori --}}
             @forelse($dokumenCategories as $categoryName => $total)
-                @php
-                    // Cari model DokumenCategory berdasarkan nama untuk mendapatkan badge_class
-                    $category = \App\Models\DokumenCategory::where('nama', $categoryName)->first();
-                    // Jika model ditemukan, gunakan badge_class. Jika tidak, gunakan default.
-                    $badgeClass = $category ? $category->badge_class : 'px-2 py-1 rounded-full bg-gray-100 text-gray-800 font-semibold';
-                @endphp
-                <span class="{{ $badgeClass }}">{{ $categoryName }}: {{ $total }}</span>
+                @php $color = getUniqueBadgeColor($categoryName); @endphp
+                <span class="px-2 py-1 rounded-full bg-{{ $color }}-100 text-{{ $color }}-800 font-semibold">{{ $categoryName }}: {{ $total }}</span>
             @empty
                 <span class="text-gray-400">Belum ada kategori.</span>
             @endforelse
@@ -106,15 +95,9 @@
             </div>
         </div>
         <div class="mt-4 pt-2 border-t border-gray-100 flex flex-wrap gap-2 text-xs">
-            {{-- KODE DIPERBAIKI UNTUK INFORMASI PUBLIK: Menggunakan key-value pair dan mencari model kategori --}}
             @forelse($infoPublikCategories as $categoryName => $total)
-                @php
-                    // Cari model InformasiPublikCategory berdasarkan nama untuk mendapatkan badge_class
-                    $category = \App\Models\InformasiPublikCategory::where('nama', $categoryName)->first();
-                    // Jika model ditemukan, gunakan badge_class. Jika tidak, gunakan default.
-                    $badgeClass = $category ? $category->badge_class : 'px-2 py-1 rounded-full bg-gray-100 text-gray-800 font-semibold';
-                @endphp
-                <span class="{{ $badgeClass }}">{{ $categoryName }}: {{ $total }}</span>
+                @php $color = getUniqueBadgeColor($categoryName); @endphp
+                <span class="px-2 py-1 rounded-full bg-{{ $color }}-100 text-{{ $color }}-800 font-semibold">{{ $categoryName }}: {{ $total }}</span>
             @empty
                 <span class="text-gray-400">Belum ada kategori.</span>
             @endforelse

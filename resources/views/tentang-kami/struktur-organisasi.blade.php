@@ -97,7 +97,7 @@
                                                 </div>
                                                 <div class="flex-grow-1 overflow-hidden">
                                                     <small class="fw-bold d-block text-nowrap overflow-hidden text-truncate" title="{{ $seksi->kepala->nama }}">
-                                                        {{-- <a href="{{ route('tentang-kami.detail-pimpinan', $seksi->kepala->id) }}">{{ $seksi->kepala->nama }}</a> --}}
+                                                        {{-- <a href="{{ route('tentang-kami.detail-pejabat', $seksi->kepala->id) }}">{{ $seksi->kepala->nama }}</a> --}}
                                                         <a href="#" class="text-decoration-none text-dark card-title mb-1 text-nowrap text-truncate link-pejabat"
                                                             data-bs-toggle="modal"
                                                             data-bs-target="#pejabatModal"
@@ -160,7 +160,7 @@
                                     </div>
                                     <div class="flex-grow-1 overflow-hidden">
                                         <small class="fw-bold d-block text-nowrap overflow-hidden text-truncate" title="{{ $uptd->kepala->nama }}">
-                                            {{-- <a href="{{ route('tentang-kami.detail-pimpinan', $uptd->kepala->id) }}">{{ $uptd->kepala->nama }}</a> --}}
+                                            {{-- <a href="{{ route('tentang-kami.detail-pejabat', $uptd->kepala->id) }}">{{ $uptd->kepala->nama }}</a> --}}
                                             <a href="#" class="text-decoration-none text-dark card-title mb-1 text-nowrap text-truncate link-pejabat"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#pejabatModal"
@@ -196,7 +196,7 @@
                                         </div>
                                         <div class="flex-grow-1 overflow-hidden">
                                             <small class="fw-bold d-block text-nowrap overflow-hidden text-truncate" title="{{ $seksi->kepala->nama }}">
-                                                {{-- <a href="{{ route('tentang-kami.detail-pimpinan', $seksi->kepala->id) }}">{{ $seksi->kepala->nama }}</a> --}}
+                                                {{-- <a href="{{ route('tentang-kami.detail-pejabat', $seksi->kepala->id) }}">{{ $seksi->kepala->nama }}</a> --}}
                                                 <a href="#" class="text-decoration-none text-dark card-title mb-1 text-nowrap text-truncate link-pejabat"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#pejabatModal"
@@ -253,7 +253,7 @@
                                 </div>
                                 <div class="flex-grow-1 overflow-hidden">
                                     <small class="fw-bold d-block text-nowrap overflow-hidden text-truncate" title="{{ $cabang->kepala->nama }}">
-                                        {{-- <a href="{{ route('tentang-kami.detail-pimpinan', $cabang->kepala->id) }}">{{ $cabang->kepala->nama }}</a> --}}
+                                        {{-- <a href="{{ route('tentang-kami.detail-pejabat', $cabang->kepala->id) }}">{{ $cabang->kepala->nama }}</a> --}}
                                         <a href="#" class="text-decoration-none text-dark card-title mb-1 text-nowrap text-truncate link-pejabat"
                                             data-bs-toggle="modal"
                                             data-bs-target="#pejabatModal"
@@ -291,7 +291,7 @@
                                             </div>
                                             <div class="flex-grow-1 overflow-hidden">
                                                 <small class="fw-bold d-block text-nowrap overflow-hidden text-truncate" title="{{ $seksi->kepala->nama }}">
-                                                    {{-- <a href="{{ route('tentang-kami.detail-pimpinan', $seksi->kepala->id) }}">{{ $seksi->kepala->nama }}</a> --}}
+                                                    {{-- <a href="{{ route('tentang-kami.detail-pejabat', $seksi->kepala->id) }}">{{ $seksi->kepala->nama }}</a> --}}
                                                     <a href="#" class="text-decoration-none text-dark card-title mb-1 text-nowrap text-truncate link-pejabat"
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#pejabatModal"

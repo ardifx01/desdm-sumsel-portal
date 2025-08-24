@@ -64,7 +64,7 @@
                 <i class="fas fa-crown fa-3x text-primary mb-3"></i>
                 <h5 class="card-title fw-bold">Profil Pejabat</h5>
                 <p class="card-text text-muted">Kenali para pejabat struktural di lingkungan dinas kami.</p>
-                <a href="{{ url('/tentang-kami/profil-pimpinan') }}" class="btn btn-link">Lihat Detail <i class="fas fa-arrow-right"></i></a>
+                <a href="{{ url('/tentang-kami/profil-pejabat') }}" class="btn btn-link">Lihat Detail <i class="fas fa-arrow-right"></i></a>
             </div>
         </div>
     </div>

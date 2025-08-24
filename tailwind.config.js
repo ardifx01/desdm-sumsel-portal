@@ -11,8 +11,8 @@ export default {
 
     safelist: [
         {
-            // Regex ini mencakup SEMUA warna baru kita
-            pattern: /^(bg|text)-(red|orange|amber|lime|green|teal|cyan|blue|indigo|purple|fuchsia|rose)-(100|800)$/,
+            // Regex ini sekarang berisi SEMUA 16 warna dari palet di helper
+            pattern: /^(bg|text)-(red|blue|green|indigo|purple|orange|pink|teal|cyan|lime|amber|sky|violet|fuchsia|rose|gray)-(100|800)$/,
         },
     ],
 

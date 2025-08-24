@@ -17,7 +17,7 @@ class CategoryController extends Controller
     {
         Gate::authorize('viewAny', Category::class);
         // Tambahkan withCount untuk menghitung jumlah post secara efisien
-        $categories = Category::ofTypePost()->withCount('posts')->orderBy('name')->paginate(10);
+        $categories = Category::withCount('posts')->orderBy('name')->paginate(10);
         return view('admin.categories.index', compact('categories'));
     }
 
@@ -39,7 +39,6 @@ class CategoryController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:100|unique:categories,name',
-            'type' => 'required|in:post,document',
         ], [
             'name.unique' => 'Nama kategori sudah ada.',
         ]);
@@ -47,7 +46,6 @@ class CategoryController extends Controller
         Category::create([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
-            'type' => 'post',
         ]);
 
         return redirect()->route('admin.categories.index')->with('success', 'Kategori berita berhasil ditambahkan!');
@@ -60,9 +58,6 @@ class CategoryController extends Controller
     {
         Gate::authorize('update', $category);
 
-        if ($category->type !== 'post') {
-            abort(404, 'Kategori tidak ditemukan atau bukan tipe berita.');
-        }
         return view('admin.categories.edit', compact('category'));
     }
 
@@ -75,7 +70,6 @@ class CategoryController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:100|unique:categories,name,' . $category->id,
-            'type' => 'required|in:post,document',
         ], [
             'name.unique' => 'Nama kategori sudah ada.',
         ]);
@@ -95,9 +89,6 @@ class CategoryController extends Controller
     {
         Gate::authorize('delete', $category);
 
-        if ($category->type !== 'post') {
-            abort(404, 'Kategori tidak ditemukan atau bukan tipe berita.');
-        }
         $category->delete();
         return redirect()->route('admin.categories.index')->with('success', 'Kategori berita berhasil dihapus!');
     }

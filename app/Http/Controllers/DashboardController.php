@@ -59,7 +59,6 @@ class DashboardController extends Controller
             $data['postCategories'] = DB::table('categories')
                 ->join('posts', 'categories.id', '=', 'posts.category_id')
                 ->select('categories.name', DB::raw('count(posts.id) as total'))
-                ->where('categories.type', 'post')
                 ->groupBy('categories.name')
                 ->pluck('total', 'name');
 
@@ -85,7 +84,6 @@ class DashboardController extends Controller
             $data['postCategories'] = DB::table('categories')
                 ->join('posts', 'categories.id', '=', 'posts.category_id')
                 ->select('categories.name', DB::raw('count(posts.id) as total'))
-                ->where('categories.type', 'post')
                 ->groupBy('categories.name')
                 ->pluck('total', 'name');
 

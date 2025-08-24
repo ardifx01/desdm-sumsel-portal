@@ -42,9 +42,9 @@
         <div class="col-md-6 mb-4">
             <div class="card h-100 pejabat-card">
                 <div class="card-body">
-                    <h5 class="card-title text-primary">Profil Pimpinan</h5>
-                    <p class="card-text">Kenali para pemimpin dan pejabat di lingkungan dinas kami.</p>
-                    <a href="{{ route('tentang-kami.profil-pimpinan') }}" class="btn btn-sm btn-outline-primary">Lihat Detail</a>
+                    <h5 class="card-title text-primary">Profil Pejabat</h5>
+                    <p class="card-text">Kenali para pejabat di lingkungan dinas kami.</p>
+                    <a href="{{ route('tentang-kami.profil-pejabat') }}" class="btn btn-sm btn-outline-primary">Lihat Detail</a>
                 </div>
             </div>
         </div>

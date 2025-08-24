@@ -44,8 +44,8 @@
         @empty
             <div class="col-12 text-center py-5">
                 <i class="bi bi-person-x fs-1 text-muted"></i>
-                <h4 class="mt-3">Data Pimpinan Belum Tersedia</h4>
-                <p class="text-muted">Saat ini belum ada data pimpinan yang dapat ditampilkan.</p>
+                <h4 class="mt-3">Data Pejabat Belum Tersedia</h4>
+                <p class="text-muted">Saat ini belum ada data pejabat yang dapat ditampilkan.</p>
             </div>
         @endforelse
     </div>

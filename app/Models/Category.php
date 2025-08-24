@@ -27,11 +27,6 @@ class Category extends Model
         return $this->hasMany(Post::class, 'category_id');
     }
 
-    public function scopeOfTypePost($query)
-    {
-        return $query->where('type', 'post');
-    }
-
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

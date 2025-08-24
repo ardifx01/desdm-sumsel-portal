@@ -11,13 +11,13 @@ class BeritaController extends Controller
 {
     public function index(Request $request)
     {
-        $categories = Category::ofTypePost()->get();
+        $categories = Category::get();
         $query = Post::with(['category', 'author'])->published();
         $title = 'Berita Terbaru';
 
         // Filter berdasarkan kategori (logika asli Anda)
         if ($request->has('kategori') && $request->kategori != 'all') {
-            $category = Category::ofTypePost()->where('slug', $request->kategori)->first();
+            $category = Category::where('slug', $request->kategori)->first();
             if ($category) {
                 $query->where('category_id', $category->id);
                 $title = 'Berita Kategori: ' . $category->name;
