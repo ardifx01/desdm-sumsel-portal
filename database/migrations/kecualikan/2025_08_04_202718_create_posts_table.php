@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('posts', function (Blueprint $table) {
-            $table->increments('id');
+            Schema::create('posts', function (Blueprint $table) {
+            $table->id(); // Menggunakan bigIncrements (id) untuk konsistensi
             $table->string('title');
             $table->string('meta_title')->nullable();
             $table->string('meta_description')->nullable();
@@ -22,14 +22,17 @@ return new class extends Migration
             $table->text('excerpt')->nullable();
             $table->longText('content_html')->nullable();
             $table->string('featured_image_url')->nullable();
-            $table->unsignedInteger('category_id')->nullable();
-            $table->unsignedBigInteger('author_id');
+            
+            // Foreign key untuk kategori
+            $table->foreignId('category_id')->nullable()->constrained('categories')->onDelete('set null');
+            
+            // Foreign key untuk author
+            $table->foreignId('author_id')->constrained('users')->onDelete('cascade');
+            
             $table->enum('status', ['published', 'draft'])->default('draft');
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
-
-            $table->foreign('category_id')->references('id')->on('categories')->onDelete('set null');
-            $table->foreign('author_id')->references('id')->on('users');
+            $table->unsignedBigInteger('hits')->default(0);
+            $table->unsignedBigInteger('share_count')->default(0);
+            $table->timestamps();
         });
     }
 

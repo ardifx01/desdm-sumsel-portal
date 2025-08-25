@@ -8,7 +8,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ url('/') }}">Beranda</a></li>
             {{-- <li class="breadcrumb-item"><a href="{{ route('tentang-kami.index') }}">Tentang Kami</a></li> --}}
-            <li class="breadcrumb-item"><a href="{{ route('tentang-kami.profil-pimpinan') }}">Profil Pimpinan</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('tentang-kami.profil-pejabat') }}">Profil Pejabat</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ $pejabat->nama }}</li>
         </ol>
     </nav>
