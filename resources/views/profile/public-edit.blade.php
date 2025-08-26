@@ -77,21 +77,32 @@
                             {{-- INPUT TERSEMBUNYI UNTUK PENGALIHAN --}}
                             <input type="hidden" name="source" value="public">
 
+                            {{-- Kata Sandi Saat Ini --}}
                             <div class="mb-3">
                                 <label for="current_password" class="form-label">Kata Sandi Saat Ini</label>
-                                <input id="current_password" name="current_password" type="password" class="form-control @error('current_password', 'updatePassword') is-invalid @enderror" autocomplete="current-password">
+                                <x-password-input-bootstrap id="current_password" 
+                                                            name="current_password" 
+                                                            class="{{ $errors->updatePassword->has('current_password') ? 'is-invalid' : '' }}" 
+                                                            autocomplete="current-password" />
                                 @error('current_password', 'updatePassword')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
+                            {{-- Kata Sandi Baru --}}
                             <div class="mb-3">
                                 <label for="password" class="form-label">Kata Sandi Baru</label>
-                                <input id="password" name="password" type="password" class="form-control @error('password', 'updatePassword') is-invalid @enderror" autocomplete="new-password">
+                                <x-password-input-bootstrap id="password" 
+                                                            name="password" 
+                                                            class="{{ $errors->updatePassword->has('password') ? 'is-invalid' : '' }}" 
+                                                            autocomplete="new-password" />
                                 @error('password', 'updatePassword')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
+                            {{-- Konfirmasi Kata Sandi Baru --}}
                             <div class="mb-3">
                                 <label for="password_confirmation" class="form-label">Konfirmasi Kata Sandi Baru</label>
-                                <input id="password_confirmation" name="password_confirmation" type="password" class="form-control" autocomplete="new-password">
+                                <x-password-input-bootstrap id="password_confirmation" 
+                                                            name="password_confirmation" 
+                                                            autocomplete="new-password" />
                             </div>
 
                             <button type="submit" class="btn btn-primary">Simpan Kata Sandi</button>

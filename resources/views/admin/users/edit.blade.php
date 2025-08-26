@@ -52,7 +52,7 @@
                             <div>
                                 <x-input-label for="role" :value="__('Peran')" />
                                 <select name="role" id="role" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
-                                    @foreach(['super_admin', 'ppid_admin', 'editor', 'moderator', 'user'] as $roleValue)
+                                    @foreach(['super_admin', 'ppid_admin', 'editor', 'user'] as $roleValue)
                                         <option value="{{ $roleValue }}" {{ old('role', $user->role) === $roleValue ? 'selected' : '' }}>
                                             {{ ucfirst(str_replace('_', ' ', $roleValue)) }}
                                         </option>
@@ -96,15 +96,15 @@
 
                             {{-- Input Kata Sandi Baru --}}
                             <div>
-                                <x-input-label for="password" :value="__('Kata Sandi Baru')" />
-                                <x-text-input id="password" name="password" type="password" class="mt-1 block w-full" autocomplete="new-password" />
+                                <x-input-label for="password" :value="__('Kata Sandi Baru (Opsional)')" />
+                                <x-password-input id="password" name="password" class="mt-1 block w-full" autocomplete="new-password" />
                                 <x-input-error class="mt-2" :messages="$errors->get('password')" />
                             </div>
     
                             {{-- Input Konfirmasi Kata Sandi --}}
                             <div>
                                 <x-input-label for="password_confirmation" :value="__('Konfirmasi Kata Sandi')" />
-                                <x-text-input id="password_confirmation" name="password_confirmation" type="password" class="mt-1 block w-full" autocomplete="new-password" />
+                                <x-password-input id="password_confirmation" name="password_confirmation" class="mt-1 block w-full" autocomplete="new-password" />
                                 <x-input-error class="mt-2" :messages="$errors->get('password_confirmation')" />
                             </div>
     

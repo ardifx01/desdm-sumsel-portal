@@ -45,15 +45,17 @@
                                 </select>
                             </div>
     
+                            {{-- Kata Sandi --}}
                             <div>
                                 <x-input-label for="password" :value="__('Kata Sandi')" />
-                                <x-text-input id="password" name="password" type="password" class="mt-1 block w-full" required autocomplete="new-password" />
+                                <x-password-input id="password" name="password" class="mt-1 block w-full" required autocomplete="new-password" />
                                 <x-input-error class="mt-2" :messages="$errors->get('password')" />
                             </div>
 
+                            {{-- Konfirmasi Kata Sandi --}}
                             <div>
                                 <x-input-label for="password_confirmation" :value="__('Konfirmasi Kata Sandi')" />
-                                <x-text-input id="password_confirmation" name="password_confirmation" type="password" class="mt-1 block w-full" required autocomplete="new-password" />
+                                <x-password-input id="password_confirmation" name="password_confirmation" class="mt-1 block w-full" required autocomplete="new-password" />
                                 <x-input-error class="mt-2" :messages="$errors->get('password_confirmation')" />
                             </div>
 

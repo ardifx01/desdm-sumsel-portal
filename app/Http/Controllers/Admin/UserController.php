@@ -16,7 +16,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::latest()->paginate(15);
-        $roles = ['super_admin', 'ppid_admin', 'editor', 'moderator', 'user'];
+        $roles = ['super_admin', 'ppid_admin', 'editor', 'user'];
 
         return view('admin.users.index', compact('users', 'roles'));
     }
@@ -26,7 +26,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = ['super_admin', 'ppid_admin', 'editor', 'moderator', 'user'];
+        $roles = ['super_admin', 'ppid_admin', 'editor', 'user'];
         return view('admin.users.create', compact('roles'));
     }
 
@@ -38,7 +38,7 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'role' => 'required|in:super_admin,ppid_admin,editor,moderator,user',
+            'role' => 'required|in:super_admin,ppid_admin,editor,user',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -66,7 +66,7 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
-            'role' => 'required|in:super_admin,ppid_admin,editor,moderator,user',
+            'role' => 'required|in:super_admin,ppid_admin,editor,user',
         ]);
 
         $user->update($request->only('name', 'email', 'role'));
