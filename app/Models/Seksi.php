@@ -9,6 +9,34 @@ use Spatie\Activitylog\LogOptions;
 use App\Models\Traits\CleansHtml;
 use Laravel\Scout\Searchable;
 
+/**
+ * @property int $id
+ * @property int $bidang_id
+ * @property string $nama_seksi
+ * @property string|null $tugas
+ * @property int $urutan
+ * @property int|null $pejabat_kepala_id
+ * @property bool $is_active
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Activitylog\Models\Activity> $activities
+ * @property-read int|null $activities_count
+ * @property-read \App\Models\Bidang $bidang
+ * @property-read \App\Models\Pejabat|null $kepala
+ * @method static \Illuminate\Database\Eloquent\Builder|Seksi newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Seksi newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Seksi query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Seksi whereBidangId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seksi whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seksi whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seksi whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seksi whereNamaSeksi($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seksi wherePejabatKepalaId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seksi whereTugas($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seksi whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seksi whereUrutan($value)
+ * @mixin \Eloquent
+ */
 class Seksi extends Model
 {
     use HasFactory, LogsActivity, CleansHtml, Searchable;

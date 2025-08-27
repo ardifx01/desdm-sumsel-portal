@@ -208,6 +208,6 @@ return [
     
     'database' => [
         'driver' => 'database',
-        'indexer' => 'fulltext', // <-- UBAH INI (atau tambahkan jika tidak ada)
+        'indexer' => 'fulltext', 
     ],
 ];

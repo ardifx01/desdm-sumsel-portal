@@ -4,6 +4,7 @@
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 if (! function_exists('highlight')) {
     /**
@@ -71,5 +72,60 @@ if (! function_exists('getUniqueBadgeColor')) {
 
         // Fallback jika ada kategori baru yang belum dipetakan
         return 'gray';
+    }
+}
+
+if (! function_exists('generate_excerpt')) {
+    /**
+     * Membuat potongan teks (excerpt) di sekitar kata kunci yang ditemukan.
+     *
+     * @param string|null $content Teks lengkap.
+     * @param string|null $keyword Kata kunci yang dicari.
+     * @param int $radius Jumlah karakter sebelum dan sesudah kata kunci.
+     * @param int $totalLength Panjang total fallback jika kata kunci tidak ditemukan.
+     * @return string Potongan teks yang relevan.
+     */
+    function generate_excerpt(?string $content, ?string $keyword, int $radius = 100, int $totalLength = 150): string
+    {
+        if (is_null($content)) {
+            return '';
+        }
+
+        // Hapus tag HTML untuk mencegah potongan teks yang rusak
+        $strippedContent = strip_tags($content);
+
+        // Jika tidak ada kata kunci, atau kata kunci kosong, gunakan Str::limit standar
+        if (is_null($keyword) || trim($keyword) === '') {
+            return Str::limit($strippedContent, $totalLength);
+        }
+
+        // Cari posisi kata kunci (case-insensitive)
+        $pos = mb_stripos($strippedContent, $keyword);
+
+        // Jika kata kunci tidak ditemukan di konten, gunakan Str::limit standar
+        if ($pos === false) {
+            return Str::limit($strippedContent, $totalLength);
+        }
+
+        // Hitung titik awal untuk potongan teks
+        $start = max(0, $pos - $radius);
+
+        // Hitung panjang potongan teks
+        $length = mb_strlen($keyword) + ($radius * 2);
+
+        // Ambil potongan teks dari string asli
+        $excerpt = mb_substr($strippedContent, $start, $length);
+
+        // Tambahkan elipsis "..." di awal jika potongan tidak dimulai dari awal teks
+        if ($start > 0) {
+            $excerpt = '... ' . $excerpt;
+        }
+
+        // Tambahkan elipsis "..." di akhir jika potongan tidak berakhir di akhir teks
+        if (($start + $length) < mb_strlen($strippedContent)) {
+            $excerpt = $excerpt . ' ...';
+        }
+
+        return $excerpt;
     }
 }

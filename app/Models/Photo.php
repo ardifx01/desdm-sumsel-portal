@@ -9,6 +9,34 @@ use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Casts\Attribute; // <-- TAMBAHKAN BARIS INI
 use Illuminate\Support\Facades\Storage; 
 
+/**
+ * @property int $id
+ * @property int $album_id
+ * @property string|null $judul
+ * @property string|null $deskripsi
+ * @property string $file_path
+ * @property string $file_name
+ * @property int $is_active
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Activitylog\Models\Activity> $activities
+ * @property-read int|null $activities_count
+ * @property-read mixed $admin_thumb_url
+ * @property-read \App\Models\Album $album
+ * @method static \Illuminate\Database\Eloquent\Builder|Photo newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Photo newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Photo query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Photo whereAlbumId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Photo whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Photo whereDeskripsi($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Photo whereFileName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Photo whereFilePath($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Photo whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Photo whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Photo whereJudul($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Photo whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Photo extends Model
 {
     use HasFactory, LogsActivity;

@@ -8,6 +8,26 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 use App\Models\Traits\CleansHtml;
 
+/**
+ * @property int $id
+ * @property string $title
+ * @property string $slug
+ * @property string $content
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Activitylog\Models\Activity> $activities
+ * @property-read int|null $activities_count
+ * @method static \Illuminate\Database\Eloquent\Builder|StaticPage newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|StaticPage newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|StaticPage query()
+ * @method static \Illuminate\Database\Eloquent\Builder|StaticPage whereContent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|StaticPage whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|StaticPage whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|StaticPage whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|StaticPage whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|StaticPage whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class StaticPage extends Model
 {
     use HasFactory, LogsActivity, CleansHtml;

@@ -9,112 +9,64 @@ use App\Models\InformasiPublik;
 use App\Models\Bidang;
 use App\Models\Seksi;
 use App\Models\Pejabat;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 class SearchController extends Controller
 {
-    /**
-     * Menangani permintaan pencarian global menggunakan Laravel Scout.
-     */
     public function index(Request $request)
     {
-        // Validasi input pencarian
         $request->validate(['q' => 'nullable|string|min:3']);
         $query = $request->input('q');
         
         $results = collect();
 
-        // Lakukan pencarian hanya jika query valid
         if ($query) {
+            // Kita akan melewati Scout dan menggunakan FULLTEXT index secara manual
+            // untuk mendapatkan ID hasil pencarian yang relevan.
 
-            // Pencarian di Post (Berita)
-            $posts = Post::search($query)
-                         ->where('status', 'published') // Filter tambahan setelah pencarian
-                         ->get()
-                         ->map(function ($item) {
-                             return [
-                                 'type' => 'post',
-                                 'title' => $item->title,
-                                 'content' => $item->content_html,
-                                 'category_name' => $item->category->name ?? 'Tanpa Kategori',
-                                 'slug' => $item->slug,
-                             ];
-                         });
+            $postIds = Post::query()
+                ->whereRaw("MATCH(title, excerpt, content_html) AGAINST(? IN BOOLEAN MODE)", [$query])
+                ->where('status', 'published')
+                ->pluck('id');
+            $posts = Post::whereIn('id', $postIds)->with('category')->get();
 
-            // Pencarian di Dokumen
-            $dokumen = Dokumen::search($query)
-                             ->where('is_active', true)
-                             ->get()
-                             ->map(function ($item) {
-                                 return [
-                                     'type' => 'dokumen',
-                                     'title' => $item->judul,
-                                     'content' => $item->deskripsi,
-                                     'category_name' => $item->category->name ?? 'Tanpa Kategori',
-                                     'slug' => $item->slug,
-                                 ];
-                             });
+            $dokumenIds = Dokumen::query()
+                ->whereRaw("MATCH(judul, deskripsi) AGAINST(? IN BOOLEAN MODE)", [$query])
+                ->where('is_active', true)
+                ->pluck('id');
+            $dokumen = Dokumen::whereIn('id', $dokumenIds)->with('category')->get();
 
-            // Pencarian di Informasi Publik
-            $informasiPublik = InformasiPublik::search($query)
-                                           ->where('is_active', true)
-                                           ->get()
-                                           ->map(function ($item) {
-                                               return [
-                                                   'type' => 'informasi_publik',
-                                                   'title' => $item->judul,
-                                                   'content' => $item->konten,
-                                                   'category_name' => $item->category->name ?? 'Tanpa Kategori',
-                                                   'slug' => $item->slug,
-                                               ];
-                                           });
+            $informasiPublikIds = InformasiPublik::query()
+                ->whereRaw("MATCH(judul, konten) AGAINST(? IN BOOLEAN MODE)", [$query])
+                ->where('is_active', true)
+                ->pluck('id');
+            $informasiPublik = InformasiPublik::whereIn('id', $informasiPublikIds)->with('category')->get();
 
-            // Pencarian di Bidang
-            $bidangs = Bidang::search($query)
-                            ->where('is_active', true)
-                            ->get()
-                            ->map(function ($item) {
-                                return [
-                                    'type' => 'bidang',
-                                    'title' => $item->nama,
-                                    'content' => $item->tupoksi,
-                                    'slug' => $item->slug,
-                                ];
-                            });
+            $bidangIds = Bidang::query()
+                ->whereRaw("MATCH(nama, tupoksi) AGAINST(? IN BOOLEAN MODE)", [$query])
+                ->where('is_active', true)
+                ->pluck('id');
+            $bidangs = Bidang::whereIn('id', $bidangIds)->get();
 
-            // Pencarian di Seksi
-            $seksis = Seksi::search($query)
-                          ->where('is_active', true)
-                          ->get()
-                          ->map(function ($item) {
-                              return [
-                                  'type' => 'seksi',
-                                  'title' => $item->nama_seksi,
-                                  'content' => $item->tugas,
-                                  'parent_slug' => $item->bidang->slug ?? '#',
-                              ];
-                          });
+            $seksiIds = Seksi::query()
+                ->whereRaw("MATCH(nama_seksi, tugas) AGAINST(? IN BOOLEAN MODE)", [$query])
+                ->where('is_active', true)
+                ->pluck('id');
+            $seksis = Seksi::whereIn('id', $seksiIds)->with('bidang')->get();
 
-            // Pencarian di Pejabat
-            $pejabats = Pejabat::search($query)
-                              ->where('is_active', true)
-                              ->get()
-                              ->map(function ($item) {
-                                  return [
-                                      'type' => 'pejabat',
-                                      'title' => $item->nama,
-                                      'content' => $item->jabatan,
-                                      'id' => $item->id,
-                                  ];
-                              });
+            $pejabatIds = Pejabat::query()
+                ->whereRaw("MATCH(nama, jabatan) AGAINST(? IN BOOLEAN MODE)", [$query])
+                ->where('is_active', true)
+                ->pluck('id');
+            $pejabats = Pejabat::whereIn('id', $pejabatIds)->get();
 
-            // Menggabungkan semua hasil ke dalam satu koleksi untuk di-pass ke view
-            $results->push(['label' => 'Berita', 'items' => $posts, 'route_name' => 'berita.show', 'has_category' => true]);
-            $results->push(['label' => 'Publikasi & Dokumen', 'items' => $dokumen, 'route_name' => 'publikasi.show', 'has_category' => true]);
-            $results->push(['label' => 'Informasi Publik', 'items' => $informasiPublik, 'route_name' => 'informasi-publik.show', 'has_category' => true]);
-            $results->push(['label' => 'Bidang Sektoral', 'items' => $bidangs, 'route_name' => 'bidang-sektoral.show']);
-            $results->push(['label' => 'Seksi Bidang', 'items' => $seksis, 'route_name' => 'bidang-sektoral.show', 'param_is_parent' => true]);
-            $results->push(['label' => 'Pejabat Dinas', 'items' => $pejabats, 'route_name' => 'tentang-kami.detail-pimpinan']);
+            // Menggabungkan semua hasil
+            $results->push(['label' => 'Berita', 'items' => $posts]);
+            $results->push(['label' => 'Publikasi & Dokumen', 'items' => $dokumen]);
+            $results->push(['label' => 'Informasi Publik', 'items' => $informasiPublik]);
+            $results->push(['label' => 'Bidang Sektoral', 'items' => $bidangs]);
+            $results->push(['label' => 'Seksi Bidang', 'items' => $seksis]);
+            $results->push(['label' => 'Pejabat Dinas', 'items' => $pejabats]);
         }
 
         return view('search.index', compact('query', 'results'));

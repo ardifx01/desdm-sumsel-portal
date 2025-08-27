@@ -18,6 +18,38 @@ use Spatie\Image\Enums\Fit;
 use App\Models\Traits\CleansHtml;
 use Laravel\Scout\Searchable;
 
+/**
+ * @property int $id
+ * @property string $nama
+ * @property string $jabatan
+ * @property string|null $nip
+ * @property string|null $deskripsi_singkat
+ * @property string|null $foto
+ * @property int $urutan
+ * @property bool $is_active
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Activitylog\Models\Activity> $activities
+ * @property-read int|null $activities_count
+ * @property-read mixed $foto_alt_text
+ * @property-read mixed $foto_url
+ * @property-read \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection<int, Media> $media
+ * @property-read int|null $media_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Pejabat newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Pejabat newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Pejabat query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Pejabat whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Pejabat whereDeskripsiSingkat($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Pejabat whereFoto($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Pejabat whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Pejabat whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Pejabat whereJabatan($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Pejabat whereNama($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Pejabat whereNip($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Pejabat whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Pejabat whereUrutan($value)
+ * @mixin \Eloquent
+ */
 class Pejabat extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia, LogsActivity, CleansHtml, Searchable;

@@ -9,38 +9,53 @@ use App\Models\PengajuanKeberatan;
 use App\Models\DokumenCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class InformasiPublikController extends Controller
 {
-    public function index(Request $request)
-    {
-        $categories = InformasiPublikCategory::all(); // Ambil semua kategori
+public function index(Request $request)
+{
+    // Mengambil kategori tetap diperlukan untuk dropdown filter di view.
+    // Ini bisa di-cache untuk performa lebih baik jika kategori jarang berubah.
+    $categories = Cache::remember('informasi_publik_categories', 60*60, function () {
+        return InformasiPublikCategory::orderBy('nama')->get();
+    });
 
-        $query = InformasiPublik::with('category')
+    $search = $request->q;
+
+    // Mulai query. Kita akan gunakan Scout jika ada input pencarian.
+    if ($search) {
+        // PENCARIAN MENGGUNAKAN LARAVEL SCOUT
+        $query = InformasiPublik::search($search)
+                                ->where('is_active', true); // Scope untuk data yang aktif saja
+    } else {
+        // QUERY ELOQUENT STANDAR (JIKA TIDAK ADA PENCARIAN)
+        $query = InformasiPublik::query()
                                 ->where('is_active', true)
                                 ->orderBy('tanggal_publikasi', 'desc');
-
-        // Filter berdasarkan kategori (jika ada parameter 'kategori' di URL)
-        if ($request->has('kategori') && $request->kategori != 'all') {
-            $category = InformasiPublikCategory::where('slug', $request->kategori)->first();
-            if ($category) {
-                $query->where('category_id', $category->id);
-            }
-        }
-
-        // Pencarian berdasarkan judul atau konten
-        if ($request->has('q') && $request->q) {
-            $search = $request->q;
-            $query->where(function ($q) use ($search) {
-                $q->where('judul', 'like', '%' . $search . '%')
-                  ->orWhere('konten', 'like', '%' . $search . '%');
-            });
-        }
-
-        $informasiPublik = $query->paginate(10); // Paginate 10 item per halaman
-
-        return view('informasi-publik.index', compact('informasiPublik', 'categories'));
     }
+
+    // Terapkan filter kategori. Bekerja untuk Scout dan Eloquent biasa.
+    // OPTIMASI: Menggunakan whereHas untuk menghindari query tambahan.
+    if ($request->filled('kategori') && $request->kategori != 'all') {
+        $slug = $request->kategori;
+        $query->whereHas('category', function ($q) use ($slug) {
+            $q->where('slug', $slug);
+        });
+    }
+
+    // Eager load relasi hanya jika ini adalah query Eloquent.
+    // Scout menangani relasi secara berbeda, biasanya relasi sudah dimuat jika di-index.
+    // Namun untuk konsistensi, kita muat setelah paginasi nanti.
+    if (!$search) {
+        $query->with('category');
+    }
+
+    // Eksekusi query dengan paginasi
+    $informasiPublik = $query->paginate(10)->withQueryString();
+
+    return view('informasi-publik.index', compact('informasiPublik', 'categories'));
+}
 
     public function show($slug)
     {

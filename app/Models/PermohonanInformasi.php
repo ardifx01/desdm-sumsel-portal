@@ -8,6 +8,45 @@ use Illuminate\Support\Carbon; // <-- Tambahkan ini
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property string $jenis_pemohon
+ * @property string|null $pekerjaan_pemohon
+ * @property string|null $identitas_pemohon
+ * @property string $nomor_registrasi
+ * @property string $rincian_informasi
+ * @property string|null $tujuan_penggunaan_informasi
+ * @property string $cara_mendapatkan_informasi
+ * @property string|null $cara_mendapatkan_salinan
+ * @property string $status
+ * @property string|null $catatan_admin
+ * @property Carbon $tanggal_permohonan
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Activitylog\Models\Activity> $activities
+ * @property-read int|null $activities_count
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|PermohonanInformasi newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|PermohonanInformasi newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|PermohonanInformasi query()
+ * @method static \Illuminate\Database\Eloquent\Builder|PermohonanInformasi whereCaraMendapatkanInformasi($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PermohonanInformasi whereCaraMendapatkanSalinan($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PermohonanInformasi whereCatatanAdmin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PermohonanInformasi whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PermohonanInformasi whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PermohonanInformasi whereIdentitasPemohon($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PermohonanInformasi whereJenisPemohon($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PermohonanInformasi whereNomorRegistrasi($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PermohonanInformasi wherePekerjaanPemohon($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PermohonanInformasi whereRincianInformasi($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PermohonanInformasi whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PermohonanInformasi whereTanggalPermohonan($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PermohonanInformasi whereTujuanPenggunaanInformasi($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PermohonanInformasi whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PermohonanInformasi whereUserId($value)
+ * @mixin \Eloquent
+ */
 class PermohonanInformasi extends Model
 {
     use HasFactory, LogsActivity;

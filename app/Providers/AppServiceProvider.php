@@ -8,6 +8,12 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use App\Models\InformasiPublikCategory;
+use App\Observers\InformasiPublikCategoryObserver;
+use App\Models\DokumenCategory;
+use App\Observers\DokumenCategoryObserver;
+use App\Models\Category;
+use App\Observers\CategoryObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -49,5 +55,9 @@ class AppServiceProvider extends ServiceProvider
             View::share('settings', collect());
         }
         // --- Akhir Kode Pengaturan ---
+
+        InformasiPublikCategory::observe(InformasiPublikCategoryObserver::class);
+        DokumenCategory::observe(DokumenCategoryObserver::class);
+        Category::observe(CategoryObserver::class);
     }
 }

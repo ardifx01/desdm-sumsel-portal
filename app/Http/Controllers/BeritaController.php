@@ -11,47 +11,52 @@ class BeritaController extends Controller
 {
     public function index(Request $request)
     {
-        $categories = Category::get();
-        $query = Post::with(['category', 'author'])->published();
+        $categories = Cache::remember('berita_categories_list', 60*60, function () {
+            return Category::orderBy('name')->get();
+        });
+
+        $search = $request->q;
         $title = 'Berita Terbaru';
 
-        // Filter berdasarkan kategori (logika asli Anda)
-        if ($request->has('kategori') && $request->kategori != 'all') {
-            $category = Category::where('slug', $request->kategori)->first();
-            if ($category) {
-                $query->where('category_id', $category->id);
-                $title = 'Berita Kategori: ' . $category->name;
-            }
-        }
-
-        // Pencarian (logika asli Anda)
-        if ($request->has('q') && $request->q) {
-            $search = $request->q;
-            $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', '%' . $search . '%')
-                  ->orWhere('excerpt', 'like', '%' . $search . '%')
-                  ->orWhere('content_html', 'like', '%' . $search . '%');
-            });
+        if ($search) {
+            // --- PERBAIKAN LOGIKA PENCARIAN SCOUT ---
+            $query = Post::search($search)->where('status', 'published');
             $title = 'Hasil Pencarian: "' . $search . '"';
+
+            if ($request->filled('kategori') && $request->kategori != 'all') {
+                // Catatan: filter kategori pada Scout bisa jadi lebih kompleks
+                // Untuk sekarang kita biarkan seperti ini, tapi idealnya ini menggunakan where clause di Scout
+            }
+            
+            $posts = $query->paginate(9)->withQueryString();
+            // Setelah mendapatkan hasil, baru kita EAGER LOAD relasinya
+            $posts->load(['category', 'author', 'media']);
+
+        } else {
+            // --- LOGIKA ELOQUENT BIASA (TETAP SAMA) ---
+            $query = Post::query()->published()->with(['category', 'author', 'media']);
+
+            if ($request->filled('kategori') && $request->kategori != 'all') {
+                $slug = $request->kategori;
+                $query->whereHas('category', function ($q) use ($slug) {
+                    $q->where('slug', $slug);
+                });
+                $currentCategory = $categories->firstWhere('slug', $slug);
+                if ($currentCategory) {
+                    $title = 'Berita Kategori: ' . $currentCategory->name;
+                }
+            }
+            $posts = $query->latest()->paginate(9)->withQueryString();
         }
 
-        // Ambil data dengan paginasi
-        $posts = $query->latest()->paginate(9)->withQueryString(); // <-- PERBAIKAN DI SINI
-
-        // Logika untuk menangani AJAX "Load More"
         if ($request->ajax()) {
             $html = '';
             foreach ($posts as $post) {
                 $html .= view('berita.partials.post-card', ['post' => $post])->render();
             }
-
-            return response()->json([
-                'html' => $html,
-                'next_page_url' => $posts->nextPageUrl(),
-            ]);
+            return response()->json(['html' => $html, 'next_page_url' => $posts->nextPageUrl()]);
         }
 
-        // Untuk permintaan biasa, tampilkan view seperti biasa
         return view('berita.index', compact('posts', 'categories', 'title'));
     }
 

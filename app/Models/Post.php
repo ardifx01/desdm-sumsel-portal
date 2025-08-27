@@ -17,6 +17,53 @@ use Spatie\Image\Enums\Fit;
 use App\Models\Traits\CleansHtml;
 use Laravel\Scout\Searchable;
 
+/**
+ * @property int $id
+ * @property string $title
+ * @property string|null $meta_title
+ * @property string|null $meta_description
+ * @property string $slug
+ * @property string|null $excerpt
+ * @property string|null $content_html
+ * @property string|null $featured_image_url
+ * @property int|null $category_id
+ * @property int $author_id
+ * @property string $status
+ * @property int $hits
+ * @property int $share_count
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Activitylog\Models\Activity> $activities
+ * @property-read int|null $activities_count
+ * @property-read \App\Models\User|null $author
+ * @property-read \App\Models\Category|null $category
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Comment> $comments
+ * @property-read int|null $comments_count
+ * @property-read \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection<int, Media> $media
+ * @property-read int|null $media_count
+ * @property-read mixed $universal_preview_url
+ * @property-read mixed $universal_thumb_url
+ * @method static \Illuminate\Database\Eloquent\Builder|Post newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Post newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Post published()
+ * @method static \Illuminate\Database\Eloquent\Builder|Post query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Post whereAuthorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Post whereCategoryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Post whereContentHtml($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Post whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Post whereExcerpt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Post whereFeaturedImageUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Post whereHits($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Post whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Post whereMetaDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Post whereMetaTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Post whereShareCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Post whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Post whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Post whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Post whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Post extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia, LogsActivity, CleansHtml, Searchable;

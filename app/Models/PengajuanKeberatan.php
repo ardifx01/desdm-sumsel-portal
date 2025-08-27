@@ -7,6 +7,37 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property string $nomor_registrasi_permohonan
+ * @property string $alasan_keberatan
+ * @property string $jenis_keberatan
+ * @property string|null $kasus_posisi
+ * @property string $status
+ * @property string|null $catatan_admin
+ * @property \Illuminate\Support\Carbon $tanggal_pengajuan
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Activitylog\Models\Activity> $activities
+ * @property-read int|null $activities_count
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|PengajuanKeberatan newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|PengajuanKeberatan newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|PengajuanKeberatan query()
+ * @method static \Illuminate\Database\Eloquent\Builder|PengajuanKeberatan whereAlasanKeberatan($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PengajuanKeberatan whereCatatanAdmin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PengajuanKeberatan whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PengajuanKeberatan whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PengajuanKeberatan whereJenisKeberatan($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PengajuanKeberatan whereKasusPosisi($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PengajuanKeberatan whereNomorRegistrasiPermohonan($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PengajuanKeberatan whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PengajuanKeberatan whereTanggalPengajuan($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PengajuanKeberatan whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PengajuanKeberatan whereUserId($value)
+ * @mixin \Eloquent
+ */
 class PengajuanKeberatan extends Model
 {
     use HasFactory, LogsActivity;

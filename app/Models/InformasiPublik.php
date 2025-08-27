@@ -11,6 +11,44 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Traits\CleansHtml;
 use Laravel\Scout\Searchable;
 
+/**
+ * @property int $id
+ * @property int $category_id
+ * @property string $judul
+ * @property string $slug
+ * @property string $konten
+ * @property string|null $file_path
+ * @property string|null $file_nama
+ * @property string|null $file_tipe
+ * @property string|null $thumbnail
+ * @property \Illuminate\Support\Carbon|null $tanggal_publikasi
+ * @property int $hits
+ * @property bool $is_active
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Activitylog\Models\Activity> $activities
+ * @property-read int|null $activities_count
+ * @property-read \App\Models\InformasiPublikCategory $category
+ * @property-read mixed $thumbnail_url
+ * @method static \Illuminate\Database\Eloquent\Builder|InformasiPublik newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|InformasiPublik newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|InformasiPublik query()
+ * @method static \Illuminate\Database\Eloquent\Builder|InformasiPublik whereCategoryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|InformasiPublik whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|InformasiPublik whereFileNama($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|InformasiPublik whereFilePath($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|InformasiPublik whereFileTipe($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|InformasiPublik whereHits($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|InformasiPublik whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|InformasiPublik whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|InformasiPublik whereJudul($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|InformasiPublik whereKonten($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|InformasiPublik whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|InformasiPublik whereTanggalPublikasi($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|InformasiPublik whereThumbnail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|InformasiPublik whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class InformasiPublik extends Model
 {
     use HasFactory, LogsActivity, CleansHtml, Searchable;

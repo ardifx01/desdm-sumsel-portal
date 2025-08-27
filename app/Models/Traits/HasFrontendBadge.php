@@ -2,40 +2,58 @@
 
 namespace App\Models\Traits;
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Str;
 
 trait HasFrontendBadge
 {
+    protected static ?array $sortedCategoryIdsCache = null;
+
     /**
-     * Mendapatkan kelas CSS badge Bootstrap untuk frontend secara dinamis.
+     * Membuat kunci cache yang unik berdasarkan nama model.
+     * Contoh: DokumenCategory -> 'sorted_dokumen_category_ids'
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return string
      */
+    protected function getCacheKeyForSorting(): string
+    {
+        // Membuat nama yang unik dari nama class model ini
+        $baseName = Str::snake(class_basename(static::class)); 
+        return "sorted_{$baseName}_ids";
+    }
+
     public function frontendBadgeClass(): Attribute
     {
         return Attribute::make(
             get: function () {
-                // Palet warna Bootstrap yang lebih beragam
                 $colors = [
-                    'badge-primary',
-                    'badge-secondary',
-                    'badge-success',
-                    'badge-danger',
-                    'badge-warning',
-                    'badge-info',
-                    'badge-dark',
-                ];
+                                'bg-primary',
+                                'bg-secondary',
+                                'bg-success',
+                                'bg-danger text-white', // Tambahkan text-white agar terbaca
+                                'bg-warning text-dark', // Tambahkan text-dark agar terbaca
+                                'bg-info text-dark',   // Tambahkan text-dark agar terbaca
+                                'bg-dark text-white',  // Tambahkan text-white agar terbaca
+                            ];
 
-                // Dapatkan daftar semua kategori DARI MODEL SAAT INI, diurutkan berdasarkan ID
-                $sortedCategoryIds = self::query()
-                                        ->orderBy('id')
-                                        ->pluck('id')
-                                        ->all();
+                // Dapatkan kunci cache yang unik untuk model ini
+                $cacheKey = $this->getCacheKeyForSorting();
 
-                // Cari posisi kategori saat ini dalam daftar yang sudah diurutkan
-                $key = array_search($this->id, $sortedCategoryIds);
+                // Cek static cache per-request dulu
+                if (is_null(self::$sortedCategoryIdsCache)) {
+                    // Jika kosong, baru cek cache utama (per aplikasi)
+                    self::$sortedCategoryIdsCache = Cache::rememberForever($cacheKey, function () {
+                        return self::query()->orderBy('id')->pluck('id')->all();
+                    });
+                }
 
-                // Pilih kelas warna berdasarkan posisi
+                $key = array_search($this->id, self::$sortedCategoryIdsCache);
+
+                if ($key === false) {
+                    return 'badge badge-light';
+                }
+
                 $selectedColor = $colors[$key % count($colors)];
 
                 return "badge {$selectedColor}";

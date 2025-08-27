@@ -9,6 +9,34 @@ use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Casts\Attribute; // <-- TAMBAHKAN BARIS INI
 use Illuminate\Support\Facades\Storage; 
 
+/**
+ * @property int $id
+ * @property string $nama
+ * @property string $slug
+ * @property string|null $deskripsi
+ * @property string|null $thumbnail
+ * @property int $is_active
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Activitylog\Models\Activity> $activities
+ * @property-read int|null $activities_count
+ * @property-read mixed $admin_thumb_url
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Photo> $photos
+ * @property-read int|null $photos_count
+ * @property-read mixed $thumbnail_url
+ * @method static \Illuminate\Database\Eloquent\Builder|Album newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Album newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Album query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Album whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Album whereDeskripsi($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Album whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Album whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Album whereNama($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Album whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Album whereThumbnail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Album whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Album extends Model
 {
     use HasFactory, LogsActivity;
