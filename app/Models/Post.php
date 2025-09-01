@@ -130,6 +130,11 @@ class Post extends Model implements HasMedia
     // Konversi untuk gambar BARU yang diunggah via Spatie
     public function registerMediaConversions(?Media $media = null): void
     {
+        $this->addMediaConversion('full-webp')
+          ->fit(Fit::Max, 1200, 1200) // <-- KUNCI: Menjaga rasio aspek asli
+          ->format('webp')
+          ->quality(85)
+          ->nonQueued();
         $this->addMediaConversion('preview')->fit(Fit::Crop, 800, 500)->quality(85)->sharpen(10)->withResponsiveImages()->nonQueued();
         $this->addMediaConversion('thumb')->fit(Fit::Crop, 400, 250)->quality(80)->sharpen(10)->nonQueued();
         $this->addMediaConversion('webp')->format('webp')->nonQueued();
@@ -137,60 +142,58 @@ class Post extends Model implements HasMedia
 
     // --- ACCESSOR YANG DIPERBAIKI DENGAN LOGIKA ANTI-GAGAL ---
 
-    protected function universalThumbUrl(): Attribute
-    {
-        return Attribute::make(
-            get: function () {
-                // PERBAIKAN KUNCI: Cek apakah symlink ada. Jika tidak, langsung fallback.
-                if (! file_exists(public_path('storage'))) {
-                    return 'https://placehold.co/400x250/E5E7EB/6B7280?text=No+Symlink';
-                }
-
-                // Prioritas 1: Gambar BARU dari Spatie Media Library
-                if ($this->hasMedia('featured_image')) {
-                    $media = $this->getFirstMedia('featured_image');
-                    if ($media && file_exists($media->getPath('thumb'))) {
-                        return $media->getUrl('thumb');
-                    }
-                }
-
-                // Prioritas 2: Gambar LAMA dari kolom featured_image_url
-                $legacyImageUrl = $this->attributes['featured_image_url'] ?? null;
-                if ($legacyImageUrl && Storage::disk('public')->exists($legacyImageUrl)) {
-                    return asset('storage/' . $legacyImageUrl);
-                }
-
-                // Fallback jika tidak ada data sama sekali
-                return 'https://placehold.co/400x250/E5E7EB/6B7280?text=No+Image';
+protected function universalThumbUrl(): Attribute
+{
+    return Attribute::make(
+        get: function () {
+            if (! file_exists(public_path('storage'))) {
+                return 'https://placehold.co/400x250/E5E7EB/6B7280?text=No+Symlink';
             }
-        );
-    }
-    
-    protected function universalPreviewUrl(): Attribute
-    {
-        return Attribute::make(
-            get: function () {
-                // PERBAIKAN KUNCI: Cek apakah symlink ada.
-                if (! file_exists(public_path('storage'))) {
-                    return null; // Di halaman detail, kita tidak tampilkan apa-apa jika symlink rusak
-                }
 
-                if ($this->hasMedia('featured_image')) {
-                    $media = $this->getFirstMedia('featured_image');
-                    if ($media && file_exists($media->getPath('preview'))) {
-                        return $media->getUrl('preview');
-                    }
-                }
-                
-                $legacyImageUrl = $this->attributes['featured_image_url'] ?? null;
-                if ($legacyImageUrl && Storage::disk('public')->exists($legacyImageUrl)) {
-                    return asset('storage/' . $legacyImageUrl);
-                }
-                
+            // Prioritas 1: Sistem Baru (Spatie Media Library)
+            if ($this->hasMedia('featured_image')) {
+                // Biarkan Spatie yang menangani: jika thumb tidak ada, ia akan mengembalikan URL gambar asli
+                return $this->getFirstMedia('featured_image')->getUrl('thumb');
+            }
+
+            // Prioritas 2: Sistem Lama
+            $legacyImageUrl = $this->attributes['featured_image_url'] ?? null;
+            if ($legacyImageUrl && Storage::disk('public')->exists($legacyImageUrl)) {
+                return asset('storage/' . $legacyImageUrl);
+            }
+
+            // Fallback Final
+            return 'https://placehold.co/400x250/E5E7EB/6B7280?text=No+Image';
+        }
+    );
+}
+
+protected function universalPreviewUrl(): Attribute
+{
+    return Attribute::make(
+        get: function () {
+            if (! file_exists(public_path('storage'))) {
                 return null;
             }
-        );
-    }
+            
+            // Prioritas 1: Sistem Baru (Spatie Media Library)
+            if ($this->hasMedia('featured_image')) {
+                return $this->getFirstMedia('featured_image')->getUrl('full-webp');
+                // INI PERBAIKANNYA: dari 'webp' ke 'preview'
+                // return $this->getFirstMedia('featured_image')->getUrl('preview');
+            }
+
+            // Prioritas 2: Sistem Lama
+            $legacyImageUrl = $this->attributes['featured_image_url'] ?? null;
+            if ($legacyImageUrl && Storage::disk('public')->exists($legacyImageUrl)) {
+                return asset('storage/' . $legacyImageUrl);
+            }
+            
+            // Fallback Final
+            return null;
+        }
+    );
+}
 
     public static function getPathGenerator(): ModulePathGenerator
     {

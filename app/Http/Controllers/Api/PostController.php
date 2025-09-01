@@ -18,7 +18,7 @@ class PostController extends Controller
         $posts = Post::with(['category', 'author'])
                      ->where('status', 'published')
                      ->latest()
-                     ->paginate(10);
+                     ->paginate(100);
 
         return new PostCollection($posts);
     }
